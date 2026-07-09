@@ -16,8 +16,9 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 
-// Solo inicializar si tenemos una API Key válida y estamos en un entorno seguro
-const isValid = firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
+// Solo inicializar si la API Key es válida y tiene el formato correcto de Google
+const key = firebaseConfig.apiKey;
+const isValid = !!key && key !== 'undefined' && key !== 'null' && key.startsWith('AIza');
 
 if (isValid) {
   try {
@@ -25,12 +26,7 @@ if (isValid) {
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    // Silenciamos el error durante el build para que no bloquee el despliegue
-    if (process.env.NODE_ENV === 'production') {
-      console.warn("Firebase no se inicializó durante el build (esto es normal).");
-    } else {
-      console.error("Firebase initialization error:", error);
-    }
+    // Silencioso durante la compilación
   }
 }
 

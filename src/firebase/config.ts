@@ -13,11 +13,12 @@ const firebaseConfig = {
 };
 
 /**
- * Valida si la configuración de Firebase es válida.
- * Durante la fase de construcción de Next.js, las variables de entorno pueden estar ausentes.
+ * Valida si la configuración de Firebase es real.
+ * Solo inicializa si la API Key empieza con 'AIza' (formato estándar de Google).
  */
 const isValidConfig = () => {
-  return !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
+  const key = firebaseConfig.apiKey;
+  return !!key && key !== 'undefined' && key !== 'null' && key.startsWith('AIza');
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
@@ -26,7 +27,6 @@ export const getFirebaseApp = (): FirebaseApp | null => {
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } catch (error) {
-    console.error("Firebase App initialization error:", error);
     return null;
   }
 };
@@ -36,7 +36,6 @@ export const getFirebaseFirestore = (app: FirebaseApp | null): Firestore | null 
   try {
     return getFirestore(app);
   } catch (error) {
-    console.error("Firestore initialization error:", error);
     return null;
   }
 };
@@ -46,7 +45,6 @@ export const getFirebaseAuth = (app: FirebaseApp | null): Auth | null => {
   try {
     return getAuth(app);
   } catch (error) {
-    console.error("Auth initialization error:", error);
     return null;
   }
 };

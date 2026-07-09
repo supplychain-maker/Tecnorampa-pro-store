@@ -1,4 +1,10 @@
+
 'use client';
+
+/**
+ * Tecnorampa Pro-Store - Home Page
+ * Versión optimizada para despliegue industrial.
+ */
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
@@ -43,7 +49,7 @@ export default function Home() {
 
   // Lógica de filtrado combinada (Categoría + Búsqueda)
   const filteredProducts = useMemo(() => {
-    let results = allProducts;
+    let results = allProducts || [];
     
     if (selectedCategoryId) {
       results = results.filter(p => 
@@ -63,7 +69,7 @@ export default function Home() {
   }, [allProducts, selectedCategoryId, searchTerm]);
 
   // Lógica de paginación
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil((filteredProducts?.length || 0) / ITEMS_PER_PAGE);
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
@@ -123,7 +129,7 @@ export default function Home() {
               >
                 Todos los Equipos
               </Button>
-              {categories.map((cat: any) => (
+              {categories && categories.map((cat: any) => (
                 <Button
                   key={cat.id}
                   variant={selectedCategoryId === cat.id ? "default" : "outline"}

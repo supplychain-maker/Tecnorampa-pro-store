@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -12,20 +11,19 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
 
-try {
-  // Inicialización segura: solo ocurre si las variables de entorno están presentes
-  if (firebaseConfig.apiKey) {
+if (firebaseConfig.apiKey) {
+  try {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
   }
-} catch (error) {
-  console.error("Firebase initialization error:", error);
 }
 
 export { auth, db };
-export default app!;
+export default app;

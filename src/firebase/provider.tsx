@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
@@ -7,9 +6,9 @@ import { Firestore } from 'firebase/firestore';
 import { Auth } from 'firebase/auth';
 
 interface FirebaseContextType {
-  app: FirebaseApp;
-  firestore: Firestore;
-  auth: Auth;
+  app: FirebaseApp | null;
+  firestore: Firestore | null;
+  auth: Auth | null;
 }
 
 const FirebaseContext = createContext<FirebaseContextType | null>(null);
@@ -21,11 +20,10 @@ export function FirebaseProvider({
   auth,
 }: {
   children: React.ReactNode;
-  app: FirebaseApp;
-  firestore: Firestore;
-  auth: Auth;
+  app: FirebaseApp | null;
+  firestore: Firestore | null;
+  auth: Auth | null;
 }) {
-  // Memorizamos el valor del contexto para evitar re-renders innecesarios en toda la app
   const value = useMemo(() => ({
     app,
     firestore,
@@ -41,18 +39,15 @@ export function FirebaseProvider({
 
 export const useFirebaseApp = () => {
   const context = useContext(FirebaseContext);
-  if (!context) throw new Error('useFirebaseApp must be used within FirebaseProvider');
-  return context.app;
+  return context?.app || null;
 };
 
 export const useFirestore = () => {
   const context = useContext(FirebaseContext);
-  if (!context) throw new Error('useFirestore must be used within FirebaseProvider');
-  return context.firestore;
+  return context?.firestore || null;
 };
 
 export const useAuth = () => {
   const context = useContext(FirebaseContext);
-  if (!context) throw new Error('useAuth must be used within FirebaseProvider');
-  return context.auth;
+  return context?.auth || null;
 };

@@ -11,14 +11,18 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-export const getFirebaseApp = (): FirebaseApp => {
+export const getFirebaseApp = (): FirebaseApp | null => {
+  if (typeof window === 'undefined' && !firebaseConfig.apiKey) return null;
+  if (!firebaseConfig.apiKey) return null;
   return !getApps().length ? initializeApp(firebaseConfig) : getApp();
 };
 
-export const getFirebaseFirestore = (app: FirebaseApp): Firestore => {
+export const getFirebaseFirestore = (app: FirebaseApp | null): Firestore | null => {
+  if (!app) return null;
   return getFirestore(app);
 };
 
-export const getFirebaseAuth = (app: FirebaseApp): Auth => {
+export const getFirebaseAuth = (app: FirebaseApp | null): Auth | null => {
+  if (!app) return null;
   return getAuth(app);
 };

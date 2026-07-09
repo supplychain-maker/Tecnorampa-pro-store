@@ -1,0 +1,98 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Perfil de Usuario",
+      "description": "Información corporativa y de contacto del cliente.",
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "company": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "admin"], "default": "customer" },
+        "address": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "firstName", "lastName"]
+    },
+    "Category": {
+      "title": "Grupo Industrial",
+      "description": "Agrupación lógica de productos (ej: Andenes, Estacionamiento).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "slug"]
+    },
+    "Product": {
+      "title": "Producto Industrial",
+      "description": "Refacción o equipo del catálogo de Tecnorampa.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "image": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "benefits": { "type": "array", "items": { "type": "string" } },
+        "specs": { "type": "object" },
+        "operationSteps": { "type": "array", "items": { "type": "string" } },
+        "active": { "type": "boolean", "default": true },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "slug", "price"]
+    },
+    "Order": {
+      "title": "Pedido Industrial",
+      "description": "Registro de compra de refacciones y equipos.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "taxes": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "paid", "delivered"] },
+        "deliveryPhoto": { "type": "string", "description": "Data URI de la evidencia de entrega." },
+        "deliveredAt": { "type": "string", "format": "date-time" },
+        "pickupLocation": { "type": "string", "default": "Pedro Escobedo, Querétaro" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password", "google.com"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Datos de perfil del cliente."
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Grupos de productos industriales."
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Catálogo dinámico de refacciones y equipos."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Historial de pedidos realizados."
+    }
+  }
+}

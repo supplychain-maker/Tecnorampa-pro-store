@@ -1,0 +1,14 @@
+
+# Configuración de App Hosting para Tecnorampa
+runConfig:
+  maxInstances: 2
+  minInstances: 0
+  memory: 512Mi
+  cpu: 1
+
+# Los secretos deben coincidir con los nombres creados en la consola de Firebase
+env:
+  - variable: STRIPE_SECRET_KEY
+    secret: STRIPE_SECRET_KEY
+  - variable: STRIPE_WEBHOOK_SECRET
+    secret: STRIPE_WEBHOOK_SECRET

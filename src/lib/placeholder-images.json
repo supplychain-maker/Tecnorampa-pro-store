@@ -1,0 +1,94 @@
+{
+  "placeholderImages": [
+    {
+      "id": "dock-lamp",
+      "description": "Lámpara de andén industrial Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1Uic5BVA-nQ_lkKIwcVSeLjZWqhASLsyG",
+      "imageHint": "industrial dock light"
+    },
+    {
+      "id": "traffic-signal",
+      "description": "Semáforo de andén LED rojo y verde Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1568T4cpn4B6QnskbqgI4b5oICkt8oV8t",
+      "imageHint": "industrial traffic light"
+    },
+    {
+      "id": "warehouse-hero",
+      "description": "Andenes de carga modernos",
+      "imageUrl": "https://picsum.photos/seed/tecnorampa-warehouse-facade/1920/1080",
+      "imageHint": "logistics warehouse dock"
+    },
+    {
+      "id": "company-building",
+      "description": "Fachada de las instalaciones de Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1_Y2pEPJ8uyXAIptUQ7ojmq-oOLi2gbJ-",
+      "imageHint": "industrial building facade"
+    },
+    {
+      "id": "company-logo",
+      "description": "Logotipo oficial de Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1l90yLT-O5OAsQpnPG1pOMXkud-ZoNERd",
+      "imageHint": "company logo"
+    },
+    {
+      "id": "company-location-map",
+      "description": "Ubicación Google Maps de Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1NX3CwYmcMoQa3o-Izb3X_dONg4THJuSE",
+      "imageHint": "google maps location"
+    },
+    {
+      "id": "quality-guarantee-bg",
+      "description": "Imagen de calidad industrial Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1TbDZYrXdoic-RXqv8SAnagJNPCBEu5jE",
+      "imageHint": "industrial quality"
+    },
+    {
+      "id": "minidock-hidraulico-cover",
+      "description": "Mini Dock Hidráulico Tecnorampa Portada",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1LMVZcXnswjpUyDD-ITyqOsQKuFloJUHr",
+      "imageHint": "hydraulic mini dock"
+    },
+    {
+      "id": "minidock-cover",
+      "description": "Mini Dock Mecánico Tecnorampa Portada",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1SPv_oOqflDA3RfrarRdGvF3jiEIbkvSm",
+      "imageHint": "mini dock leveler"
+    },
+    {
+      "id": "dock-bumper",
+      "description": "Tope de andén reforzado con placa de acero",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH",
+      "imageHint": "industrial dock bumper"
+    },
+    {
+      "id": "dock-bumper-laminated",
+      "description": "Tope de andén laminado estándar",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1JQyUblYuT0fNwsLnjnMKX6xZQe8F8qYT",
+      "imageHint": "rubber dock bumper"
+    },
+    {
+      "id": "dock-leveler-cover",
+      "description": "Niveladora mecánica de andén Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1Vr6or92_otUzLfLMaWoHpXBwpspb1n0d",
+      "imageHint": "mechanical dock leveler"
+    },
+    {
+      "id": "hydraulic-leveler-cover",
+      "description": "Niveladora hidráulica de andén Tecnorampa",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1OnmLSVRZVsaBKHlIi_V4IsHhJ4RrSGvV",
+      "imageHint": "hydraulic dock leveler"
+    },
+    {
+      "id": "parking-ramp-cover",
+      "description": "Rampa de estacionamiento TR Evolution Portada",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb",
+      "imageHint": "car parking lift"
+    },
+    {
+      "id": "parking-lift-cover",
+      "description": "Rampa de estacionamiento Parking Lift Portada",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR",
+      "imageHint": "parking lift solution"
+    }
+  ]
+}

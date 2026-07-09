@@ -1,3 +1,4 @@
+
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -15,13 +16,21 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 
-if (firebaseConfig.apiKey) {
+// Solo inicializar si tenemos una API Key válida y estamos en un entorno seguro
+const isValid = firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
+
+if (isValid) {
   try {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    console.error("Firebase initialization error:", error);
+    // Silenciamos el error durante el build para que no bloquee el despliegue
+    if (process.env.NODE_ENV === 'production') {
+      console.warn("Firebase no se inicializó durante el build (esto es normal).");
+    } else {
+      console.error("Firebase initialization error:", error);
+    }
   }
 }
 

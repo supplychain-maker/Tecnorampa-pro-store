@@ -1,3 +1,4 @@
+
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -11,18 +12,41 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+/**
+ * Valida si la configuración de Firebase es válida.
+ * Durante la fase de construcción de Next.js, las variables de entorno pueden estar ausentes.
+ */
+const isValidConfig = () => {
+  return !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
+};
+
 export const getFirebaseApp = (): FirebaseApp | null => {
-  if (typeof window === 'undefined' && !firebaseConfig.apiKey) return null;
-  if (!firebaseConfig.apiKey) return null;
-  return !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  if (!isValidConfig()) return null;
+  
+  try {
+    return !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  } catch (error) {
+    console.error("Firebase App initialization error:", error);
+    return null;
+  }
 };
 
 export const getFirebaseFirestore = (app: FirebaseApp | null): Firestore | null => {
   if (!app) return null;
-  return getFirestore(app);
+  try {
+    return getFirestore(app);
+  } catch (error) {
+    console.error("Firestore initialization error:", error);
+    return null;
+  }
 };
 
 export const getFirebaseAuth = (app: FirebaseApp | null): Auth | null => {
   if (!app) return null;
-  return getAuth(app);
+  try {
+    return getAuth(app);
+  } catch (error) {
+    console.error("Auth initialization error:", error);
+    return null;
+  }
 };

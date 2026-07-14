@@ -17,16 +17,16 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 
 const key = firebaseConfig.apiKey;
-// Solo inicializamos si la llave parece ser una real de Firebase (empieza con AIza)
-const isValid = !!key && key.startsWith('AIza') && key.length > 20;
+// Solo inicializamos si la llave es real y no estamos en fase de build crítica
+const isValid = !!key && key.startsWith('AIza') && key.length > 20 && key !== 'undefined';
 
-if (isValid && typeof window !== 'undefined') {
+if (isValid) {
   try {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    // Silencioso durante build
+    // Silencioso para no romper el despliegue
   }
 }
 

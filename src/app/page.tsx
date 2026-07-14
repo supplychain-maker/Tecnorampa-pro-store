@@ -3,7 +3,7 @@
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión optimizada para despliegue industrial v1.2.
+ * Versión optimizada para despliegue industrial v1.3 (Build Resilient)
  */
 
 import { useMemo, useState } from 'react';
@@ -63,7 +63,7 @@ export default function Home() {
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPage]);
 
-  const isLoading = catsLoading || productsLoading;
+  const isLoading = (catsLoading || productsLoading) && db !== null;
 
   return (
     <div className="flex flex-col bg-background">
@@ -75,7 +75,7 @@ export default function Home() {
                 Tecnorampa Pro-Store
               </h1>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Suministros industriales certificados v1.2
+                Suministros industriales certificados v1.3
               </p>
             </div>
             <div className="relative w-full max-w-md">

@@ -3,7 +3,7 @@
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión optimizada para despliegue industrial.
+ * Versión optimizada para despliegue industrial activo.
  */
 
 import { useMemo, useState } from 'react';
@@ -89,9 +89,14 @@ export default function Home() {
           
           {/* Cabecera con Branding y Buscador */}
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12 bg-muted/30 p-8 rounded-2xl border-b-4 border-primary">
-            <h1 className="text-lg md:text-xl font-black uppercase tracking-[0.15em] text-foreground italic text-center lg:text-left">
-              Tienda oficial de refacciones tecnorampa
-            </h1>
+            <div className="space-y-1">
+              <h1 className="text-lg md:text-xl font-black uppercase tracking-[0.15em] text-foreground italic text-center lg:text-left">
+                Tecnorampa Pro-Store
+              </h1>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center lg:text-left">
+                Suministros industriales certificados v1.0
+              </p>
+            </div>
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary" size={20} />
               <Input 

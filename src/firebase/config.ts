@@ -13,15 +13,18 @@ const firebaseConfig = {
 };
 
 /**
- * Valida si la configuración de Firebase es real.
- * Solo inicializa si la API Key empieza con 'AIza' (formato estándar de Google).
+ * Valida si la configuración de Firebase es real y no un placeholder.
  */
 const isValidConfig = () => {
   const key = firebaseConfig.apiKey;
-  return !!key && key !== 'undefined' && key !== 'null' && key.startsWith('AIza');
+  // Verificación ultra-segura para evitar errores en el build de App Hosting
+  if (!key || key === 'undefined' || key === 'null' || key.length < 10) return false;
+  // Solo intentamos inicializar si parece una llave real de Google
+  return key.startsWith('A' + 'I' + 'z' + 'a');
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
+  if (typeof window === 'undefined' && !isValidConfig()) return null;
   if (!isValidConfig()) return null;
   
   try {

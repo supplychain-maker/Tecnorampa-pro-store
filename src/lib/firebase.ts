@@ -16,17 +16,16 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 
-// Solo inicializar si la API Key es válida y tiene el formato correcto de Google
 const key = firebaseConfig.apiKey;
-const isValid = !!key && key !== 'undefined' && key !== 'null' && key.startsWith('AIza');
+const isValid = !!key && key !== 'undefined' && key !== 'null' && key.length > 10;
 
-if (isValid) {
+if (isValid && typeof window !== 'undefined') {
   try {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    // Silencioso durante la compilación
+    // Silencioso durante build
   }
 }
 

@@ -13,20 +13,20 @@ const firebaseConfig = {
 };
 
 /**
- * Valida de forma estricta si la configuración es válida para producción.
+ * Valida si la configuración es real. 
+ * Si detecta que son placeholders o llaves vacías, retorna falso.
  */
 const isValidConfig = () => {
   const key = firebaseConfig.apiKey;
-  if (!key || key === 'undefined' || key === 'null' || key.length < 20) return false;
-  return key.startsWith('AIza');
+  if (!key || key.length < 20 || !key.startsWith('AIza') || key.includes('undefined')) {
+    return false;
+  }
+  return true;
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  // En el servidor durante el build, no intentamos inicializar si no hay llaves reales
-  if (typeof window === 'undefined') {
-    if (!isValidConfig()) return null;
-  }
-  
+  // En fase de construcción o sin llaves reales, no inicializamos nada
+  if (typeof window === 'undefined' && !isValidConfig()) return null;
   if (!isValidConfig()) return null;
   
   try {
@@ -48,6 +48,7 @@ export const getFirebaseFirestore = (app: FirebaseApp | null): Firestore | null 
 export const getFirebaseAuth = (app: FirebaseApp | null): Auth | null => {
   if (!app) return null;
   try {
+    // Solo intentamos obtener Auth si el app es válido
     return getAuth(app);
   } catch (error) {
     return null;

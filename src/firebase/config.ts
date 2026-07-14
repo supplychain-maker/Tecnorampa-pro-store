@@ -13,10 +13,11 @@ const firebaseConfig = {
 };
 
 /**
- * Validación ultra-estricta para evitar errores durante el build de Next.js
+ * Validación estricta para evitar errores durante el build de Next.js
  */
 const isValidConfig = () => {
   const key = firebaseConfig.apiKey;
+  // Si la llave no existe, es 'undefined' o es demasiado corta, NO es válida
   if (!key || key === 'undefined' || key.length < 20 || !key.startsWith('AIza')) {
     return false;
   }
@@ -24,14 +25,13 @@ const isValidConfig = () => {
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  // BLOQUEO CRÍTICO: Si no hay llaves reales, NO inicializar. 
-  // Esto evita el error auth/invalid-api-key en el servidor de Google Cloud
-  if (!isValidConfig()) return null;
+  if (!isValidConfig()) {
+    return null;
+  }
   
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } catch (error) {
-    console.error("Firebase init suppressed during build");
     return null;
   }
 };

@@ -17,7 +17,7 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 
 const key = firebaseConfig.apiKey;
-// Solo inicializamos si la llave es real y no estamos en fase de build crítica
+// Blindaje total para el build
 const isValid = !!key && key.startsWith('AIza') && key.length > 20 && key !== 'undefined';
 
 if (isValid) {
@@ -26,7 +26,7 @@ if (isValid) {
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    // Silencioso para no romper el despliegue
+    // Silencioso
   }
 }
 

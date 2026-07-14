@@ -13,8 +13,7 @@ const firebaseConfig = {
 };
 
 /**
- * Valida de forma extrema si la configuración es real.
- * Si el API Key es un placeholder o no empieza con AIza, lo ignora.
+ * Valida de forma estricta si la configuración es válida para producción.
  */
 const isValidConfig = () => {
   const key = firebaseConfig.apiKey;
@@ -23,7 +22,7 @@ const isValidConfig = () => {
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  // NUNCA inicializar durante la fase de 'build' en el servidor si la config no es perfecta
+  // En el servidor durante el build, no intentamos inicializar si no hay llaves reales
   if (typeof window === 'undefined') {
     if (!isValidConfig()) return null;
   }

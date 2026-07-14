@@ -17,7 +17,8 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 
 const key = firebaseConfig.apiKey;
-const isValid = !!key && key !== 'undefined' && key !== 'null' && key.length > 10;
+// Solo inicializamos si la llave parece ser una real de Firebase (empieza con AIza)
+const isValid = !!key && key.startsWith('AIza') && key.length > 20;
 
 if (isValid && typeof window !== 'undefined') {
   try {

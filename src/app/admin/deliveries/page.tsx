@@ -216,33 +216,37 @@ export default function AdminDeliveriesPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave:</span>
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave Secreta:</span>
                     <code className="text-[10px] font-black font-mono bg-muted px-2 py-0.5 rounded text-primary">
                       {stripeStatus.keyPrefix}...
                     </code>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Sincronización Webhook:</span>
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Estado Webhook:</span>
                     {stripeStatus.webhookConfigured ? (
                       <Badge variant="outline" className="text-[9px] font-black text-green-600 border-green-600/30 gap-1 uppercase bg-green-50">
-                        <Zap size={8} /> CONECTADO
+                        <Zap size={8} /> CONFIGURADO
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[9px] font-black text-destructive border-destructive/30 bg-destructive/5 uppercase">DESCONECTADO</Badge>
+                      <Badge variant="outline" className="text-[9px] font-black text-destructive border-destructive/30 bg-destructive/5 uppercase">PENDIENTE</Badge>
                     )}
                   </div>
                   
-                  {!stripeStatus.webhookConfigured && (
-                    <div className="bg-muted p-3 rounded-lg space-y-2 border border-border">
-                      <label className="text-[8px] font-black text-muted-foreground uppercase block">URL obligatoria para Stripe Webhook:</label>
-                      <div className="flex items-center gap-2 bg-white border border-border p-1.5 rounded">
-                        <code className="text-[9px] font-mono truncate flex-grow px-1 text-primary">{generatedWebhookUrl}</code>
-                        <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-primary/10" onClick={copyToClipboard}>
-                          {copied ? <Check className="text-green-600" size={14} /> : <Copy size={14} />}
-                        </Button>
-                      </div>
+                  <div className="bg-muted p-3 rounded-lg space-y-2 border border-border">
+                    <label className="text-[8px] font-black text-muted-foreground uppercase block">URL para el Webhook de Stripe:</label>
+                    <div className="flex items-center gap-2 bg-white border border-border p-1.5 rounded">
+                      <code className="text-[9px] font-mono truncate flex-grow px-1 text-primary">{generatedWebhookUrl}</code>
+                      <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-primary/10" onClick={copyToClipboard}>
+                        {copied ? <Check className="text-green-600" size={14} /> : <Copy size={14} />}
+                      </Button>
                     </div>
+                  </div>
+                  
+                  {stripeStatus.mode === 'test' && (
+                    <p className="text-[8px] font-bold text-destructive uppercase italic leading-tight">
+                      * ATENCIÓN: Tu llave empieza con "sk_test". Debes usar la clave "sk_live" de tu dashboard de Stripe para recibir pagos reales.
+                    </p>
                   )}
                 </div>
               </div>

@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Login Page
- * Versión v1.8 - Aislamiento total de Suspense para Next.js 15
+ * Blindaje v2.0 - force-dynamic para evitar errores de pre-renderizado en App Hosting
  */
 
 import { useState, Suspense } from 'react';
@@ -28,9 +28,9 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-/**
- * Componente interno que maneja toda la lógica del formulario.
- */
+// Obligamos a Next.js a no pre-renderizar esta página durante el build
+export const dynamic = 'force-dynamic';
+
 function LoginForm() {
   const auth = useAuth();
   const db = useFirestore();
@@ -38,7 +38,6 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   
-  // Extraemos parámetros de forma segura dentro del componente envuelto
   const initialMode = searchParams.get('mode') === 'signup' ? false : true;
   const redirect = searchParams.get('redirect') || '/';
 
@@ -152,7 +151,7 @@ function LoginForm() {
           {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
         </CardTitle>
         <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-          Tecnorampa S.A. de C.V. • Ecosistema Digital
+          Tecnorampa S.A. de C.V. • v2.0
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
@@ -217,10 +216,6 @@ function LoginForm() {
   );
 }
 
-/**
- * Página Principal de Login.
- * Este componente es el que Next.js detecta como ruta y envuelve todo en Suspense.
- */
 export default function LoginPage() {
   return (
     <div className="min-h-[90vh] flex flex-col items-center justify-center bg-white industrial-grid p-6">

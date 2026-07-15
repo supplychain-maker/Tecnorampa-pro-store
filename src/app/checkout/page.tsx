@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * Tecnorampa Pro-Store - Checkout Page
+ * Blindaje v2.0 - force-dynamic para evitar errores de pre-renderizado en App Hosting
+ */
+
 import { useCart } from '@/context/CartContext';
 import { useUser, useFirestore } from '@/firebase';
 import { Button } from '@/components/ui/button';
@@ -14,6 +19,8 @@ import { Badge } from '@/components/ui/badge';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { useSearchParams } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 function CheckoutContent() {
   const { items, total, itemCount, clearCart } = useCart();

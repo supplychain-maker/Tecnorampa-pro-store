@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión de Producción Final
+ * Versión de Producción Oficial v1.0
  */
 
 import { useMemo, useState } from 'react';
@@ -16,7 +16,8 @@ import {
   LayoutGrid,
   Database,
   MessageSquareCode,
-  Search
+  Search,
+  ShieldCheck
 } from 'lucide-react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
@@ -70,11 +71,11 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12 bg-muted/30 p-8 rounded-2xl border-b-4 border-primary">
             <div className="space-y-1">
-              <h1 className="text-lg md:text-xl font-black uppercase tracking-[0.15em] text-foreground italic">
+              <h1 className="text-xl md:text-2xl font-black uppercase tracking-[0.15em] text-foreground italic">
                 Tecnorampa Pro-Store
               </h1>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Suministros industriales certificados • Calidad Garantizada
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                <ShieldCheck size={12} className="text-primary" /> Soluciones Industriales Certificadas
               </p>
             </div>
             <div className="relative w-full max-w-md">
@@ -92,15 +93,15 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-4 text-foreground italic">Equipos Destacados</h2>
+            <div className="space-y-2">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase text-foreground italic">Equipos Destacados</h2>
               <div className="w-24 h-1.5 bg-primary" />
             </div>
           </div>
 
           <div className="mb-12 space-y-4">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">
-              <LayoutGrid size={14} className="text-primary" /> Filtrar por Grupo Industrial:
+              <LayoutGrid size={14} className="text-primary" /> Filtrar por Categoría:
             </div>
             <div className="flex flex-wrap gap-3">
               <Button
@@ -173,9 +174,9 @@ export default function Home() {
             </div>
             <div className="max-w-xl space-y-6 relative z-10">
               <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none italic">¿Dudas Técnicas?</h2>
-              <p className="text-lg opacity-90 font-medium">Usa nuestro Asistente Inteligente de Logística para recibir recomendaciones personalizadas.</p>
+              <p className="text-lg opacity-90 font-medium">Use nuestro Asistente Inteligente de Logística para recibir recomendaciones personalizadas antes de su compra.</p>
               <Link href="/assistant" className="inline-block">
-                <Button variant="secondary" size="lg" className="h-14 px-8 text-lg font-bold bg-white text-primary hover:bg-white/90 uppercase italic tracking-widest">
+                <Button variant="secondary" size="lg" className="h-14 px-8 text-lg font-bold bg-white text-primary hover:bg-white/90 uppercase italic tracking-widest shadow-xl">
                   Consultar al Asistente IA
                 </Button>
               </Link>

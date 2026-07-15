@@ -1,10 +1,9 @@
-
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { headers } from 'next/headers';
 
 /**
- * Crea una sesión de pago segura en Stripe.
+ * Crea una sesión de pago segura en Stripe (Producción).
  * Calcula el monto incluyendo el 16% de IVA y maneja la redirección.
  */
 export async function POST(req: Request) {
@@ -21,6 +20,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Identificador de orden ausente.' }, { status: 400 });
     }
 
+    // El cálculo del IVA y centavos se realiza aquí para máxima precisión
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer_email: userEmail,
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
           product_data: {
             name: item.name,
             images: item.image ? [item.image] : [],
-            description: item.variant ? `Configuración: ${item.variant}` : 'Equipo Industrial Tecnorampa',
+            description: item.variant ? `Configuración: ${item.variant} (IVA Incluido)` : 'Equipo Industrial Tecnorampa (IVA Incluido)',
           },
           // Stripe requiere el monto en centavos (monto * 1.16 IVA * 100)
           unit_amount: Math.round(item.price * 1.16 * 100), 
@@ -49,6 +49,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (err: any) {
     console.error('Error en Stripe Checkout:', err);
-    return NextResponse.json({ error: 'No se pudo iniciar el proceso de pago.' }, { status: 500 });
+    return NextResponse.json({ error: 'No se pudo iniciar el proceso de pago. Verifique sus llaves de Stripe.' }, { status: 500 });
   }
 }

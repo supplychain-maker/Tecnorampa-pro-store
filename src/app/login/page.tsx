@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Login Page
- * Blindaje v2.1 - force-dynamic para evitar errores de pre-renderizado en App Hosting
+ * Blindaje v2.2 - force-dynamic y Aislamiento de Suspense para Next.js 15
  */
 
 import { useState, Suspense } from 'react';
@@ -28,10 +28,9 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// Obligamos a Next.js a no pre-renderizar esta página durante el build
 export const dynamic = 'force-dynamic';
 
-function LoginForm() {
+function LoginFormContent() {
   const auth = useAuth();
   const db = useFirestore();
   const router = useRouter();
@@ -151,7 +150,7 @@ function LoginForm() {
           {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
         </CardTitle>
         <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-          Tecnorampa S.A. de C.V. • v2.1
+          Tecnorampa S.A. de C.V. • v2.2
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
@@ -230,7 +229,7 @@ export default function LoginPage() {
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cargando Módulo de Seguridad...</p>
           </div>
         }>
-          <LoginForm />
+          <LoginFormContent />
         </Suspense>
       </div>
     </div>

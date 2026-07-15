@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Checkout Page
- * Blindaje v2.0 - force-dynamic para evitar errores de pre-renderizado en App Hosting
+ * Blindaje v2.2 - force-dynamic y Aislamiento de Suspense para Next.js 15
  */
 
 import { useCart } from '@/context/CartContext';

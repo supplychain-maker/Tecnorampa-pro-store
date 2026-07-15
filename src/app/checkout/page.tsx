@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Checkout Page
- * Blindaje v2.4 - Aislamiento estricto de Suspense para Next.js 15
+ * Blindaje v2.5 - Aislamiento estricto de Suspense para Next.js 15
  */
 
 import { useCart } from '@/context/CartContext';
@@ -356,7 +356,7 @@ function CheckoutContent() {
           <div className="lg:col-span-4">
             <Card className="border-border sticky top-28 shadow-xl overflow-hidden border-t-4 border-t-primary">
               <CardHeader className="bg-muted/50 border-b">
-                <CardTitle className="text-sm font-black uppercase tracking-[0.2em] italic">Resumen Industrial v2.4</CardTitle>
+                <CardTitle className="text-sm font-black uppercase tracking-[0.2em] italic">Resumen Industrial v2.5</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6 pt-8">
                 <div className="space-y-4">

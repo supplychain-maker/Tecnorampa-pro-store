@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión blindada v2.5 - Despliegue industrial garantizado
+ * Versión de Producción Final
  */
 
 import { useMemo, useState } from 'react';
@@ -71,10 +71,10 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12 bg-muted/30 p-8 rounded-2xl border-b-4 border-primary">
             <div className="space-y-1">
               <h1 className="text-lg md:text-xl font-black uppercase tracking-[0.15em] text-foreground italic">
-                Tecnorampa Pro-Store v2.5
+                Tecnorampa Pro-Store
               </h1>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Suministros industriales certificados • Build v2.5
+                Suministros industriales certificados • Calidad Garantizada
               </p>
             </div>
             <div className="relative w-full max-w-md">

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -40,7 +39,8 @@ import {
   ShieldCheck,
   AlertTriangle,
   Globe,
-  Monitor
+  Monitor,
+  Info
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';

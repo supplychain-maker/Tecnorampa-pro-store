@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Login Page
- * Versión v1.7 con Suspense Boundary reforzado para Next.js 15
+ * Versión v1.8 - Aislamiento total de Suspense para Next.js 15
  */
 
 import { useState, Suspense } from 'react';
@@ -29,19 +29,18 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 /**
- * Componente interno que consume los parámetros de búsqueda.
- * DEBE estar envuelto en Suspense.
+ * Componente interno que maneja toda la lógica del formulario.
  */
 function LoginForm() {
   const auth = useAuth();
   const db = useFirestore();
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   
-  // Extraemos parámetros de forma segura
-  const initialMode = searchParams ? searchParams.get('mode') === 'signup' ? false : true : true;
-  const redirect = searchParams ? searchParams.get('redirect') || '/' : '/';
+  // Extraemos parámetros de forma segura dentro del componente envuelto
+  const initialMode = searchParams.get('mode') === 'signup' ? false : true;
+  const redirect = searchParams.get('redirect') || '/';
 
   const [isLogin, setIsLogin] = useState(initialMode);
   const [email, setEmail] = useState('');
@@ -142,87 +141,85 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md">
-      <Card className="border-border shadow-2xl bg-white/95 backdrop-blur-xl border-t-8 border-t-primary">
-        <CardHeader className="space-y-2 pt-10">
-          <div className="flex justify-center mb-8">
-            <div className="p-5 bg-primary rounded-2xl shadow-xl shadow-primary/20 rotate-3">
-              <Building2 className="w-10 h-10 text-primary-foreground" />
-            </div>
+    <Card className="border-border shadow-2xl bg-white/95 backdrop-blur-xl border-t-8 border-t-primary">
+      <CardHeader className="space-y-2 pt-10">
+        <div className="flex justify-center mb-8">
+          <div className="p-5 bg-primary rounded-2xl shadow-xl shadow-primary/20 rotate-3">
+            <Building2 className="w-10 h-10 text-primary-foreground" />
           </div>
-          <CardTitle className="text-4xl font-black text-center uppercase tracking-tighter italic">
-            {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
-          </CardTitle>
-          <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-            Versión v1.7 • Identificación Industrial
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          {errorMessage && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Falla de Autenticación</AlertTitle>
-              <AlertDescription className="text-xs font-bold">{errorMessage}</AlertDescription>
-            </Alert>
-          )}
+        </div>
+        <CardTitle className="text-4xl font-black text-center uppercase tracking-tighter italic">
+          {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
+        </CardTitle>
+        <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
+          Tecnorampa S.A. de C.V. • Ecosistema Digital
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-6">
+        {errorMessage && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Falla de Autenticación</AlertTitle>
+            <AlertDescription className="text-xs font-bold">{errorMessage}</AlertDescription>
+          </Alert>
+        )}
 
-          <form onSubmit={handleAuth} className="space-y-4">
-            {!isLogin && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Nombre</Label>
-                    <Input placeholder="Juan" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="h-12" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Apellido</Label>
-                    <Input placeholder="Pérez" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="h-12" />
-                  </div>
+        <form onSubmit={handleAuth} className="space-y-4">
+          {!isLogin && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Nombre</Label>
+                  <Input placeholder="Nombre" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="h-12" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Empresa</Label>
-                  <Input placeholder="Logística Industrial S.A." value={company} onChange={(e) => setCompany(e.target.value)} required className="h-12" />
+                  <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Apellido</Label>
+                  <Input placeholder="Apellido" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="h-12" />
                 </div>
-              </>
-            )}
-            <div className="space-y-2">
-              <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Correo Corporativo</Label>
-              <Input type="email" placeholder="ejemplo@empresa.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12" />
-            </div>
-            <div className="space-y-2">
-              <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Contraseña</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12" />
-            </div>
-            <Button type="submit" className="w-full font-black h-14 text-lg shadow-xl uppercase tracking-tighter italic" disabled={loading}>
-              {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isLogin ? <LogIn className="mr-2" /> : <UserPlus className="mr-2" />)}
-              {isLogin ? 'INGRESAR AL SISTEMA' : 'CREAR MI CUENTA'}
-            </Button>
-          </form>
-          
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center"><Separator /></div>
-            <div className="relative flex justify-center text-[10px] uppercase font-black">
-              <span className="bg-white px-4 text-muted-foreground tracking-[0.3em]">O continuar con</span>
-            </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Empresa</Label>
+                <Input placeholder="Nombre de la empresa" value={company} onChange={(e) => setCompany(e.target.value)} required className="h-12" />
+              </div>
+            </>
+          )}
+          <div className="space-y-2">
+            <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Correo Corporativo</Label>
+            <Input type="email" placeholder="ejemplo@empresa.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12" />
           </div>
-          
-          <Button variant="outline" className="w-full h-12 font-black border-border hover:bg-muted transition-all uppercase text-[10px] tracking-widest" onClick={handleGoogleLogin} disabled={loading}>
-            <Chrome className="mr-3 h-4 w-4 text-primary" /> GOOGLE AUTH
+          <div className="space-y-2">
+            <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Contraseña</Label>
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12" />
+          </div>
+          <Button type="submit" className="w-full font-black h-14 text-lg shadow-xl uppercase tracking-tighter italic" disabled={loading}>
+            {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isLogin ? <LogIn className="mr-2" /> : <UserPlus className="mr-2" />)}
+            {isLogin ? 'INGRESAR AL SISTEMA' : 'CREAR MI CUENTA'}
           </Button>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-6 border-t border-border mt-6 p-8 bg-muted/10">
-          <button onClick={() => setIsLogin(!isLogin)} className="text-[10px] text-primary font-black hover:underline uppercase tracking-widest">
-            {isLogin ? '¿No tiene cuenta corporativa? Regístrese aquí' : '¿Ya es cliente? Inicie sesión'}
-          </button>
-        </CardFooter>
-      </Card>
-    </div>
+        </form>
+        
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center"><Separator /></div>
+          <div className="relative flex justify-center text-[10px] uppercase font-black">
+            <span className="bg-white px-4 text-muted-foreground tracking-[0.3em]">O continuar con</span>
+          </div>
+        </div>
+        
+        <Button variant="outline" className="w-full h-12 font-black border-border hover:bg-muted transition-all uppercase text-[10px] tracking-widest" onClick={handleGoogleLogin} disabled={loading}>
+          <Chrome className="mr-3 h-4 w-4 text-primary" /> GOOGLE AUTH
+        </Button>
+      </CardContent>
+      <CardFooter className="flex flex-col gap-6 border-t border-border mt-6 p-8 bg-muted/10">
+        <button onClick={() => setIsLogin(!isLogin)} className="text-[10px] text-primary font-black hover:underline uppercase tracking-widest">
+          {isLogin ? '¿No tiene cuenta corporativa? Regístrese aquí' : '¿Ya es cliente? Inicie sesión'}
+        </button>
+      </CardFooter>
+    </Card>
   );
 }
 
 /**
  * Página Principal de Login.
- * Este componente es el que Next.js detecta como ruta.
+ * Este componente es el que Next.js detecta como ruta y envuelve todo en Suspense.
  */
 export default function LoginPage() {
   return (
@@ -231,14 +228,16 @@ export default function LoginPage() {
         <ArrowLeft size={16} /> Volver a la Tienda
       </Link>
       
-      <Suspense fallback={
-        <div className="w-full max-w-md p-20 flex flex-col items-center justify-center bg-white border rounded-xl shadow-xl">
-          <Loader2 className="animate-spin text-primary mb-4" size={40} />
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cargando Módulo de Seguridad...</p>
-        </div>
-      }>
-        <LoginForm />
-      </Suspense>
+      <div className="w-full max-w-md">
+        <Suspense fallback={
+          <div className="w-full p-20 flex flex-col items-center justify-center bg-white border rounded-xl shadow-xl">
+            <Loader2 className="animate-spin text-primary mb-4" size={40} />
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cargando Módulo de Seguridad...</p>
+          </div>
+        }>
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }

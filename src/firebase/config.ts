@@ -12,22 +12,20 @@ const firebaseConfig = {
 };
 
 /**
- * Validación extrema de configuración.
- * Previene que Firebase intente inicializarse con datos basura durante el build.
+ * Verificación extrema de entorno de construcción.
+ * Evita que Firebase arroje errores de 'invalid-api-key' durante el build estático.
  */
-const isValidConfig = () => {
-  const key = firebaseConfig.apiKey;
-  if (!key || typeof key !== 'string' || key === 'undefined' || key.length < 20 || !key.startsWith('AIza')) {
-    return false;
+const isBuildEnvironment = () => {
+  if (typeof window === 'undefined') {
+    // Si estamos en el servidor, verificamos si las llaves son marcadores de posición
+    const key = firebaseConfig.apiKey;
+    return !key || key === 'undefined' || key.length < 10 || key.includes('YOUR_');
   }
-  return true;
+  return false;
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  // Durante la compilación (build), si no hay llaves reales, retornamos null silenciosamente.
-  if (!isValidConfig()) {
-    return null;
-  }
+  if (isBuildEnvironment()) return null;
   
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();

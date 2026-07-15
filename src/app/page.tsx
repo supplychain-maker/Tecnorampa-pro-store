@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión optimizada para despliegue industrial v1.7 (Build Final)
+ * Versión optimizada para despliegue industrial v1.8 (Build Blindado)
  */
 
 import { useMemo, useState } from 'react';
@@ -74,7 +74,7 @@ export default function Home() {
                 Tecnorampa Pro-Store
               </h1>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Suministros industriales certificados v1.7
+                Suministros industriales certificados v1.8
               </p>
             </div>
             <div className="relative w-full max-w-md">

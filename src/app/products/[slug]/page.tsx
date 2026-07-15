@@ -83,19 +83,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           {/* Gallery */}
           <div className="space-y-4">
-            <div className="relative aspect-square bg-card rounded-xl overflow-hidden border border-border group">
+            <div className="relative aspect-square bg-white rounded-xl overflow-hidden border border-border group p-8">
               <Image 
                 src={imagesToDisplay[activeImage]} 
                 alt={product.name} 
                 fill 
                 priority
-                className="object-cover transition-transform duration-500 hover:scale-105"
+                className="object-contain transition-transform duration-500 hover:scale-105 p-4"
                 data-ai-hint="industrial product high detail"
                 unoptimized
               />
               <div className="absolute top-4 right-4">
-                <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                  Zoom disponible
+                <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm text-[10px] font-black uppercase tracking-widest">
+                  ALTA DEFINICIÓN
                 </Badge>
               </div>
             </div>
@@ -104,9 +104,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                 <button 
                   key={idx} 
                   onClick={() => setActiveImage(idx)}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${activeImage === idx ? 'border-primary' : 'border-border opacity-60 hover:opacity-100'}`}
+                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all bg-white p-2 ${activeImage === idx ? 'border-primary' : 'border-border opacity-60 hover:opacity-100'}`}
                 >
-                  <Image src={img} alt={`${product.name} ${idx}`} fill className="object-cover" unoptimized />
+                  <Image src={img} alt={`${product.name} ${idx}`} fill className="object-contain p-1" unoptimized />
                 </button>
               ))}
             </div>
@@ -117,24 +117,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
                 {product.categoryNames?.map((cat, i) => (
-                  <Badge key={i} variant="outline" className="text-primary border-primary">{cat}</Badge>
+                  <Badge key={i} variant="outline" className="text-primary border-primary font-black uppercase text-[10px] tracking-widest">{cat}</Badge>
                 ))}
               </div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase">{product.name}</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">{product.shortDescription}</p>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">{product.name}</h1>
+              <p className="text-xl text-muted-foreground leading-relaxed font-medium">{product.shortDescription}</p>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-black text-primary animate-in fade-in slide-in-from-left-2 duration-300">
+                <span className="text-4xl font-black text-primary animate-in fade-in slide-in-from-left-2 duration-300 italic">
                   ${finalPrice.toLocaleString()}
                 </span>
-                <span className="text-muted-foreground font-bold">MXN + IVA</span>
+                <span className="text-muted-foreground font-black uppercase text-xs tracking-widest">MXN + IVA</span>
               </div>
               <div className="bg-muted/50 p-3 rounded-lg border border-border flex items-center gap-3">
                 <MapPin className="text-primary" size={20} />
-                <p className="text-sm font-black uppercase tracking-tight text-foreground/80">
-                  Precio LAB (Libre a Bordo) en planta Tecnorampa, Querétaro.
+                <p className="text-xs font-black uppercase tracking-tighter text-foreground/80 italic">
+                  Precio LAB (Libre a Bordo) en planta Tecnorampa, Pedro Escobedo, Qro.
                 </p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-4">
-                <h4 className="font-black uppercase text-xs tracking-widest text-primary italic">Configuración de Capacidad y Labio:</h4>
+                <h4 className="font-black uppercase text-[10px] tracking-widest text-primary italic">Configuración Técnica Certificada:</h4>
                 <RadioGroup 
                   value={selectedVariant || ''} 
                   onValueChange={setSelectedVariant} 
@@ -158,10 +158,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                       >
                         <div className="flex flex-col">
                           <span className="font-black uppercase text-xs italic">{v.name}</span>
-                          <span className="text-[10px] text-muted-foreground font-bold">Ajuste técnico certificado</span>
+                          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Ajuste de ingeniería directa</span>
                         </div>
                         <div className="text-right">
-                          <span className="font-black text-sm">
+                          <span className="font-black text-sm italic">
                             ${(product.price + v.priceModifier).toLocaleString()}
                           </span>
                         </div>
@@ -173,22 +173,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             )}
 
             <div className="flex gap-4 pt-4">
-              <Button onClick={handleAddToCart} size="lg" className="flex-grow h-14 text-lg font-black uppercase italic tracking-tighter">
-                <ShoppingCart className="mr-2" /> Agregar al Carrito
+              <Button onClick={handleAddToCart} size="lg" className="flex-grow h-14 text-lg font-black uppercase italic tracking-widest shadow-xl">
+                <ShoppingCart className="mr-2 h-5 w-5" /> AGREGAR AL CARRITO
               </Button>
-              <Button size="icon" variant="outline" className="h-14 w-14 shrink-0">
-                <ShieldCheck />
+              <Button size="icon" variant="outline" className="h-14 w-14 shrink-0 border-2">
+                <ShieldCheck className="w-6 h-6" />
               </Button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-              <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg">
-                <PackageCheck className="text-primary" />
-                <span className="text-xs font-bold uppercase">Disponibilidad Inmediata</span>
+              <div className="flex items-center gap-3 p-3 bg-white border border-border rounded-lg shadow-sm">
+                <PackageCheck className="text-primary" size={20} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Disponibilidad Inmediata</span>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg">
-                <ShieldCheck className="text-primary" />
-                <span className="text-xs font-bold uppercase">Garantía Industrial 12 Meses</span>
+              <div className="flex items-center gap-3 p-3 bg-white border border-border rounded-lg shadow-sm">
+                <ShieldCheck className="text-primary" size={20} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Garantía Industrial 12 Meses</span>
               </div>
             </div>
           </div>
@@ -199,67 +199,67 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           <TabsList className="w-full justify-start bg-transparent border-b border-border rounded-none h-auto p-0 mb-8 overflow-x-auto">
             <TabsTrigger 
               value="specs" 
-              className="px-8 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-tight text-xs italic"
+              className="px-8 py-4 rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-widest text-[11px] italic"
             >
-              Especificaciones Técnicas
+              Ficha Técnica
             </TabsTrigger>
             <TabsTrigger 
               value="benefits" 
-              className="px-8 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-tight text-xs italic"
+              className="px-8 py-4 rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-widest text-[11px] italic"
             >
-              Beneficios Clave
+              Ventajas Competitivas
             </TabsTrigger>
             <TabsTrigger 
               value="operation" 
-              className="px-8 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-tight text-xs italic"
+              className="px-8 py-4 rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-black uppercase tracking-widest text-[11px] italic"
             >
-              Funcionamiento
+              Protocolo de Uso
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="specs" className="animate-in fade-in-50">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-4 max-w-5xl">
               {Object.entries(product.specs || {}).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center py-3 border-b border-border">
+                <div key={key} className="flex justify-between items-center py-4 border-b border-border">
                   <span className="text-muted-foreground font-black uppercase text-[10px] tracking-widest">{key}</span>
-                  <span className="font-bold">{String(value)}</span>
+                  <span className="font-bold text-sm">{String(value)}</span>
                 </div>
               ))}
               {currentVariant && (
-                <div className="flex justify-between items-center py-3 border-b border-primary bg-primary/5 px-2">
-                  <span className="text-primary font-black uppercase text-[10px] tracking-widest">Configuración Seleccionada</span>
-                  <span className="font-black text-primary">{currentVariant.name}</span>
+                <div className="flex justify-between items-center py-4 border-b-2 border-primary bg-primary/5 px-4 rounded-t-lg">
+                  <span className="text-primary font-black uppercase text-[10px] tracking-widest">Variante Seleccionada</span>
+                  <span className="font-black text-sm text-primary uppercase italic">{currentVariant.name}</span>
                 </div>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="benefits" className="animate-in fade-in-50">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(product.benefits || []).map((benefit, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 bg-card border border-border rounded-lg shadow-sm">
-                  <div className="mt-1 bg-primary/20 p-1.5 rounded-full">
+                <div key={i} className="flex items-start gap-4 p-5 bg-white border border-border rounded-xl shadow-sm border-t-4 border-t-primary/20">
+                  <div className="mt-1 bg-primary/10 p-2 rounded-full">
                     <CheckCircle2 size={18} className="text-primary" />
                   </div>
-                  <p className="font-bold text-sm leading-relaxed uppercase tracking-tight text-foreground/80">{benefit}</p>
+                  <p className="font-black text-[11px] leading-relaxed uppercase tracking-tight text-foreground/80 italic">{benefit}</p>
                 </div>
               ))}
             </div>
           </TabsContent>
 
           <TabsContent value="operation" className="animate-in fade-in-50">
-            <div className="max-w-3xl space-y-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Lightbulb size={24} className="text-primary" />
-                <h3 className="text-xl font-black uppercase tracking-tighter italic">Proceso de Operación Certificada</h3>
+            <div className="max-w-4xl space-y-10">
+              <div className="flex items-center gap-3 mb-6">
+                <Lightbulb size={28} className="text-primary" />
+                <h3 className="text-2xl font-black uppercase tracking-tighter italic">Secuencia de Operación Segura</h3>
               </div>
-              <div className="space-y-6 relative border-l-4 border-primary/20 pl-8 ml-4">
+              <div className="space-y-8 relative border-l-4 border-primary/20 pl-10 ml-5">
                 {(product.operationSteps || []).map((step, i) => (
                   <div key={i} className="relative">
-                    <div className="absolute -left-[42px] top-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center font-black text-xs text-primary-foreground border-4 border-background" />
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest">Paso {i + 1}</span>
-                      <p className="text-lg font-bold leading-relaxed italic">{step}</p>
+                    <div className="absolute -left-[54px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center font-black text-sm text-primary-foreground border-4 border-background shadow-lg" />
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Módulo {i + 1}</span>
+                      <p className="text-xl font-bold leading-tight italic uppercase tracking-tighter">{step}</p>
                     </div>
                   </div>
                 ))}

@@ -40,18 +40,18 @@ export function ProductCard({ product }: ProductCardProps) {
     <Card className="overflow-hidden border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-md group">
       {/* Área clickable de imagen y título */}
       <Link href={`/products/${product.slug}`} className="flex-grow">
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <div className="relative aspect-[4/3] overflow-hidden bg-white p-4">
           <Image 
             src={displayImage} 
             alt={product.name} 
             fill 
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 group-hover:scale-105 p-2"
             data-ai-hint="industrial product photo"
             unoptimized
           />
           <div className="absolute top-4 left-4 flex flex-wrap gap-1">
             {product.categoryNames?.slice(0, 1).map((cat, i) => (
-              <Badge key={i} className="font-bold" variant="secondary">
+              <Badge key={i} className="font-black uppercase text-[9px] tracking-widest shadow-sm" variant="secondary">
                 {cat}
               </Badge>
             ))}
@@ -59,18 +59,18 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         
         <CardContent className="p-6">
-          <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors uppercase italic tracking-tighter">
+          <h3 className="text-xl font-black mb-2 group-hover:text-primary transition-colors uppercase italic tracking-tighter leading-tight">
             {product.name}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-4 font-medium">
             {product.shortDescription}
           </p>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-2xl italic">
               ${product.price.toLocaleString()} 
-              <span className="text-xs text-muted-foreground font-normal not-italic">MXN</span>
+              <span className="text-xs text-muted-foreground font-normal not-italic tracking-widest">MXN</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase text-muted-foreground tracking-wider">
+            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase text-muted-foreground tracking-widest">
               <MapPin size={12} className="text-primary" />
               Recolección en Planta
             </div>
@@ -80,15 +80,15 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Botones de acción */}
       <CardFooter className="p-6 pt-0 flex flex-col gap-2">
-        <Button className="w-full group/btn h-11 font-bold uppercase tracking-tight" variant="outline" asChild>
+        <Button className="w-full group/btn h-11 font-bold uppercase tracking-widest text-[10px]" variant="outline" asChild>
           <Link href={`/products/${product.slug}`}>
-            Ver Detalles
-            <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+            Ver Especificaciones
+            <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
           </Link>
         </Button>
         <Button 
           onClick={handleAddToCart}
-          className="w-full h-11 font-black uppercase tracking-widest text-[11px] italic shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="w-full h-11 font-black uppercase tracking-widest text-[10px] italic shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
           Agregar al Carrito

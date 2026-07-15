@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Login Page
- * Blindaje v2.0 - force-dynamic para evitar errores de pre-renderizado en App Hosting
+ * Blindaje v2.1 - force-dynamic para evitar errores de pre-renderizado en App Hosting
  */
 
 import { useState, Suspense } from 'react';
@@ -151,7 +151,7 @@ function LoginForm() {
           {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
         </CardTitle>
         <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-          Tecnorampa S.A. de C.V. • v2.0
+          Tecnorampa S.A. de C.V. • v2.1
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">

@@ -1,6 +1,9 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
+/**
+ * Tecnorampa Pro-Store - Login Page
+ * Versión v1.7 con Suspense Boundary reforzado para Next.js 15
+ */
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { LogIn, UserPlus, ShieldCheck, Chrome, Loader2, ArrowLeft, Building2, AlertTriangle } from 'lucide-react';
+import { LogIn, UserPlus, Building2, Chrome, Loader2, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -25,15 +28,20 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-function LoginContent() {
+/**
+ * Componente interno que consume los parámetros de búsqueda.
+ * DEBE estar envuelto en Suspense.
+ */
+function LoginForm() {
   const auth = useAuth();
   const db = useFirestore();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
   
-  const initialMode = searchParams.get('mode') === 'signup' ? false : true;
-  const redirect = searchParams.get('redirect') || '/';
+  // Extraemos parámetros de forma segura
+  const initialMode = searchParams ? searchParams.get('mode') === 'signup' ? false : true : true;
+  const redirect = searchParams ? searchParams.get('redirect') || '/' : '/';
 
   const [isLogin, setIsLogin] = useState(initialMode);
   const [email, setEmail] = useState('');
@@ -85,16 +93,11 @@ function LoginContent() {
         router.push(redirect);
       }
     } catch (error: any) {
-      console.error("Auth Error:", error.code);
-      if (error.code === 'auth/operation-not-allowed') {
-        setErrorMessage("¡FALTA ACTIVAR EL PROVEEDOR! En tu consola de Firebase, haz clic en 'Agregar proveedor nuevo' y selecciona 'Correo electrónico/contraseña'.");
-      } else {
-        setErrorMessage(error.message || "Error al procesar la solicitud.");
-      }
+      setErrorMessage(error.message || "Error al procesar la solicitud.");
       toast({ 
         variant: "destructive", 
         title: "Error de Acceso", 
-        description: error.message || "Verifique sus credenciales e intente de nuevo." 
+        description: error.message || "Verifique sus credenciales." 
       });
     } finally {
       setLoading(false);
@@ -106,7 +109,6 @@ function LoginContent() {
     const provider = new GoogleAuthProvider();
     try {
       setLoading(true);
-      setErrorMessage(null);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -133,20 +135,15 @@ function LoginContent() {
 
       router.push(redirect);
     } catch (error: any) {
-      setErrorMessage("Error al iniciar con Google. Asegúrate de que el popup no esté bloqueado.");
-      toast({ variant: "destructive", title: "Error", description: "Error al iniciar con Google." });
+      toast({ variant: "destructive", title: "Error", description: "Falla en acceso con Google." });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[90vh] flex flex-col items-center justify-center bg-white industrial-grid p-6">
-      <Link href="/" className="mb-12 flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors uppercase text-xs font-black tracking-[0.25em]">
-        <ArrowLeft size={16} /> Volver a la Tienda
-      </Link>
-      
-      <Card className="w-full max-w-md border-border shadow-2xl bg-white/95 backdrop-blur-xl border-t-8 border-t-primary">
+    <div className="w-full max-w-md">
+      <Card className="border-border shadow-2xl bg-white/95 backdrop-blur-xl border-t-8 border-t-primary">
         <CardHeader className="space-y-2 pt-10">
           <div className="flex justify-center mb-8">
             <div className="p-5 bg-primary rounded-2xl shadow-xl shadow-primary/20 rotate-3">
@@ -157,19 +154,15 @@ function LoginContent() {
             {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
           </CardTitle>
           <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-            {isLogin 
-              ? 'Identifíquese para continuar su operación' 
-              : 'Únase a nuestra red logística certificada'}
+            Versión v1.7 • Identificación Industrial
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           {errorMessage && (
             <Alert variant="destructive" className="mb-6">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Configuración Requerida</AlertTitle>
-              <AlertDescription className="text-xs font-bold">
-                {errorMessage}
-              </AlertDescription>
+              <AlertTitle>Falla de Autenticación</AlertTitle>
+              <AlertDescription className="text-xs font-bold">{errorMessage}</AlertDescription>
             </Alert>
           )}
 
@@ -178,70 +171,27 @@ function LoginContent() {
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Nombre</Label>
-                    <Input 
-                      id="firstName" 
-                      placeholder="Juan" 
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required={!isLogin}
-                      className="h-12 border-border focus:border-primary"
-                    />
+                    <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Nombre</Label>
+                    <Input placeholder="Juan" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="h-12" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Apellido</Label>
-                    <Input 
-                      id="lastName" 
-                      placeholder="Pérez" 
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required={!isLogin}
-                      className="h-12 border-border focus:border-primary"
-                    />
+                    <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Apellido</Label>
+                    <Input placeholder="Pérez" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="h-12" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="company" className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Empresa</Label>
-                  <Input 
-                    id="company" 
-                    placeholder="Logística Industrial S.A." 
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    required={!isLogin}
-                    className="h-12 border-border focus:border-primary"
-                  />
+                  <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Empresa</Label>
+                  <Input placeholder="Logística Industrial S.A." value={company} onChange={(e) => setCompany(e.target.value)} required className="h-12" />
                 </div>
               </>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email" className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Correo Corporativo</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="ejemplo@empresa.com" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required 
-                className="h-12 border-border focus:border-primary"
-              />
+              <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Correo Corporativo</Label>
+              <Input type="email" placeholder="ejemplo@empresa.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12" />
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="password" title="Contraseña" className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Contraseña</Label>
-                {isLogin && (
-                  <Link href="/reset-password" size="sm" className="text-[10px] text-primary font-bold hover:underline">
-                    ¿Olvidó su contraseña?
-                  </Link>
-                )}
-              </div>
-              <Input 
-                id="password" 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required 
-                className="h-12 border-border focus:border-primary"
-              />
+              <Label className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Contraseña</Label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12" />
             </div>
             <Button type="submit" className="w-full font-black h-14 text-lg shadow-xl uppercase tracking-tighter italic" disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : (isLogin ? <LogIn className="mr-2" /> : <UserPlus className="mr-2" />)}
@@ -250,25 +200,19 @@ function LoginContent() {
           </form>
           
           <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <Separator />
-            </div>
+            <div className="absolute inset-0 flex items-center"><Separator /></div>
             <div className="relative flex justify-center text-[10px] uppercase font-black">
               <span className="bg-white px-4 text-muted-foreground tracking-[0.3em]">O continuar con</span>
             </div>
           </div>
           
           <Button variant="outline" className="w-full h-12 font-black border-border hover:bg-muted transition-all uppercase text-[10px] tracking-widest" onClick={handleGoogleLogin} disabled={loading}>
-            <Chrome className="mr-3 h-4 w-4 text-primary" />
-            CUENTA DE GOOGLE (Habilitada)
+            <Chrome className="mr-3 h-4 w-4 text-primary" /> GOOGLE AUTH
           </Button>
         </CardContent>
         <CardFooter className="flex flex-col gap-6 border-t border-border mt-6 p-8 bg-muted/10">
-          <button 
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-[10px] text-primary font-black hover:underline uppercase tracking-widest"
-          >
-            {isLogin ? '¿No tiene cuenta corporativa? Regístrese aquí' : '¿Ya es cliente Tecnorampa? Inicie sesión'}
+          <button onClick={() => setIsLogin(!isLogin)} className="text-[10px] text-primary font-black hover:underline uppercase tracking-widest">
+            {isLogin ? '¿No tiene cuenta corporativa? Regístrese aquí' : '¿Ya es cliente? Inicie sesión'}
           </button>
         </CardFooter>
       </Card>
@@ -276,14 +220,25 @@ function LoginContent() {
   );
 }
 
+/**
+ * Página Principal de Login.
+ * Este componente es el que Next.js detecta como ruta.
+ */
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-primary" size={40} />
-      </div>
-    }>
-      <LoginContent />
-    </Suspense>
+    <div className="min-h-[90vh] flex flex-col items-center justify-center bg-white industrial-grid p-6">
+      <Link href="/" className="mb-12 flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors uppercase text-xs font-black tracking-[0.25em]">
+        <ArrowLeft size={16} /> Volver a la Tienda
+      </Link>
+      
+      <Suspense fallback={
+        <div className="w-full max-w-md p-20 flex flex-col items-center justify-center bg-white border rounded-xl shadow-xl">
+          <Loader2 className="animate-spin text-primary mb-4" size={40} />
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cargando Módulo de Seguridad...</p>
+        </div>
+      }>
+        <LoginForm />
+      </Suspense>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -13,18 +12,19 @@ const firebaseConfig = {
 };
 
 /**
- * Validación estricta para evitar errores durante el build de Next.js
+ * Validación extrema de configuración.
+ * Previene que Firebase intente inicializarse con datos basura durante el build.
  */
 const isValidConfig = () => {
   const key = firebaseConfig.apiKey;
-  // Si la llave no existe, es 'undefined' o es demasiado corta, NO es válida
-  if (!key || key === 'undefined' || key.length < 20 || !key.startsWith('AIza')) {
+  if (!key || typeof key !== 'string' || key === 'undefined' || key.length < 20 || !key.startsWith('AIza')) {
     return false;
   }
   return true;
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
+  // Durante la compilación (build), si no hay llaves reales, retornamos null silenciosamente.
   if (!isValidConfig()) {
     return null;
   }

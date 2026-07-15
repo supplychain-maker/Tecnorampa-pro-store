@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Login Page
- * Blindaje v2.3 - Next.js 15 Strict Suspense Boundary
+ * Blindaje v2.4 - Aislamiento estricto de Suspense para Next.js 15
  */
 
 import { useState, Suspense } from 'react';
@@ -150,7 +150,7 @@ function LoginFormContent() {
           {isLogin ? 'Acceso Cliente' : 'Registro Corporativo'}
         </CardTitle>
         <CardDescription className="text-center font-bold text-muted-foreground uppercase text-[10px] tracking-widest pt-2">
-          Tecnorampa S.A. de C.V. • v2.3
+          Tecnorampa S.A. de C.V. • v2.4
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">

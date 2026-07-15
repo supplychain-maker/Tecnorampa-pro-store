@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { headers } from 'next/headers';
@@ -15,15 +16,11 @@ export async function POST(req: Request) {
 
     if (!process.env.STRIPE_SECRET_KEY) {
       console.error('CRITICAL: STRIPE_SECRET_KEY is missing in environment variables.');
-      return NextResponse.json({ error: 'Configuración incompleta: Falta la llave secreta de Stripe en el servidor.' }, { status: 500 });
+      return NextResponse.json({ error: 'Configuración incompleta: Falta la llave secreta de Stripe.' }, { status: 500 });
     }
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'El carrito está vacío.' }, { status: 400 });
-    }
-
-    if (!orderId) {
-      return NextResponse.json({ error: 'Identificador de orden ausente.' }, { status: 400 });
     }
 
     // El cálculo del IVA y centavos se realiza aquí para máxima precisión
@@ -31,16 +28,17 @@ export async function POST(req: Request) {
       payment_method_types: ['card'],
       customer_email: userEmail,
       line_items: items.map((item: any) => {
-        // Limpiamos la URL de la imagen para Stripe
+        // Limpiamos la URL de la imagen para Stripe.
+        // Stripe requiere URLs públicas. Si no es segura, no la enviamos para evitar que falle el checkout.
         const cleanImage = item.image ? getDirectImageUrl(item.image) : '';
+        const stripeImages = (cleanImage && cleanImage.startsWith('https')) ? [cleanImage] : [];
         
         return {
           price_data: {
             currency: 'mxn',
             product_data: {
               name: item.name,
-              // Stripe requiere URLs públicas y seguras. Filtramos solo URLs válidas.
-              images: cleanImage && cleanImage.startsWith('http') ? [cleanImage] : [],
+              images: stripeImages,
               description: item.variant ? `Configuración: ${item.variant} (IVA Incluido)` : 'Equipo Industrial Tecnorampa (IVA Incluido)',
             },
             // Stripe requiere el monto en centavos (monto * 1.16 IVA * 100)
@@ -61,9 +59,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (err: any) {
     console.error('Error detallado de Stripe:', err);
-    // Retornamos el mensaje de error real de Stripe para facilitar el diagnóstico al usuario
     return NextResponse.json({ 
-      error: err.message || 'No se pudo iniciar el proceso de pago. Verifique sus llaves de Stripe.' 
+      error: err.message || 'No se pudo iniciar el proceso de pago.' 
     }, { status: 500 });
   }
 }

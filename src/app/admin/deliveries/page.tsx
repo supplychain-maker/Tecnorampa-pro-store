@@ -36,7 +36,9 @@ import {
   CreditCard,
   Zap,
   Copy,
-  Check
+  Check,
+  ShieldCheck,
+  AlertTriangle
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -59,7 +61,6 @@ export default function AdminDeliveriesPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    // Verificamos el estado de la configuración de Stripe en el servidor
     fetch('/api/stripe/config-status')
       .then(res => res.json())
       .then(data => setStripeStatus(data))
@@ -194,40 +195,51 @@ export default function AdminDeliveriesPage() {
           
           <div className="flex flex-col gap-4">
             {stripeStatus && (
-              <div className="bg-white border border-border p-4 rounded-xl shadow-lg flex flex-col gap-3 min-w-[320px]">
-                <div className="flex items-center justify-between border-b pb-2 mb-1">
+              <div className="bg-white border-2 border-primary/20 p-5 rounded-xl shadow-xl flex flex-col gap-3 min-w-[350px]">
+                <div className="flex items-center justify-between border-b pb-3 mb-1">
                   <div className="flex items-center gap-2">
-                    <CreditCard className="text-primary" size={18} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Diagnóstico Stripe</span>
+                    <CreditCard className="text-primary" size={20} />
+                    <span className="text-[11px] font-black uppercase tracking-widest text-foreground">Estado de Pagos</span>
                   </div>
                   {stripeStatus.mode === 'live' ? (
-                    <Badge className="bg-green-600 text-white text-[9px] font-black uppercase italic">LIVE MODE</Badge>
+                    <Badge className="bg-green-600 text-white text-[10px] font-black uppercase italic animate-pulse">
+                      <ShieldCheck size={10} className="mr-1" /> MODO REAL (LIVE)
+                    </Badge>
                   ) : stripeStatus.mode === 'test' ? (
-                    <Badge variant="secondary" className="text-[9px] font-black uppercase italic">TEST MODE</Badge>
+                    <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 text-[10px] font-black uppercase italic">
+                      <AlertTriangle size={10} className="mr-1" /> MODO PRUEBA (TEST)
+                    </Badge>
                   ) : (
-                    <Badge variant="destructive" className="text-[9px] font-black uppercase italic">NO CONFIG</Badge>
+                    <Badge variant="destructive" className="text-[10px] font-black uppercase italic">NO CONFIGURADO</Badge>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase">Estado Webhook:</span>
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave:</span>
+                    <code className="text-[10px] font-black font-mono bg-muted px-2 py-0.5 rounded text-primary">
+                      {stripeStatus.keyPrefix}...
+                    </code>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Sincronización Webhook:</span>
                     {stripeStatus.webhookConfigured ? (
-                      <Badge variant="outline" className="text-[9px] font-black text-green-600 border-green-600/20 gap-1 uppercase">
-                        <Zap size={8} /> Webhook OK
+                      <Badge variant="outline" className="text-[9px] font-black text-green-600 border-green-600/30 gap-1 uppercase bg-green-50">
+                        <Zap size={8} /> CONECTADO
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[9px] font-black text-destructive border-destructive/20 uppercase">REQUERIDO</Badge>
+                      <Badge variant="outline" className="text-[9px] font-black text-destructive border-destructive/30 bg-destructive/5 uppercase">DESCONECTADO</Badge>
                     )}
                   </div>
                   
                   {!stripeStatus.webhookConfigured && (
-                    <div className="bg-muted p-2 rounded-lg space-y-1">
-                      <label className="text-[8px] font-black text-muted-foreground uppercase">URL para copiar en Stripe:</label>
-                      <div className="flex items-center gap-2 bg-white border border-border p-1 rounded">
-                        <code className="text-[9px] font-mono truncate flex-grow px-1">{generatedWebhookUrl}</code>
-                        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={copyToClipboard}>
-                          {copied ? <Check className="text-green-600" size={12} /> : <Copy size={12} />}
+                    <div className="bg-muted p-3 rounded-lg space-y-2 border border-border">
+                      <label className="text-[8px] font-black text-muted-foreground uppercase block">URL obligatoria para Stripe Webhook:</label>
+                      <div className="flex items-center gap-2 bg-white border border-border p-1.5 rounded">
+                        <code className="text-[9px] font-mono truncate flex-grow px-1 text-primary">{generatedWebhookUrl}</code>
+                        <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-primary/10" onClick={copyToClipboard}>
+                          {copied ? <Check className="text-green-600" size={14} /> : <Copy size={14} />}
                         </Button>
                       </div>
                     </div>
@@ -239,7 +251,7 @@ export default function AdminDeliveriesPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               <Input 
                 placeholder="Buscar por ID o Cliente..." 
-                className="pl-10 h-12 bg-white"
+                className="pl-10 h-12 bg-white border-2 border-border focus:border-primary"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

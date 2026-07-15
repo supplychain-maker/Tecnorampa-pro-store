@@ -246,8 +246,8 @@ export default function AdminDeliveriesPage() {
                   </div>
                   
                   {!isProduction && (
-                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-center gap-2">
-                      <Info size={12} className="text-blue-700 shrink-0" />
+                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-start gap-2">
+                      <Info size={14} className="text-blue-700 shrink-0 mt-0.5" />
                       <p className="text-[8px] font-bold text-blue-700 uppercase leading-relaxed">
                         Nota: El editor no lee los secretos de Firebase Console. Para probar "Live" aquí, debes pedirme que actualice el archivo .env con tus llaves.
                       </p>

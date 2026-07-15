@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useCart } from '@/context/CartContext';
@@ -9,19 +8,19 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ShieldCheck, CreditCard, Truck, CheckCircle, ArrowLeft, LogIn, Lock, ClipboardCheck, MapPin, Loader2 } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
+import { useSearchParams } from 'next/navigation';
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const { items, total, itemCount, clearCart } = useCart();
   const { user, loading: authLoading } = useUser();
   const db = useFirestore();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   
   const [step, setStep] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -33,19 +32,16 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (initialized.current) return;
 
-    const params = new URLSearchParams(window.location.search);
-    const success = params.get('success');
-    const orderId = params.get('order_id');
+    const success = searchParams.get('success');
+    const orderId = searchParams.get('order_id');
 
     if (success && orderId && db) {
       initialized.current = true;
       setIsSuccess(true);
       setOrderNumber(orderId);
       
-      // Limpiamos el carrito local tras el éxito
       clearCart();
 
-      // Marcamos como pagado localmente por si el webhook aún no llega
       const orderRef = doc(db, 'orders', orderId);
       const updateData = { 
         status: 'paid',
@@ -53,12 +49,9 @@ export default function CheckoutPage() {
         updatedAt: serverTimestamp() 
       };
 
-      updateDoc(orderRef, updateData)
-        .catch(async () => {
-          // Si falla aquí no es crítico porque el Webhook lo intentará también
-        });
+      updateDoc(orderRef, updateData).catch(() => {});
     }
-  }, [clearCart, db]);
+  }, [clearCart, db, searchParams]);
 
   if (authLoading) {
     return (
@@ -179,7 +172,6 @@ export default function CheckoutPage() {
     if (!db || !user) return;
     setIsProcessing(true);
 
-    // Creamos la orden como 'pending' (intento de pago)
     const orderData = {
       userId: user.uid,
       customerEmail: user.email,
@@ -216,7 +208,6 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Error al crear sesión de Stripe');
       }
     } catch (error: any) {
-      console.error('Checkout error:', error);
       toast({
         variant: 'destructive',
         title: 'Error de Pago',
@@ -394,5 +385,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={40} />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }

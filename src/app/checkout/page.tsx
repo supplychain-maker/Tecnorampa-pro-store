@@ -2,7 +2,7 @@
 
 /**
  * Tecnorampa Pro-Store - Checkout Page
- * Blindaje v2.2 - force-dynamic y Aislamiento de Suspense para Next.js 15
+ * Blindaje v2.3 - Next.js 15 Strict Suspense Boundary
  */
 
 import { useCart } from '@/context/CartContext';

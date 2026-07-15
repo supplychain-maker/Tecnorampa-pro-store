@@ -2,6 +2,12 @@ import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
+/**
+ * CONFIGURACIÓN DE FIREBASE BLINDADA v2.3
+ * Evita que Firebase se inicialice durante la compilación de Next.js (build)
+ * si no hay llaves válidas, previniendo errores críticos de App Hosting.
+ */
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -11,25 +17,23 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-/**
- * Verificación extrema de entorno de construcción.
- * Evita que Firebase arroje errores de 'invalid-api-key' durante el build estático.
- */
-const isBuildEnvironment = () => {
+// Verificación ultra-estricta de entorno
+const isSafeToInit = () => {
   if (typeof window === 'undefined') {
-    // Si estamos en el servidor, verificamos si las llaves son marcadores de posición
     const key = firebaseConfig.apiKey;
-    return !key || key === 'undefined' || key.length < 10 || key.includes('YOUR_');
+    // Si estamos en el servidor (build), verificamos que la llave no sea un placeholder
+    return !!key && key.length > 20 && !key.includes('YOUR_') && key !== 'undefined';
   }
-  return false;
+  return true; // En el navegador siempre intentamos
 };
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  if (isBuildEnvironment()) return null;
+  if (!isSafeToInit()) return null;
   
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } catch (error) {
+    console.error("Firebase init error blocked.");
     return null;
   }
 };

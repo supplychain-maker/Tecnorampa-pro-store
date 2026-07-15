@@ -38,7 +38,9 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  AlertTriangle
+  AlertTriangle,
+  Globe,
+  Monitor
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -66,6 +68,8 @@ export default function AdminDeliveriesPage() {
       .then(data => setStripeStatus(data))
       .catch(() => setStripeStatus({ error: true }));
   }, []);
+
+  const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('cloudworkstations.dev');
 
   const generatedWebhookUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
@@ -205,20 +209,28 @@ export default function AdminDeliveriesPage() {
                     <Badge className="bg-green-600 text-white text-[10px] font-black uppercase italic animate-pulse">
                       <ShieldCheck size={10} className="mr-1" /> MODO REAL (LIVE)
                     </Badge>
-                  ) : stripeStatus.mode === 'test' ? (
+                  ) : (
                     <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 text-[10px] font-black uppercase italic">
                       <AlertTriangle size={10} className="mr-1" /> MODO PRUEBA (TEST)
                     </Badge>
-                  ) : (
-                    <Badge variant="destructive" className="text-[10px] font-black uppercase italic">NO CONFIGURADO</Badge>
                   )}
                 </div>
 
                 <div className="space-y-3">
+                  <div className="flex items-center justify-between bg-muted/50 p-2 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      {isProduction ? <Globe className="text-green-600" size={14} /> : <Monitor className="text-blue-600" size={14} />}
+                      <span className="text-[9px] font-black uppercase">{isProduction ? 'Entorno: Producción' : 'Entorno: Editor (Preview)'}</span>
+                    </div>
+                    {!isProduction && stripeStatus.mode === 'error' && (
+                      <span className="text-[8px] font-bold text-destructive uppercase italic animate-bounce">Configura .env</span>
+                    )}
+                  </div>
+
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave Secreta:</span>
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave:</span>
                     <code className="text-[10px] font-black font-mono bg-muted px-2 py-0.5 rounded text-primary">
-                      {stripeStatus.keyPrefix}...
+                      {stripeStatus.keyPrefix || 'MISSING'}...
                     </code>
                   </div>
 
@@ -233,8 +245,16 @@ export default function AdminDeliveriesPage() {
                     )}
                   </div>
                   
+                  {!isProduction && (
+                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg">
+                      <p className="text-[8px] font-bold text-blue-700 uppercase leading-relaxed">
+                        <Info size={8} className="inline mr-1" /> Nota: El editor no lee los secretos de Firebase Console. Para probar "Live" aquí, debes pedirme que actualice el archivo .env con tus llaves.
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="bg-muted p-3 rounded-lg space-y-2 border border-border">
-                    <label className="text-[8px] font-black text-muted-foreground uppercase block">URL para el Webhook de Stripe:</label>
+                    <label className="text-[8px] font-black text-muted-foreground uppercase block">URL Webhook para Stripe:</label>
                     <div className="flex items-center gap-2 bg-white border border-border p-1.5 rounded">
                       <code className="text-[9px] font-mono truncate flex-grow px-1 text-primary">{generatedWebhookUrl}</code>
                       <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-primary/10" onClick={copyToClipboard}>
@@ -242,12 +262,6 @@ export default function AdminDeliveriesPage() {
                       </Button>
                     </div>
                   </div>
-                  
-                  {stripeStatus.mode === 'test' && (
-                    <p className="text-[8px] font-bold text-destructive uppercase italic leading-tight">
-                      * ATENCIÓN: Tu llave empieza con "sk_test". Debes usar la clave "sk_live" de tu dashboard de Stripe para recibir pagos reales.
-                    </p>
-                  )}
                 </div>
               </div>
             )}
@@ -255,7 +269,7 @@ export default function AdminDeliveriesPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               <Input 
                 placeholder="Buscar por ID o Cliente..." 
-                className="pl-10 h-12 bg-white border-2 border-border focus:border-primary"
+                className="pl-10 h-12 bg-white border-2 border-border focus:border-primary font-bold shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -390,7 +404,7 @@ export default function AdminDeliveriesPage() {
                         <TableCell>
                           <div className="relative w-16 h-10 bg-muted rounded border border-border overflow-hidden">
                             {order.deliveryPhoto ? (
-                              <Image src={order.deliveryPhoto} alt="Evidencia" fill className="object-cover" />
+                              <Image src={order.deliveryPhoto} alt="Evidencia" fill className="object-contain bg-white" />
                             ) : (
                               <div className="flex items-center justify-center h-full"><ImageIcon size={14} className="opacity-20" /></div>
                             )}
@@ -438,7 +452,7 @@ export default function AdminDeliveriesPage() {
             <div className="relative aspect-video bg-muted border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center overflow-hidden">
               {deliveryPhoto ? (
                 <>
-                  <Image src={deliveryPhoto} alt="Evidencia" fill className="object-cover" />
+                  <Image src={deliveryPhoto} alt="Evidencia" fill className="object-contain bg-white" />
                   <Button variant="destructive" size="sm" className="absolute bottom-2 right-2 text-[10px] h-8 font-black uppercase" onClick={() => setDeliveryPhoto(null)}>ELIMINAR</Button>
                 </>
               ) : (

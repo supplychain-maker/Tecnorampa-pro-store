@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -222,9 +223,6 @@ export default function AdminDeliveriesPage() {
                       {isProduction ? <Globe className="text-green-600" size={14} /> : <Monitor className="text-blue-600" size={14} />}
                       <span className="text-[9px] font-black uppercase">{isProduction ? 'Entorno: Producción' : 'Entorno: Editor (Preview)'}</span>
                     </div>
-                    {!isProduction && stripeStatus.mode === 'error' && (
-                      <span className="text-[8px] font-bold text-destructive uppercase italic animate-bounce">Configura .env</span>
-                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -249,7 +247,7 @@ export default function AdminDeliveriesPage() {
                     <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-start gap-2">
                       <Info size={14} className="text-blue-700 shrink-0 mt-0.5" />
                       <p className="text-[8px] font-bold text-blue-700 uppercase leading-relaxed">
-                        Nota: El editor no lee los secretos de Firebase Console. Para probar "Live" aquí, debes pedirme que actualice el archivo .env con tus llaves.
+                        Nota: Estás usando tus llaves reales en el entorno de desarrollo. Ten cuidado con los cargos reales.
                       </p>
                     </div>
                   )}

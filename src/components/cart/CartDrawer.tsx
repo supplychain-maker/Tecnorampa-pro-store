@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { getDirectImageUrl } from '@/lib/utils';
 
 export function CartDrawer() {
   const { items, total, updateQuantity, removeItem, itemCount } = useCart();
@@ -48,41 +49,41 @@ export function CartDrawer() {
         <div className="space-y-6">
           {items.map((item) => (
             <div key={`${item.id}-${item.variant}`} className="flex gap-4">
-              <div className="relative w-20 h-20 bg-muted rounded overflow-hidden flex-shrink-0">
+              <div className="relative w-20 h-20 bg-white border border-border rounded overflow-hidden flex-shrink-0 p-1">
                 <Image 
-                  src={item.image} 
+                  src={getDirectImageUrl(item.image)} 
                   alt={item.name} 
                   fill 
-                  className="object-cover" 
-                  data-ai-hint="industrial spare part"
+                  className="object-contain" 
+                  unoptimized
                 />
               </div>
               <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-bold text-sm truncate pr-2">{item.name}</h4>
+                  <h4 className="font-black uppercase text-[11px] italic truncate pr-2 tracking-tighter">{item.name}</h4>
                   <button onClick={() => removeItem(item.id)} className="text-muted-foreground hover:text-destructive transition-colors">
                     <X size={16} />
                   </button>
                 </div>
-                {item.variant && <p className="text-xs text-muted-foreground mb-2">Opción: {item.variant}</p>}
+                {item.variant && <p className="text-[9px] font-bold text-muted-foreground mb-2 uppercase tracking-widest">Config: {item.variant}</p>}
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 border border-border rounded-md px-2 py-1">
+                  <div className="flex items-center gap-2 border border-border rounded-md px-2 py-1 bg-muted/50">
                     <button 
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="text-muted-foreground hover:text-foreground p-1 transition-colors"
+                      className="text-muted-foreground hover:text-foreground p-0.5 transition-colors"
                     >
-                      <Minus size={14} />
+                      <Minus size={12} />
                     </button>
-                    <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
+                    <span className="text-xs font-black w-4 text-center">{item.quantity}</span>
                     <button 
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="text-muted-foreground hover:text-foreground p-1 transition-colors"
+                      className="text-muted-foreground hover:text-foreground p-0.5 transition-colors"
                     >
-                      <Plus size={14} />
+                      <Plus size={12} />
                     </button>
                   </div>
-                  <span className="text-sm font-bold text-primary">
-                    ${(item.price * item.quantity).toLocaleString()} MXN
+                  <span className="text-sm font-black text-primary italic">
+                    ${(item.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -94,37 +95,33 @@ export function CartDrawer() {
       <div className="p-6 border-t border-border space-y-4 bg-muted/30">
         <div className="bg-primary/10 p-3 rounded-lg border border-primary/20 flex items-start gap-2 mb-2">
           <MapPin size={16} className="text-primary shrink-0 mt-0.5" />
-          <p className="text-[10px] leading-tight font-black uppercase text-foreground/70 tracking-tight">
-            Nota: Todos los equipos se entregan para recolección en nuestras instalaciones de Pedro Escobedo, Querétaro.
+          <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
+            Nota: Recolección en Planta Querétaro (LAB).
           </p>
         </div>
         
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground font-medium">Subtotal</span>
-            <span className="font-bold">${total.toLocaleString()} MXN</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground font-medium">Envío / Flete</span>
-            <span className="text-primary font-black uppercase text-[10px] tracking-wider">Por cuenta del cliente</span>
+          <div className="flex justify-between text-xs font-bold">
+            <span className="text-muted-foreground uppercase tracking-widest">Subtotal</span>
+            <span className="font-black">${total.toLocaleString()} MXN</span>
           </div>
           <Separator className="my-2" />
-          <div className="flex justify-between text-lg font-bold">
-            <span>Total Estimado</span>
-            <span className="text-primary">${total.toLocaleString()} MXN</span>
+          <div className="flex justify-between text-xl font-black italic text-primary">
+            <span className="uppercase tracking-tighter">Total</span>
+            <span>${total.toLocaleString()} MXN</span>
           </div>
         </div>
         
         <Link href="/checkout" className="block w-full">
           <SheetClose asChild>
-            <Button className="w-full h-12 text-md font-bold group">
-              Finalizar Compra
-              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+            <Button className="w-full h-14 text-md font-black uppercase italic tracking-widest shadow-xl group">
+              PROCESAR PAGO SEGURO
+              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </SheetClose>
         </Link>
-        <p className="text-[10px] text-center text-muted-foreground font-medium uppercase tracking-widest">
-          Precios incluyen IVA • Facturación disponible
+        <p className="text-[9px] text-center text-muted-foreground font-black uppercase tracking-[0.2em]">
+          PRECIOS INCLUYEN IVA
         </p>
       </div>
     </div>

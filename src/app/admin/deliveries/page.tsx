@@ -78,10 +78,12 @@ export default function AdminDeliveriesPage() {
   }, []);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedWebhookUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast({ title: "URL Copiada", description: "Pégala en el panel de Webhooks de Stripe." });
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard.writeText(generatedWebhookUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast({ title: "URL Copiada", description: "Pégala en el panel de Webhooks de Stripe." });
+    }
   };
 
   const userDocRef = useMemo(() => {

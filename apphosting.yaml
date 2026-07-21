@@ -1,5 +1,5 @@
 
-# Configuración de App Hosting para Tecnorampa
+# Configuración de App Hosting para Tecnorampa Pro-Store
 runConfig:
   maxInstances: 2
   minInstances: 0
@@ -12,3 +12,7 @@ env:
     secret: STRIPE_SECRET_KEY
   - variable: STRIPE_WEBHOOK_SECRET
     secret: STRIPE_WEBHOOK_SECRET
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: "placeholder" # Se inyecta automáticamente desde el entorno
+  - variable: GOOGLE_GENAI_API_KEY
+    secret: GOOGLE_GENAI_API_KEY

@@ -1,5 +1,4 @@
-
-"use client"
+'use client';
 
 import { use, useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
@@ -194,7 +193,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <div className="bg-primary/5 p-4 rounded-xl border-l-4 border-primary flex items-center gap-3">
               <MessageSquareText className="text-primary shrink-0" size={18} />
               <p className="text-[11px] font-black uppercase tracking-tight text-foreground/80 italic">
-                Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+                Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
               </p>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useCart } from '@/context/CartContext';
@@ -104,7 +103,7 @@ export function CartDrawer() {
           <div className="bg-foreground/5 p-2 rounded-lg border border-foreground/10 flex items-start gap-2">
             <MessageSquareText size={14} className="text-primary shrink-0 mt-0.5" />
             <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
-              Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+              Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
             </p>
           </div>
         </div>

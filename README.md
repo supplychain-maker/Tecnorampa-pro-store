@@ -33,8 +33,8 @@ Si el sistema llegara a mostrar errores de "Secret missing", verifica en la **Co
 - **Control de Entregas**: En `/admin/deliveries` verás las ventas pagadas y registrarás la foto de evidencia.
 - **Asistente IA**: Ubicado en `/assistant` para consultoría técnica automatizada.
 
-## 📞 Soporte de Facturación
-Leyenda oficial en el sistema: *Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410*.
+## 📞 Soporte de Facturación y Logística
+Leyenda oficial en el sistema: *Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410*.
 
 ---
 **Certificación:** Sistema configurado para Modo Real (Live) con Stripe y Gemini 1.5 Flash.

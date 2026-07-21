@@ -1,4 +1,3 @@
-
 'use client';
 
 /**
@@ -147,7 +146,7 @@ function CheckoutContent() {
           <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 flex items-center justify-center gap-3 max-w-lg mx-auto">
             <MessageSquareText className="text-primary shrink-0" size={20} />
             <p className="text-[11px] font-black uppercase tracking-tight text-foreground/80 italic">
-              Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+              Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
             </p>
           </div>
         </div>
@@ -397,7 +396,7 @@ function CheckoutContent() {
                 <div className="bg-primary/5 p-3 rounded-lg border border-primary/20 flex items-start gap-2 mt-4">
                   <MessageSquareText className="text-primary shrink-0 mt-0.5" size={14} />
                   <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
-                    Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+                    Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
                   </p>
                 </div>
               </CardContent>

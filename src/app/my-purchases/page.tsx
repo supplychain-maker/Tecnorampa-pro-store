@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useMemo } from 'react';
@@ -156,7 +155,7 @@ export default function MyPurchasesPage() {
                   <div className="flex items-center gap-2">
                     <MessageSquareText size={14} className="text-primary print:text-black" />
                     <p className="text-[10px] font-black uppercase tracking-tight text-foreground/80 italic print:text-black">
-                      Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+                      Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
                     </p>
                   </div>
                   <p className="text-[8px] text-muted-foreground font-medium italic print:text-black">

@@ -2,8 +2,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Función robusta para verificar si el usuario tiene rol de administrador
     function isAdmin() {
       return request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
@@ -22,13 +24,22 @@ service cloud.firestore {
     }
 
     match /orders/{orderId} {
+      // Los usuarios pueden crear sus propios pedidos
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      // Los usuarios pueden leer sus propios pedidos y los admins todos
       allow read: if request.auth != null && (
         request.auth.uid == resource.data.userId || isAdmin()
       );
+      
+      // Los admins pueden actualizar cualquier pedido (para registrar entregas)
+      // Los usuarios solo pueden actualizar si son dueños (por si cancelan o algo similar)
       allow update: if request.auth != null && (
-        request.auth.uid == resource.data.userId || isAdmin()
+        isAdmin() || request.auth.uid == resource.data.userId
       );
+      
+      // Borrado restringido a admins
+      allow delete: if isAdmin();
     }
   }
 }

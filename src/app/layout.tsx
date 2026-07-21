@@ -12,6 +12,11 @@ import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
 export const metadata: Metadata = {
   title: 'Tecnorampa Pro-Store | Refacciones Industriales',
   description: 'Tienda oficial de refacciones industriales Tecnorampa. Lámparas de andén, semáforos y soluciones logísticas.',
+  icons: {
+    icon: 'https://lh3.googleusercontent.com/d/1l90yLT-O5OAsQpnPG1pOMXkud-ZoNERd',
+    shortcut: 'https://lh3.googleusercontent.com/d/1l90yLT-O5OAsQpnPG1pOMXkud-ZoNERd',
+    apple: 'https://lh3.googleusercontent.com/d/1l90yLT-O5OAsQpnPG1pOMXkud-ZoNERd',
+  },
 };
 
 export default function RootLayout({

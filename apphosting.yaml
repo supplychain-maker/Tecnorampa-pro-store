@@ -1,7 +1,3 @@
-
-# Configuración de App Hosting para Tecnorampa Pro-Store
-# Solo definimos los Secretos críticos que se configuran en la Consola de Firebase.
-
 runConfig:
   maxInstances: 2
   minInstances: 0

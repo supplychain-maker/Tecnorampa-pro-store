@@ -1,31 +1,52 @@
 
-# Tecnorampa Pro-Store 🚀
+# 🏗️ Tecnorampa Pro-Store: Manual de Operación
 
-Sistema industrial de refacciones con inteligencia artificial y pagos seguros.
+Este repositorio contiene el sistema oficial de venta de refacciones industriales para Tecnorampa S.A. de C.V.
 
-## Guía de Despliegue Rápido (Gratis)
+## 🏁 Verificación de GitHub
 
-1. **GitHub**: Crea un repositorio vacío en GitHub y sube tu código:
+Para saber si tu código está ligado a GitHub y si está al día, ejecuta estos comandos en la terminal:
+
+1. **¿Tengo un repositorio conectado?**
    ```bash
-   git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
-   git add .
-   git commit -m "Deploy: Version oficial"
-   git push -u origin main
+   git remote -v
    ```
+   *Si te aparece una URL de github.com, ¡ya tienes el repositorio ligado!*
 
-2. **Consola de Firebase**:
-   - Ve a [Firebase Console](https://console.firebase.google.com/).
-   - Entra en tu proyecto y busca **App Hosting** en el menú lateral.
-   - Haz clic en **"Comenzar"** y conecta tu repositorio de GitHub.
+2. **¿Qué fue lo último que subí?**
+   ```bash
+   git log -n 1
+   ```
+   *Esto te mostrará el mensaje del último "commit". Si dice "Final: Produccion oficial...", estás al día.*
 
-3. **Configuración de Secretos**:
-   Durante el flujo de creación, asegúrate de añadir estos "Secretos":
-   - `STRIPE_SECRET_KEY`: Tu llave `sk_live_...`
-   - `STRIPE_WEBHOOK_SECRET`: Tu secreto `whsec_...`
-   - `GOOGLE_GENAI_API_KEY`: Tu llave de Gemini para el asistente.
+3. **¿Hay cambios pendientes por subir?**
+   ```bash
+   git status
+   ```
+   *Si ves archivos en rojo o un mensaje que dice "Your branch is ahead of origin/main", significa que tienes cambios aquí que aún no están en GitHub.*
 
-4. **Dominio**:
-   Firebase te asignará una URL automática como `https://tecnorampa-xxx.web.app`. ¡Esa es tu página real!
+## 🚀 Despliegue a Producción (Gratis)
+
+Si ya verificaste que tienes cambios pendientes, ejecuta la secuencia final:
+```bash
+git add .
+git commit -m "Final: Sincronización completa de tienda industrial"
+git push
+```
+
+### Pasos en Firebase Console:
+1. Ve a [Firebase App Hosting](https://console.firebase.google.com/).
+2. Conecta tu cuenta de GitHub y elige este repositorio.
+3. Configura las variables de entorno (Secretos):
+   - `STRIPE_SECRET_KEY`: Tu clave `sk_live_...`
+   - `STRIPE_WEBHOOK_SECRET`: Tu clave `whsec_...`
+   - `GOOGLE_GENAI_API_KEY`: Tu llave de Gemini.
+
+## 🛠️ Soporte Técnico
+El sistema cuenta con:
+- **Modo Real (Live)**: Activado mediante variables de entorno.
+- **Asistente IA**: Recomendaciones técnicas basadas en Gemini.
+- **Gestión de Entregas**: Registro de evidencia fotográfica para administradores.
 
 ---
 Desarrollado para Tecnorampa S.A. de C.V.

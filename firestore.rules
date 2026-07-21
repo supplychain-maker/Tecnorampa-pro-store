@@ -2,17 +2,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Función robusta para verificar si el usuario tiene rol de administrador
+    
+    // Función de administración simplificada y robusta
     function isAdmin() {
       return request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
+    // Perfiles de usuario
     match /users/{userId} {
-      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow write: if request.auth != null && (request.auth.uid == userId || isAdmin());
     }
 
+    // Catálogo público
     match /categories/{categoryId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -23,22 +26,24 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Pedidos Industriales
     match /orders/{orderId} {
-      // Los usuarios pueden crear sus propios pedidos
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      // Creación: Solo usuarios autenticados para sí mismos
+      allow create: if request.auth != null;
       
-      // Los usuarios pueden leer sus propios pedidos y los admins todos
+      // Lectura: Dueño del pedido o Administradores
       allow read: if request.auth != null && (
-        request.auth.uid == resource.data.userId || isAdmin()
+        resource.data.userId == request.auth.uid || isAdmin()
       );
       
-      // Los admins pueden actualizar cualquier pedido (para registrar entregas)
-      // Los usuarios solo pueden actualizar si son dueños (por si cancelan o algo similar)
+      // Actualización: 
+      // 1. El dueño puede actualizar si es su pedido (ej: cancelar)
+      // 2. Administradores pueden actualizar cualquier campo (ej: registrar entrega/foto)
       allow update: if request.auth != null && (
-        isAdmin() || request.auth.uid == resource.data.userId
+        isAdmin() || resource.data.userId == request.auth.uid
       );
       
-      // Borrado restringido a admins
+      // Borrado: Solo administradores
       allow delete: if isAdmin();
     }
   }

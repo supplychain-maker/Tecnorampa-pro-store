@@ -132,6 +132,14 @@ export default function AdminDeliveriesPage() {
   const handlePhotoCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 800000) {
+        toast({ 
+          variant: "destructive", 
+          title: "Imagen muy pesada", 
+          description: "Por favor usa una foto de menos de 800KB para el registro." 
+        });
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setDeliveryPhoto(reader.result as string);
@@ -144,28 +152,31 @@ export default function AdminDeliveriesPage() {
     if (!db || !selectedOrder || !deliveryPhoto) return;
     setIsDelivering(true);
 
+    // Aseguramos que la referencia sea al documento correcto
     const orderRef = doc(db, 'orders', selectedOrder.id);
+    
     const updateData = {
       status: 'delivered',
-      deliveryPhoto,
+      deliveryPhoto: deliveryPhoto,
       deliveredAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
 
-    updateDoc(orderRef, updateData)
-      .then(() => {
-        toast({ title: "Entrega Registrada", description: "El pedido ha sido marcado como entregado con éxito." });
-        setSelectedOrder(null);
-        setDeliveryPhoto(null);
-      })
-      .catch(async () => {
-        errorEmitter.emit('permission-error', new FirestorePermissionError({
-          path: orderRef.path,
-          operation: 'update',
-          requestResourceData: updateData
-        }));
-      })
-      .finally(() => setIsDelivering(false));
+    try {
+      await updateDoc(orderRef, updateData);
+      toast({ title: "Entrega Registrada", description: "El pedido ha sido marcado como entregado con éxito." });
+      setSelectedOrder(null);
+      setDeliveryPhoto(null);
+    } catch (error: any) {
+      console.error("Error actualizando pedido:", error);
+      errorEmitter.emit('permission-error', new FirestorePermissionError({
+        path: orderRef.path,
+        operation: 'update',
+        requestResourceData: updateData
+      }));
+    } finally {
+      setIsDelivering(false);
+    }
   };
 
   if (authLoading || profileLoading) {

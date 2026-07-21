@@ -9,7 +9,7 @@ import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2 } from 'lucide-react';
+import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -35,7 +35,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const { data: products, loading } = useCollection<Product>(productQuery);
   const product = products?.[0];
 
-  // Establecer la variante inicial una vez que el producto se carga
   useEffect(() => {
     if (product && product.variants && product.variants.length > 0 && !selectedVariant) {
       setSelectedVariant(product.variants[0].id);
@@ -190,6 +189,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                 <ShieldCheck className="text-primary" size={20} />
                 <span className="text-[10px] font-black uppercase tracking-widest">Garantía Industrial 12 Meses</span>
               </div>
+            </div>
+            
+            <div className="bg-primary/5 p-4 rounded-xl border-l-4 border-primary flex items-center gap-3">
+              <MessageSquareText className="text-primary shrink-0" size={18} />
+              <p className="text-[11px] font-black uppercase tracking-tight text-foreground/80 italic">
+                Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+              </p>
             </div>
           </div>
         </div>

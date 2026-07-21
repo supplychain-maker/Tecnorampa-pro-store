@@ -1,8 +1,9 @@
+
 "use client"
 
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { X, Plus, Minus, ShoppingBag, ArrowRight, MapPin } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, ArrowRight, MapPin, MessageSquareText } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
@@ -93,11 +94,19 @@ export function CartDrawer() {
       </ScrollArea>
 
       <div className="p-6 border-t border-border space-y-4 bg-muted/30">
-        <div className="bg-primary/10 p-3 rounded-lg border border-primary/20 flex items-start gap-2 mb-2">
-          <MapPin size={16} className="text-primary shrink-0 mt-0.5" />
-          <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
-            Nota: Recolección en Planta Querétaro (LAB).
-          </p>
+        <div className="space-y-2">
+          <div className="bg-primary/10 p-2 rounded-lg border border-primary/20 flex items-start gap-2">
+            <MapPin size={14} className="text-primary shrink-0 mt-0.5" />
+            <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
+              Nota: Recolección en Planta Querétaro (LAB).
+            </p>
+          </div>
+          <div className="bg-foreground/5 p-2 rounded-lg border border-foreground/10 flex items-start gap-2">
+            <MessageSquareText size={14} className="text-primary shrink-0 mt-0.5" />
+            <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
+              Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+            </p>
+          </div>
         </div>
         
         <div className="space-y-2">

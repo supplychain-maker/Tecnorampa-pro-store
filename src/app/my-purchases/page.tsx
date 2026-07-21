@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, Package, Calendar, MapPin, QrCode, ArrowLeft, Printer, ShoppingBag, Receipt, AlertCircle } from 'lucide-react';
+import { Loader2, Package, Calendar, MapPin, QrCode, ArrowLeft, Printer, ShoppingBag, Receipt, AlertCircle, MessageSquareText } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -151,7 +152,13 @@ export default function MyPurchasesPage() {
                     </Button>
                   </div>
                 </CardContent>
-                <CardFooter className="bg-muted/10 border-t py-3 px-6 print:bg-transparent">
+                <CardFooter className="bg-muted/10 border-t py-3 px-6 print:bg-transparent flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-2">
+                    <MessageSquareText size={14} className="text-primary print:text-black" />
+                    <p className="text-[10px] font-black uppercase tracking-tight text-foreground/80 italic print:text-black">
+                      Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+                    </p>
+                  </div>
                   <p className="text-[8px] text-muted-foreground font-medium italic print:text-black">
                     * Comprobante oficial de pago. Factura disponible al momento de la recolección física.
                   </p>

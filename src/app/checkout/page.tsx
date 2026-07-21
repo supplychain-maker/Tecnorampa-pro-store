@@ -1,8 +1,9 @@
+
 'use client';
 
 /**
  * Tecnorampa Pro-Store - Checkout Page
- * Blindaje v2.5 - Aislamiento estricto de Suspense para Next.js 15
+ * Blindaje v2.6 - Leyenda de Facturación WhatsApp
  */
 
 import { useCart } from '@/context/CartContext';
@@ -12,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ShieldCheck, CreditCard, Truck, CheckCircle, ArrowLeft, LogIn, Lock, ClipboardCheck, MapPin, Loader2 } from 'lucide-react';
+import { ShieldCheck, CreditCard, Truck, CheckCircle, ArrowLeft, LogIn, Lock, ClipboardCheck, MapPin, Loader2, MessageSquareText } from 'lucide-react';
 import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -143,6 +144,12 @@ function CheckoutContent() {
         <div className="space-y-4">
           <h1 className="text-5xl font-black tracking-tighter uppercase italic">¡Orden Confirmada!</h1>
           <p className="text-muted-foreground text-lg">Su pedido está listo para ser programado para recolección.<br/>Enviamos los detalles a <strong className="text-foreground">{user?.email}</strong>.</p>
+          <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 flex items-center justify-center gap-3 max-w-lg mx-auto">
+            <MessageSquareText className="text-primary shrink-0" size={20} />
+            <p className="text-[11px] font-black uppercase tracking-tight text-foreground/80 italic">
+              Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+            </p>
+          </div>
         </div>
         <Card className="max-w-md w-full bg-white border-border shadow-lg">
           <CardContent className="p-8 text-left space-y-6">
@@ -356,7 +363,7 @@ function CheckoutContent() {
           <div className="lg:col-span-4">
             <Card className="border-border sticky top-28 shadow-xl overflow-hidden border-t-4 border-t-primary">
               <CardHeader className="bg-muted/50 border-b">
-                <CardTitle className="text-sm font-black uppercase tracking-[0.2em] italic">Resumen Industrial v2.5</CardTitle>
+                <CardTitle className="text-sm font-black uppercase tracking-[0.2em] italic">Resumen Industrial</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6 pt-8">
                 <div className="space-y-4">
@@ -385,6 +392,13 @@ function CheckoutContent() {
                     <span className="uppercase tracking-tighter">Total</span>
                     <span>${(total * 1.16).toLocaleString()}</span>
                   </div>
+                </div>
+                
+                <div className="bg-primary/5 p-3 rounded-lg border border-primary/20 flex items-start gap-2 mt-4">
+                  <MessageSquareText className="text-primary shrink-0 mt-0.5" size={14} />
+                  <p className="text-[9px] leading-tight font-black uppercase text-foreground/70 tracking-tight italic">
+                    Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410
+                  </p>
                 </div>
               </CardContent>
             </Card>

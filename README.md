@@ -1,52 +1,27 @@
 
-# 🏗️ Tecnorampa Pro-Store: Manual de Operación
+# 🏗️ Tecnorampa Pro-Store: Manual de Operación Final
 
 Este repositorio contiene el sistema oficial de venta de refacciones industriales para Tecnorampa S.A. de C.V.
 
-## 🏁 Verificación de GitHub
+## 🚀 Despliegue a Producción (Paso Final)
 
-Para saber si tu código está ligado a GitHub y si está al día, ejecuta estos comandos en la terminal:
+Como ya hiciste el `git push`, tu código ya está listo. Sigue estos pasos para prender la página:
 
-1. **¿Tengo un repositorio conectado?**
-   ```bash
-   git remote -v
-   ```
-   *Si te aparece una URL de github.com, ¡ya tienes el repositorio ligado!*
-
-2. **¿Qué fue lo último que subí?**
-   ```bash
-   git log -n 1
-   ```
-   *Esto te mostrará el mensaje del último "commit". Si dice "Final: Produccion oficial...", estás al día.*
-
-3. **¿Hay cambios pendientes por subir?**
-   ```bash
-   git status
-   ```
-   *Si ves archivos en rojo o un mensaje que dice "Your branch is ahead of origin/main", significa que tienes cambios aquí que aún no están en GitHub.*
-
-## 🚀 Despliegue a Producción (Gratis)
-
-Si ya verificaste que tienes cambios pendientes, ejecuta la secuencia final:
-```bash
-git add .
-git commit -m "Final: Sincronización completa de tienda industrial"
-git push
-```
-
-### Pasos en Firebase Console:
-1. Ve a [Firebase App Hosting](https://console.firebase.google.com/).
-2. Conecta tu cuenta de GitHub y elige este repositorio.
-3. Configura las variables de entorno (Secretos):
+1. **Entra a la Consola**: Ve a [Firebase App Hosting](https://console.firebase.google.com/project/_/apphosting).
+2. **Crea un Backend**: Dale a "Comenzar" y selecciona tu repositorio: `supplychain-maker/Tecnorampa-pro-store`.
+3. **Configura los Secretos (CRÍTICO)**: Durante el flujo de creación, Firebase te pedirá las variables de entorno. Debes crear estos "Secretos":
    - `STRIPE_SECRET_KEY`: Tu clave `sk_live_...`
-   - `STRIPE_WEBHOOK_SECRET`: Tu clave `whsec_...`
-   - `GOOGLE_GENAI_API_KEY`: Tu llave de Gemini.
+   - `STRIPE_WEBHOOK_SECRET`: Tu clave `whsec_...` (Obtenla en Stripe -> Developers -> Webhooks).
+   - `GOOGLE_GENAI_API_KEY`: Tu llave de Gemini para el Asistente IA.
+4. **URL del Webhook**: Una vez que Firebase te dé tu dominio (ej. `tecnorampa.web.app`), ve a Stripe y asegúrate de que el Webhook apunte a `https://tu-dominio.com/api/stripe/webhook`.
 
-## 🛠️ Soporte Técnico
-El sistema cuenta con:
-- **Modo Real (Live)**: Activado mediante variables de entorno.
-- **Asistente IA**: Recomendaciones técnicas basadas en Gemini.
-- **Gestión de Entregas**: Registro de evidencia fotográfica para administradores.
+## 🛠️ Herramientas Administrativas
+- **Gestión de Inventario**: Accede a `/admin/products` para subir nuevos equipos.
+- **Control de Entregas**: En `/admin/deliveries` podrás ver las ventas pagadas y registrar la foto de evidencia al entregar.
+- **Asistente IA**: Ubicado en `/assistant` para ayudar a clientes con dudas técnicas.
+
+## 📞 Soporte de Facturación
+Leyenda oficial incluida en el sistema: *Para solicitar factura, favor de comunicarse por whatsapp al 427 276 1410*.
 
 ---
-Desarrollado para Tecnorampa S.A. de C.V.
+**Estado del Sistema:** Producción / Live (Stripe Activado)

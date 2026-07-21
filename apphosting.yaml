@@ -1,17 +1,19 @@
+
 # Configuración de App Hosting para Tecnorampa Pro-Store
+# Las variables de entorno en App Hosting se inyectan automáticamente desde la consola de Firebase.
+# Solo definimos los Secretos críticos.
+
 runConfig:
   maxInstances: 2
   minInstances: 0
   memory: 512Mi
   cpu: 1
 
-# Los secretos deben coincidir con los nombres creados en la consola de Firebase
+# Los nombres aquí deben coincidir con los "Secretos" creados en la Consola de Firebase -> App Hosting -> Settings
 env:
   - variable: STRIPE_SECRET_KEY
     secret: STRIPE_SECRET_KEY
   - variable: STRIPE_WEBHOOK_SECRET
     secret: STRIPE_WEBHOOK_SECRET
-  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: "placeholder" # Se inyecta automáticamente desde el entorno
   - variable: GOOGLE_GENAI_API_KEY
     secret: GOOGLE_GENAI_API_KEY

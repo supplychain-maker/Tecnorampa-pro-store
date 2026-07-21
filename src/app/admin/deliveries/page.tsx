@@ -152,7 +152,6 @@ export default function AdminDeliveriesPage() {
     if (!db || !selectedOrder || !deliveryPhoto) return;
     setIsDelivering(true);
 
-    // Aseguramos que la referencia sea al documento correcto
     const orderRef = doc(db, 'orders', selectedOrder.id);
     
     const updateData = {
@@ -238,6 +237,15 @@ export default function AdminDeliveriesPage() {
                     </div>
                   </div>
 
+                  {!isProduction && (
+                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-start gap-2">
+                      <Info size={14} className="text-blue-700 shrink-0 mt-0.5" />
+                      <p className="text-[8px] font-bold text-blue-700 uppercase leading-relaxed">
+                        Nota: Estás usando tus llaves reales en el entorno de desarrollo. Ten cuidado con los cargos reales.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Prefijo de Llave:</span>
                     <code className="text-[10px] font-black font-mono bg-muted px-2 py-0.5 rounded text-primary">
@@ -255,15 +263,6 @@ export default function AdminDeliveriesPage() {
                       <Badge variant="outline" className="text-[9px] font-black text-destructive border-destructive/30 bg-destructive/5 uppercase">PENDIENTE</Badge>
                     )}
                   </div>
-                  
-                  {!isProduction && (
-                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-start gap-2">
-                      <Info size={14} className="text-blue-700 shrink-0 mt-0.5" />
-                      <p className="text-[8px] font-bold text-blue-700 uppercase leading-relaxed">
-                        Nota: Estás usando tus llaves reales en el entorno de desarrollo. Ten cuidado con los cargos reales.
-                      </p>
-                    </div>
-                  )}
                   
                   <div className="bg-muted p-3 rounded-lg space-y-2 border border-border">
                     <label className="text-[8px] font-black text-muted-foreground uppercase block">URL Webhook para Stripe:</label>
@@ -443,7 +442,6 @@ export default function AdminDeliveriesPage() {
         </Tabs>
       </div>
 
-      {/* Modal de Entrega */}
       <Dialog open={!!selectedOrder} onOpenChange={() => { setSelectedOrder(null); setDeliveryPhoto(null); }}>
         <DialogContent className="sm:max-w-md border-t-8 border-t-primary">
           <DialogHeader>

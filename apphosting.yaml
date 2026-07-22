@@ -13,16 +13,16 @@ env:
   - variable: GOOGLE_GENAI_API_KEY
     secret: GOOGLE_GENAI_API_KEY
   
-  # Variables Públicas de Firebase para el cliente (Next.js)
+  # Variables de Firebase (Ahora como secretos para evitar alertas de seguridad y seguir estándares Pro)
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: "AIzaSyA3YYrDs3sJ6bId2GHRbNls0IMcsFMcMkE"
+    secret: NEXT_PUBLIC_FIREBASE_API_KEY
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: "studio-1924852802-ce47d.firebaseapp.com"
+    secret: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: "studio-1924852802-ce47d"
+    secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-    value: "studio-1924852802-ce47d.firebasestorage.app"
+    secret: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
   - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-    value: "127559379906"
+    secret: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: "1:127559379906:web:a541b88810a47a60f4045b"
+    secret: NEXT_PUBLIC_FIREBASE_APP_ID

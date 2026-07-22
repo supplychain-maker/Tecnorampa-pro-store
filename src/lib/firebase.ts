@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -16,17 +15,15 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 
-const key = firebaseConfig.apiKey;
-// Blindaje total para el build
-const isValid = !!key && key.startsWith('AIza') && key.length > 20 && key !== 'undefined';
+const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
 
-if (isValid) {
+if (isConfigValid) {
   try {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
   } catch (error) {
-    // Silencioso
+    console.error("Firebase library init error:", error);
   }
 }
 

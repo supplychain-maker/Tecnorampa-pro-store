@@ -13,17 +13,16 @@ env:
   - variable: GOOGLE_GENAI_API_KEY
     secret: GOOGLE_GENAI_API_KEY
   
-  # Variables Públicas de Firebase (Copiar de Project Settings -> General -> Your Apps -> Config)
-  # Debes poner tus valores reales aquí para que el sitio funcione en internet.
+  # Variables Públicas de Firebase para el cliente (Next.js)
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: "TU_API_KEY_AQUI"
+    value: "AIzaSyA3YYrDs3sJ6bId2GHRbNls0IMcsFMcMkE"
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: "TU_AUTH_DOMAIN_AQUI"
+    value: "studio-1924852802-ce47d.firebaseapp.com"
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: "TU_PROJECT_ID_AQUI"
+    value: "studio-1924852802-ce47d"
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-    value: "TU_STORAGE_BUCKET_AQUI"
+    value: "studio-1924852802-ce47d.firebasestorage.app"
   - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-    value: "TU_MESSAGING_SENDER_ID_AQUI"
+    value: "127559379906"
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: "TU_APP_ID_AQUI"
+    value: "1:127559379906:web:a541b88810a47a60f4045b"

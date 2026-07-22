@@ -3,8 +3,8 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
 /**
- * CONFIGURACIÓN DE FIREBASE UNIFICADA v3.1
- * Incluye logs de depuración para producción.
+ * CONFIGURACIÓN DE FIREBASE UNIFICADA v3.2
+ * Las variables se inyectan desde apphosting.yaml en producción.
  */
 
 const firebaseConfig = {
@@ -16,17 +16,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Verificación de configuración completa en consola para diagnóstico
-if (typeof window !== 'undefined') {
-  if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined') {
-    console.warn('⚠️ Firebase: NEXT_PUBLIC_FIREBASE_API_KEY no está configurada en el entorno.');
-  }
-}
-
 const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
 
 export const getFirebaseApp = (): FirebaseApp | null => {
-  if (!isConfigValid) return null;
+  if (!isConfigValid) {
+    if (typeof window !== 'undefined') {
+      console.error('Firebase Config Missing: Ensure environment variables are set in App Hosting.');
+    }
+    return null;
+  }
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } catch (error) {

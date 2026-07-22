@@ -5,9 +5,14 @@ runConfig:
   cpu: 1
 
 env:
+  # Secretos para pasarela de pagos e IA
   - variable: STRIPE_SECRET_KEY
     secret: STRIPE_SECRET_KEY
   - variable: STRIPE_WEBHOOK_SECRET
     secret: STRIPE_WEBHOOK_SECRET
   - variable: GOOGLE_GENAI_API_KEY
     secret: GOOGLE_GENAI_API_KEY
+  
+  # Variables de configuración de Firebase para el Cliente
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: "AIzaSy..." # Estas se inyectan automáticamente en App Hosting conectado, pero es mejor tener el esquema claro

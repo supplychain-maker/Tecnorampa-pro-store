@@ -1,12 +1,11 @@
-
 'use client';
 
 /**
  * Tecnorampa Pro-Store - Home Page
- * Versión de Producción Oficial v2.7
+ * Versión de Producción Resiliente v3.1
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ProductCard } from '@/components/products/ProductCard';
@@ -18,7 +17,9 @@ import {
   Database,
   MessageSquareCode,
   Search,
-  ShieldCheck
+  ShieldCheck,
+  AlertTriangle,
+  RefreshCcw
 } from 'lucide-react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
@@ -33,6 +34,17 @@ export default function Home() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [connectionTimeout, setConnectionTimeout] = useState(false);
+
+  // Monitor de tiempo de carga para detectar fallas de red
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!allProducts || allProducts.length === 0) {
+        setConnectionTimeout(true);
+      }
+    }, 8000); // 8 segundos de tolerancia
+    return () => clearTimeout(timer);
+  }, []);
 
   const categoriesQuery = useMemo(() => {
     if (!db) return null;
@@ -44,7 +56,7 @@ export default function Home() {
     if (!db) return null;
     return query(collection(db, 'products'), where('active', '==', true));
   }, [db]);
-  const { data: allProducts, loading: productsLoading } = useCollection<Product>(productsQuery);
+  const { data: allProducts, loading: productsLoading, error: productsError } = useCollection<Product>(productsQuery);
 
   const filteredProducts = useMemo(() => {
     let results = allProducts || [];
@@ -64,7 +76,7 @@ export default function Home() {
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPage]);
 
-  const isLoading = (catsLoading || productsLoading) && db !== null;
+  const isLoading = (catsLoading || productsLoading) && !productsError && !connectionTimeout;
 
   return (
     <div className="flex flex-col bg-background">
@@ -73,7 +85,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12 bg-muted/30 p-8 rounded-2xl border-b-4 border-primary">
             <div className="space-y-1">
               <h1 className="text-xl md:text-2xl font-black uppercase tracking-[0.15em] text-foreground italic">
-                Tecnorampa Pro-Store <span className="text-[10px] not-italic font-bold opacity-30">v2.7</span>
+                Tecnorampa Pro-Store <span className="text-[10px] not-italic font-bold opacity-30">v3.1</span>
               </h1>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck size={12} className="text-primary" /> Soluciones Industriales Certificadas
@@ -130,10 +142,22 @@ export default function Home() {
               <Loader2 className="animate-spin text-primary mb-4" size={48} />
               <p className="text-muted-foreground font-black uppercase tracking-widest text-xs italic">Sincronizando Inventario...</p>
             </div>
+          ) : (productsError || (connectionTimeout && filteredProducts.length === 0)) ? (
+            <div className="text-center py-24 border-2 border-dashed border-destructive/20 rounded-2xl bg-destructive/5 max-w-2xl mx-auto px-6 shadow-inner">
+              <AlertTriangle className="mx-auto mb-4 text-destructive" size={64} />
+              <p className="text-lg font-black uppercase italic text-destructive mb-4">Falla de Conexión en Red</p>
+              <p className="text-sm text-muted-foreground mb-8">No pudimos enlazar con el servidor de inventario. Esto puede deberse a la señal de internet o configuración de red.</p>
+              <Button onClick={() => window.location.reload()} className="font-black uppercase tracking-widest italic">
+                <RefreshCcw className="mr-2" size={16} /> REINTENTAR CONEXIÓN
+              </Button>
+            </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-24 border-2 border-dashed border-border rounded-2xl bg-white/50 backdrop-blur max-w-2xl mx-auto px-6 shadow-inner">
               <Database className="mx-auto mb-4 text-muted-foreground opacity-20" size={64} />
-              <p className="text-lg font-black uppercase italic text-muted-foreground">No se encontraron productos</p>
+              <p className="text-lg font-black uppercase italic text-muted-foreground">No hay equipos registrados en esta categoría</p>
+              <Link href="/setup" className="mt-4 inline-block">
+                <Button variant="link" className="font-bold text-primary">Inicializar Catálogo</Button>
+              </Link>
             </div>
           ) : (
             <>

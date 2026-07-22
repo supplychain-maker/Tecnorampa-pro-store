@@ -5,7 +5,7 @@ runConfig:
   cpu: 1
 
 env:
-  # Secretos para pasarela de pagos e IA (Configurar en App Hosting -> Settings -> Environment Variables)
+  # Secretos para pasarela de pagos e IA
   - variable: STRIPE_SECRET_KEY
     secret: STRIPE_SECRET_KEY
   - variable: STRIPE_WEBHOOK_SECRET

@@ -3,8 +3,8 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
 /**
- * CONFIGURACIÓN DE FIREBASE UNIFICADA v3.0
- * Garantiza que las llaves estén presentes antes de intentar la conexión.
+ * CONFIGURACIÓN DE FIREBASE UNIFICADA v3.1
+ * Incluye logs de depuración para producción.
  */
 
 const firebaseConfig = {
@@ -16,7 +16,13 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Verificación de configuración completa
+// Verificación de configuración completa en consola para diagnóstico
+if (typeof window !== 'undefined') {
+  if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined') {
+    console.warn('⚠️ Firebase: NEXT_PUBLIC_FIREBASE_API_KEY no está configurada en el entorno.');
+  }
+}
+
 const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
 
 export const getFirebaseApp = (): FirebaseApp | null => {
@@ -24,6 +30,7 @@ export const getFirebaseApp = (): FirebaseApp | null => {
   try {
     return !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } catch (error) {
+    console.error('Firebase Initialization Error:', error);
     return null;
   }
 };

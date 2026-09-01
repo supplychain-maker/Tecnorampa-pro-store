@@ -46,7 +46,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Efecto para subir el scroll al cambiar de página
+  // EFECTO DE SCROLL: Sube al inicio cuando cambia la página
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);

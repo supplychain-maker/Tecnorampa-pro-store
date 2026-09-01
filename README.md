@@ -26,7 +26,11 @@ Si al hacer `git push` sale el error "Invalid username or token", sigue esta gu�
 - En la barra lateral izquierda, baja hasta el final y haz clic en **<> Developer settings**.
 - Haz clic en **Personal access tokens** -> **Tokens (classic)**.
 - Haz clic en **Generate new token** -> **Generate new token (classic)**.
-- **Nota**: Ponle nombre "Tecnorampa-Key", marca la casilla **'repo'** y dale a "Generate token".
+- **Configuración del Token**:
+  - **Note**: Ponle "Tecnorampa-Key".
+  - **Expiration**: 90 días (recomendado).
+  - **Scopes**: Marca únicamente la casilla **'repo'** (esto permite subir código).
+- Haz clic en "Generate token" al final de la página.
 - **IMPORTANTE**: Copia el código que aparece (empieza con `ghp_`). No se volverá a mostrar.
 
 ### 2. Actualiza la terminal de este editor:

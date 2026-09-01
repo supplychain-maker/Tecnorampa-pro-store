@@ -46,6 +46,11 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Efecto para subir el scroll al cambiar de página
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
   const categoriesQuery = useMemo(() => {
     if (!db) return null;
     return query(collection(db, 'categories'), orderBy('name', 'asc'));

@@ -17,6 +17,19 @@ Para que tu tienda tenga una dirección profesional, sigue estos pasos:
 2. **En tu proveedor de dominio**:
    - Firebase te dará unos valores llamados **Registros A**. Cópialos y pégalos en la configuración DNS de tu dominio.
 
+## 🔑 Solución a Error de Autenticación (Git Push)
+Si al hacer `git push` sale el error "Invalid username or token", sigue esto:
+
+1. **Genera un Token en GitHub**:
+   - Ve a GitHub -> Settings -> Developer Settings -> **Personal Access Tokens** -> Tokens (classic).
+   - Dale a "Generate new token". Ponle nombre "Tecnorampa-Key" y marca la casilla **'repo'**.
+   - **Copia el token** (es un código largo que empieza con `ghp_`).
+
+2. **Actualiza la terminal**:
+   - Escribe este comando reemplazando `<TOKEN>` por el código que copiaste:
+     `git remote set-url origin https://<TOKEN>@github.com/supplychain-maker/Tecnorampa-pro-store.git`
+   - Luego intenta de nuevo: `git push`
+
 ## 🛠️ Configuración de Secretos (IMPORTANTE)
 Para que el sistema funcione, los siguientes secretos DEBEN estar configurados en **App Hosting -> Settings -> Environment Variables**:
 
@@ -26,6 +39,7 @@ Para que el sistema funcione, los siguientes secretos DEBEN estar configurados e
 - `GOOGLE_GENAI_API_KEY`: Tu llave de Gemini IA.
 
 ### Llaves de Conexión (Firebase)
+Deben estar dadas de alta como **Secrets** con estos nombres:
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
 - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
 - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`

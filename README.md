@@ -12,7 +12,9 @@ Si en Firebase te aparecen valores en rojo que "se deben quitar" (como `13.248.2
    - **IMPORTANTE:** Si no ves más registros A, busca una sección que diga **"Reenvío" (Forwarding)** o **"Estacionamiento de dominio"**. Si están activos, desactívalos/elimínalos, ya que ellos crean esos registros "ocultos".
 2. **El registro "Parked":**
    - A veces GoDaddy tiene un registro A llamado `@` con valor `Parked`. **Bórralo**.
-3. **Espera la propagación:**
+3. **Configuración en Firebase:**
+   - En la ventana de "Editar dominio", selecciona siempre **"Entregar tráfico desde este dominio"**.
+4. **Espera la propagación:**
    - Una vez que solo quede el registro A de Firebase en tu lista de GoDaddy, Firebase tardará desde unos minutos hasta un par de horas en dejar de ver los anteriores. Cuando el recuadro rojo desaparezca, tu sitio estará al 100%.
 
 ---

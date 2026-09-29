@@ -2,21 +2,23 @@
 
 Este repositorio contiene el sistema oficial de venta de refacciones industriales para Tecnorampa S.A. de C.V.
 
-## 🚀 Conexión de Dominio (GoDaddy) - SOLUCIÓN A IPs EN ROJO
+## 🚀 Conexión de Dominio (GoDaddy) - SOLUCIÓN DEFINITIVA
 
-Si en Firebase te aparecen valores en rojo que "se deben quitar" (como `13.248.243.5` o similares) y no los ves en tu lista de DNS de GoDaddy, sigue estos pasos exactos:
+Si tu página muestra el Website Builder de GoDaddy en lugar de tu tienda, sigue estos pasos exactos en tu tabla de registros DNS:
 
-1. **En GoDaddy (Pestaña DNS Records):**
-   - Busca en la tabla principal de registros un registro de tipo **A** que tenga el valor `Parked`. **BÓRRALO**.
-   - Si ves un registro de tipo **AAAA**, **BÓRRALO** también (Firebase no lo necesita y causa conflictos).
-   - Busca el registro tipo **A** con nombre `@`. Asegúrate de que **SOLO HAYA UNO** y que apunte a la IP de Firebase: `35.219.200.195`.
+1. **Borra el registro conflictivo**:
+   - Busca el registro tipo **A** que en la columna "Data" dice **`WebsiteBuilder Site`**.
+   - Haz clic en el icono del **Bote de Basura (Delete)** a la derecha de ese registro y confirma.
 
-2. **Configuración Correcta:**
-   - Registro **A** | Host: `@` | Value: `35.219.200.195`
-   - Registro **CNAME** | Host: `www` | Value: `tecnorampastore.com` (o `@`)
+2. **Verifica el registro correcto**:
+   - Asegúrate de que **SOLO QUEDE UN registro tipo A** con el nombre `@`.
+   - Ese registro debe tener el valor: **`35.219.200.195`**.
 
-3. **Espera la propagación:**
-   - Una vez eliminado el registro "Parked", Firebase tardará de 15 a 30 minutos en dejar de ver las IPs viejas. En cuanto el recuadro rojo desaparezca, tu tienda aparecerá automáticamente con su certificado de seguridad.
+3. **Limpia registros invisibles**:
+   - Si ves algún registro tipo **AAAA**, bórralo también (Firebase no lo usa y causa errores).
+
+4. **Espera la propagación**:
+   - Una vez que borres el registro de "WebsiteBuilder", tu tienda aparecerá automáticamente. Esto puede tardar de 5 a 15 minutos en reflejarse en tu navegador.
 
 ---
 
@@ -34,8 +36,7 @@ Si al hacer `git push` sale el error "Invalid username or token", sigue esta gu�
 ---
 
 ## 🛠️ Configuración de Secretos (IMPORTANTE)
-Para que el catálogo y los pagos funcionen en el dominio real, estas variables deben estar en **App Hosting -> Settings -> Environment Variables** como **Secrets**:
-
+Para que el catálogo y los pagos funcionen, estas variables deben estar en **App Hosting -> Settings -> Environment Variables** como **Secrets**:
 - `STRIPE_SECRET_KEY`
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
 - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`

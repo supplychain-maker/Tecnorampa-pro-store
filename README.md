@@ -4,18 +4,19 @@ Este repositorio contiene el sistema oficial de venta de refacciones industriale
 
 ## 🚀 Conexión de Dominio (GoDaddy) - SOLUCIÓN A IPs EN ROJO
 
-Si en Firebase te aparecen valores en rojo que "se deben quitar" (como `13.248.243.5` o similares) y no los ves en GoDaddy, sigue estos pasos:
+Si en Firebase te aparecen valores en rojo que "se deben quitar" (como `13.248.243.5` o similares) y no los ves en tu lista de DNS de GoDaddy, sigue estos pasos exactos:
 
 1. **En GoDaddy (DNS Management):**
-   - Busca los registros de tipo **A** con el nombre `@`.
-   - Si ves alguno que NO sea el de Firebase (`35.219.200.195`), elimínalo.
-   - **IMPORTANTE:** Si no ves más registros A, busca una sección que diga **"Reenvío" (Forwarding)** o **"Estacionamiento de dominio"**. Si están activos, desactívalos/elimínalos, ya que ellos crean esos registros "ocultos".
-2. **El registro "Parked":**
-   - A veces GoDaddy tiene un registro A llamado `@` con valor `Parked`. **Bórralo**.
-3. **Configuración en Firebase:**
-   - En la ventana de "Editar dominio", selecciona siempre **"Entregar tráfico desde este dominio"**.
-4. **Espera la propagación:**
-   - Una vez que solo quede el registro A de Firebase en tu lista de GoDaddy, Firebase tardará desde unos minutos hasta un par de horas en dejar de ver los anteriores. Cuando el recuadro rojo desaparezca, tu sitio estará al 100%.
+   - Baja hasta el final de la página de DNS y busca la sección **"Reenvío" (Forwarding)**.
+   - Si hay algo configurado en "Dominio" o "Subdominio", **ELIMÍNALO**. Esto es lo que crea las IPs en rojo.
+   - Busca en la tabla de registros un registro de tipo **A** que tenga el valor `Parked`. **BÓRRALO**.
+
+2. **Configuración Correcta:**
+   - Solo debe quedar **UN solo registro tipo A** con el nombre `@` apuntando a la IP de Firebase: `35.219.200.195`.
+   - Si usas `www`, asegúrate de que sea un **CNAME** apuntando a `tecnorampastore.com`.
+
+3. **Espera la propagación:**
+   - Una vez eliminado el Reenvío y el registro "Parked", Firebase tardará de 15 a 30 minutos en dejar de ver las IPs viejas. En cuanto el recuadro rojo desaparezca, tu tienda aparecerá automáticamente.
 
 ---
 

@@ -466,7 +466,7 @@ export default function SetupPage() {
           {!success ? (
             <div className="space-y-6">
               <div className="bg-muted p-4 rounded-lg text-sm italic">
-                Este proceso restaurará los **11 productos** con soporte para múltiples grupos industriales y galerías completas.
+                Este proceso restaurará los **22 productos y refacciones industriales** con soporte para múltiples grupos, imágenes locales y galerías completas.
               </div>
               
               {loading && (

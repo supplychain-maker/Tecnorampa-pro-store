@@ -15,6 +15,7 @@ export interface Product {
   image: string;
   images: string[];
   category?: string;
+  categoryId?: string;
   categoryIds?: string[];
   categoryNames?: string[];
   benefits: string[];

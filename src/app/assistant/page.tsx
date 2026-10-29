@@ -102,7 +102,7 @@ export default function AssistantPage() {
                   <p className="text-muted-foreground font-bold text-xs uppercase tracking-[0.2em]">Seleccionando componentes de alto rendimiento</p>
                 </div>
               </div>
-            ) : (
+            ) : result ? (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <Alert className="bg-primary/10 border-primary/30">
                   <Info className="h-4 w-4 text-primary" />
@@ -145,7 +145,7 @@ export default function AssistantPage() {
                   <Button onClick={() => window.print()} className="font-bold uppercase text-[10px] tracking-widest h-12 px-8 bg-foreground hover:bg-foreground/90">Exportar Propuesta PDF</Button>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

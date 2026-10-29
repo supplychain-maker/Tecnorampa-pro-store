@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { Product } from '@/app/lib/products';
-import { getDirectImageUrl } from '@/lib/utils';
+import { getDirectImageUrl, cn } from '@/lib/utils';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -141,25 +141,35 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-4">
-                <h4 className="font-black uppercase text-[10px] tracking-widest text-primary italic">Configuración Técnica Certificada:</h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-black uppercase text-[10px] tracking-widest text-primary italic">
+                    Configuración / Medida Certificada:
+                  </h4>
+                  <span className="text-[10px] text-muted-foreground font-bold">
+                    {product.variants.length} medidas disponibles
+                  </span>
+                </div>
                 <RadioGroup 
                   value={selectedVariant || ''} 
                   onValueChange={setSelectedVariant} 
-                  className="grid grid-cols-1 gap-3"
+                  className={cn(
+                    "grid gap-2.5",
+                    product.variants.length > 3 ? "grid-cols-1 sm:grid-cols-2 max-h-80 overflow-y-auto pr-1" : "grid-cols-1"
+                  )}
                 >
                   {product.variants.map((v) => (
                     <div key={v.id} className="relative">
                       <RadioGroupItem value={v.id} id={v.id} className="peer sr-only" />
                       <Label
                         htmlFor={v.id}
-                        className="flex flex-1 items-center justify-between rounded-md border-2 border-muted bg-card p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary cursor-pointer transition-all shadow-sm"
+                        className="flex flex-1 items-center justify-between rounded-md border-2 border-muted bg-card p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary cursor-pointer transition-all shadow-sm"
                       >
-                        <div className="flex flex-col">
+                        <div className="flex flex-col pr-2">
                           <span className="font-black uppercase text-xs italic">{v.name}</span>
-                          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Ajuste de ingeniería directa</span>
+                          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Materia prima certificada</span>
                         </div>
-                        <div className="text-right">
-                          <span className="font-black text-sm italic">
+                        <div className="text-right shrink-0">
+                          <span className="font-black text-sm italic text-primary">
                             ${(product.price + v.priceModifier).toLocaleString()}
                           </span>
                         </div>

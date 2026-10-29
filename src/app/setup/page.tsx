@@ -272,15 +272,39 @@ export const INITIAL_PRODUCTS = [
     mainGroupName: "Refacciones Industriales",
     subGroup: "Mecánicas y Retención",
     categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
-    price: 1950,
-    shortDescription: "Juego de poleas de canal maquinadas en polímero técnico de alta densidad para cables de tracción.",
-    description: "Poleas de carga maquinadas en polímero de alta resistencia mecánica (Nylamid / Polímero técnico antifricción). Diseñadas para guiar cables de acero en sistemas de elevación, contrapesos y niveladoras de andén sin desgastar ni morder el cable, reduciendo el ruido y eliminando la fricción excesiva.",
+    price: 650,
+    shortDescription: "Juego de poleas de canal maquinadas en barra de Nylon PA66 / Nylamid con diámetros de 1\" a 12\".",
+    description: "Poleas industriales maquinadas en barra redonda sólida de polímero técnico Nylon PA66 / Nylamid de alta densidad y resistencia mecánica. Diseñadas para sistemas de elevación, contrapesos, cables de tracción y rampas niveladoras de andén. Disponibles en diámetros maquinados a medida desde 1\" hasta 12\". No muerden ni deforman el cable de acero, eliminan la fricción metálica y garantizan una operación silenciosa y duradera.",
     image: "/products/poleas-industriales-frente.jpeg",
     images: ["/products/poleas-industriales-frente.jpeg", "/products/poleas-industriales-lado1.jpeg", "/products/poleas-industriales-lado2.jpeg"],
     active: true,
-    benefits: ["Material autolubricado que prolonga la vida del cable", "No genera chispas ni corrosión", "Canal de precisión para cable de acero de 1/4\" a 3/8\"", "Operación silenciosa y suave"],
-    specs: { "Material": "Polímero técnico maquinado", "Aplicación": "Guía de cable en rampas y elevadores", "Canal": "Ranura en V/U para cable de acero", "Buje": "Barreno central maquinado para eje" },
-    operationSteps: ["Colocar sobre el eje correspondiente", "Alinear cable de tracción en la garganta", "Asegurar con rondana y pasador de retención"]
+    benefits: [
+      "Maquinadas desde barra redonda sólida de Nylon PA66 / Nylamid",
+      "Variantes en todos los diámetros comerciales: 1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\" y 12\"",
+      "Material autolubricado que prolonga la vida útil del cable de acero",
+      "Resistencia química, sin riesgo de chispas ni corrosión por humedad"
+    ],
+    specs: {
+      "Materia Prima": "Redondo sólido de Nylamid / Nylon PA66",
+      "Gama de Diámetros": "1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\", 12\"",
+      "Aplicación": "Guía de cable en rampas niveladoras, elevadores y contrapesos",
+      "Canal": "Ranura en V/U maquinada de precisión para cable de acero",
+      "Buje": "Barreno central maquinado a medida de flecha o balero"
+    },
+    operationSteps: ["Seleccionar diámetro adecuado para el cable y carga", "Colocar sobre el eje correspondiente", "Alinear cable de tracción en la garganta", "Asegurar con rondana y pasador de retención"],
+    variants: [
+      { id: "pol-1", name: "Diámetro 1\" (25.4 mm)", priceModifier: 0 },
+      { id: "pol-2", name: "Diámetro 2\" (50.8 mm)", priceModifier: 280 },
+      { id: "pol-3", name: "Diámetro 3\" (76.2 mm)", priceModifier: 650 },
+      { id: "pol-3-5", name: "Diámetro 3.5\" (88.9 mm)", priceModifier: 950 },
+      { id: "pol-4", name: "Diámetro 4\" (101.6 mm)", priceModifier: 1300 },
+      { id: "pol-4-625", name: "Diámetro 4 5/8\" (117.5 mm)", priceModifier: 1700 },
+      { id: "pol-5", name: "Diámetro 5\" (127.0 mm)", priceModifier: 2200 },
+      { id: "pol-6", name: "Diámetro 6\" (152.4 mm)", priceModifier: 3000 },
+      { id: "pol-7", name: "Diámetro 7\" (177.8 mm)", priceModifier: 4150 },
+      { id: "pol-10", name: "Diámetro 10\" (254.0 mm)", priceModifier: 6850 },
+      { id: "pol-12", name: "Diámetro 12\" (304.8 mm)", priceModifier: 10150 }
+    ]
   },
   {
     name: "Válvula Reguladora de Caudal Parker con Micrómetro",

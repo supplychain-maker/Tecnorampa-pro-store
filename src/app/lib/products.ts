@@ -18,6 +18,9 @@ export interface Product {
   categoryId?: string;
   categoryIds?: string[];
   categoryNames?: string[];
+  mainGroup?: string;
+  mainGroupName?: string;
+  subGroup?: string;
   benefits: string[];
   specs: { [key: string]: string };
   operationSteps: string[];

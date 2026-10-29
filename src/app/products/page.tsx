@@ -1,11 +1,28 @@
-
 'use client';
+
+/**
+ * Tecnorampa Pro-Store - Catálogo Completo
+ * Versión de Producción Resiliente v3.4 - Organización en 3 Macro-Grupos y Subgrupos
+ */
 
 import { useMemo, useState } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
 import { ProductCard } from '@/components/products/ProductCard';
-import { Loader2, AlertTriangle, Database, ArrowRight, LayoutGrid, Tag, Search } from 'lucide-react';
+import { 
+  Loader2, 
+  AlertTriangle, 
+  Database, 
+  ArrowRight, 
+  LayoutGrid, 
+  Tag, 
+  Search,
+  Warehouse,
+  Car,
+  Wrench,
+  Layers,
+  X
+} from 'lucide-react';
 import { Product } from '@/app/lib/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,18 +30,33 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
+const MAIN_GROUPS_CONFIG = [
+  { id: 'all', name: 'Todos los Equipos', icon: LayoutGrid, subGroups: [] },
+  { 
+    id: 'anden', 
+    name: 'Andén de Carga', 
+    icon: Warehouse, 
+    subGroups: ['Niveladoras y Mini Docks', 'Seguridad e Iluminación', 'Protección de Andén'] 
+  },
+  { 
+    id: 'estacionamiento', 
+    name: 'Estacionamiento', 
+    icon: Car, 
+    subGroups: ['Duplicadores de Autos'] 
+  },
+  { 
+    id: 'refacciones', 
+    name: 'Refacciones Industriales', 
+    icon: Wrench, 
+    subGroups: ['Mecánicas y Retención', 'Hidráulica', 'Control y Eléctrico', 'Baleros y Rodamientos'] 
+  }
+];
+
 export default function ProductsPage() {
   const db = useFirestore();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedMainGroup, setSelectedMainGroup] = useState<string>('all');
+  const [selectedSubGroup, setSelectedSubGroup] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Consulta de categorías para los filtros superiores
-  const categoriesQuery = useMemo(() => {
-    if (!db) return null;
-    return query(collection(db, 'categories'), orderBy('name', 'asc'));
-  }, [db]);
-
-  const { data: categories, loading: catsLoading } = useCollection(categoriesQuery);
 
   // Consulta de productos activos
   const productsQuery = useMemo(() => {
@@ -37,26 +69,59 @@ export default function ProductsPage() {
 
   const { data: products, loading: productsLoading, error } = useCollection<Product>(productsQuery);
 
-  // Filtrar productos según la categoría seleccionada y el término de búsqueda
-  const filteredProducts = useMemo(() => {
-    let results = products;
+  const groupCounts = useMemo(() => {
+    const list = products || [];
+    return {
+      all: list.length,
+      anden: list.filter(p => p.mainGroup === 'anden' || p.categoryNames?.some(c => c.toLowerCase().includes('andén') || c.toLowerCase().includes('rampas'))).length,
+      estacionamiento: list.filter(p => p.mainGroup === 'estacionamiento' || p.categoryNames?.some(c => c.toLowerCase().includes('estacionamiento'))).length,
+      refacciones: list.filter(p => p.mainGroup === 'refacciones' || p.categoryNames?.some(c => c.toLowerCase().includes('refacc') || c.toLowerCase().includes('baleros') || c.toLowerCase().includes('hidrául') || c.toLowerCase().includes('control'))).length,
+    };
+  }, [products]);
 
-    if (selectedCategoryId) {
-      results = results.filter(p => p.categoryIds?.includes(selectedCategoryId) || p.categoryId === selectedCategoryId);
+  const activeGroupConfig = useMemo(() => {
+    return MAIN_GROUPS_CONFIG.find(g => g.id === selectedMainGroup);
+  }, [selectedMainGroup]);
+
+  // Filtrar productos según el Macro-Grupo, Subgrupo y término de búsqueda
+  const filteredProducts = useMemo(() => {
+    let results = products || [];
+
+    // 1. Filtro por Macro-Grupo
+    if (selectedMainGroup !== 'all') {
+      results = results.filter(p => {
+        if (p.mainGroup) return p.mainGroup === selectedMainGroup;
+        if (selectedMainGroup === 'anden') return p.categoryNames?.some(c => c.toLowerCase().includes('andén') || c.toLowerCase().includes('rampas'));
+        if (selectedMainGroup === 'estacionamiento') return p.categoryNames?.some(c => c.toLowerCase().includes('estacionamiento'));
+        if (selectedMainGroup === 'refacciones') return p.categoryNames?.some(c => c.toLowerCase().includes('refacc') || c.toLowerCase().includes('baleros') || c.toLowerCase().includes('hidrául') || c.toLowerCase().includes('control'));
+        return true;
+      });
     }
 
+    // 2. Filtro por Subgrupo
+    if (selectedSubGroup) {
+      results = results.filter(p => p.subGroup === selectedSubGroup || p.categoryNames?.includes(selectedSubGroup));
+    }
+
+    // 3. Filtro por Búsqueda
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       results = results.filter(p => 
         p.name.toLowerCase().includes(term) || 
-        p.shortDescription?.toLowerCase().includes(term)
+        p.shortDescription?.toLowerCase().includes(term) ||
+        p.subGroup?.toLowerCase().includes(term) ||
+        p.mainGroupName?.toLowerCase().includes(term)
       );
     }
 
     return results;
-  }, [products, selectedCategoryId, searchTerm]);
+  }, [products, selectedMainGroup, selectedSubGroup, searchTerm]);
 
-  const isLoading = catsLoading || productsLoading;
+  const handleResetFilters = () => {
+    setSelectedMainGroup('all');
+    setSelectedSubGroup(null);
+    setSearchTerm('');
+  };
 
   return (
     <div className="py-12 bg-background min-h-screen">
@@ -80,49 +145,122 @@ export default function ProductsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm('')} 
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
         </div>
 
-        <header className="mb-12">
+        <header className="mb-8">
           <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-4 italic">Catálogo Completo</h2>
           <p className="text-xl text-muted-foreground max-w-2xl font-medium">
-            Selecciona un grupo industrial para filtrar nuestras soluciones de ingeniería certificada.
+            Selecciona un grupo o subgrupo industrial para filtrar soluciones de ingeniería certificada.
           </p>
         </header>
 
-        {/* Barra de Filtros por Categoría */}
-        <div className="mb-12 space-y-4">
-          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">
-            <LayoutGrid size={14} className="text-primary" /> Filtrar por Grupo:
+        {/* Barra de Filtros por Macro-Grupo y Subgrupos */}
+        <div className="mb-12 space-y-4 bg-muted/20 p-6 rounded-2xl border border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
+              <Layers size={16} className="text-primary" /> Filtrar por Grupo:
+            </div>
+            {(selectedMainGroup !== 'all' || selectedSubGroup !== null || searchTerm) && (
+              <button
+                onClick={handleResetFilters}
+                className="text-[10px] font-black uppercase text-primary hover:underline flex items-center gap-1"
+              >
+                <X size={12} /> Limpiar Filtros
+              </button>
+            )}
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant={selectedCategoryId === null ? "default" : "outline"}
-              onClick={() => setSelectedCategoryId(null)}
-              className={cn(
-                "h-12 px-6 font-black uppercase tracking-widest text-xs italic transition-all",
-                selectedCategoryId === null ? "shadow-lg scale-105" : "hover:border-primary"
-              )}
-            >
-              Todos los Equipos
-            </Button>
-            {categories.map((cat: any) => (
+
+          {/* Fila 1: Macro-Grupos */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {MAIN_GROUPS_CONFIG.map((group) => {
+              const Icon = group.icon;
+              const isSelected = selectedMainGroup === group.id;
+              const count = groupCounts[group.id as keyof typeof groupCounts] || 0;
+
+              return (
+                <button
+                  key={group.id}
+                  onClick={() => {
+                    setSelectedMainGroup(group.id);
+                    setSelectedSubGroup(null);
+                  }}
+                  className={cn(
+                    "flex items-center justify-between p-4 rounded-xl border-2 font-black uppercase text-xs italic tracking-wider transition-all text-left",
+                    isSelected 
+                      ? "bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]" 
+                      : "bg-white text-foreground border-border hover:border-primary/50 hover:bg-muted/50"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Icon size={18} className={cn("shrink-0", isSelected ? "text-primary-foreground" : "text-primary")} />
+                    <span className="truncate">{group.name}</span>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] px-2 py-0.5 rounded-full font-bold ml-2 shrink-0",
+                    isSelected ? "bg-black/20 text-white" : "bg-muted text-muted-foreground"
+                  )}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Fila 2: Subgrupos contextuales */}
+          {activeGroupConfig && activeGroupConfig.subGroups.length > 0 && (
+            <div className="pt-3 border-t border-border/60 flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mr-1">
+                Subgrupos de {activeGroupConfig.name}:
+              </span>
               <Button
-                key={cat.id}
-                variant={selectedCategoryId === cat.id ? "default" : "outline"}
-                onClick={() => setSelectedCategoryId(cat.id)}
+                size="sm"
+                variant={selectedSubGroup === null ? "default" : "secondary"}
+                onClick={() => setSelectedSubGroup(null)}
                 className={cn(
-                  "h-12 px-6 font-black uppercase tracking-widest text-xs italic transition-all",
-                  selectedCategoryId === cat.id ? "shadow-lg scale-105" : "hover:border-primary"
+                  "h-8 px-3 text-[11px] font-black uppercase tracking-wider rounded-full",
+                  selectedSubGroup === null ? "bg-foreground text-background hover:bg-foreground/90" : "bg-muted hover:bg-muted/80 text-foreground"
                 )}
               >
-                {cat.name}
+                Ver Todos ({groupCounts[selectedMainGroup as keyof typeof groupCounts] || 0})
               </Button>
-            ))}
-          </div>
+              {activeGroupConfig.subGroups.map((sub) => {
+                const isSubActive = selectedSubGroup === sub;
+                const subCount = (products || []).filter(p => 
+                  (p.subGroup === sub || p.categoryNames?.includes(sub)) && 
+                  (selectedMainGroup === 'all' || p.mainGroup === selectedMainGroup)
+                ).length;
+
+                return (
+                  <Button
+                    key={sub}
+                    size="sm"
+                    variant={isSubActive ? "default" : "outline"}
+                    onClick={() => setSelectedSubGroup(sub)}
+                    className={cn(
+                      "h-8 px-3 text-[11px] font-black uppercase tracking-wider rounded-full transition-all",
+                      isSubActive 
+                        ? "bg-primary text-primary-foreground border-primary shadow-sm" 
+                        : "bg-white border-border hover:border-primary/60 text-foreground"
+                    )}
+                  >
+                    {sub} {subCount > 0 && <span className="ml-1 opacity-75">({subCount})</span>}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {isLoading ? (
+        {productsLoading ? (
           <div className="flex flex-col items-center justify-center py-24">
             <Loader2 className="animate-spin text-primary mb-4" size={48} />
             <p className="text-muted-foreground font-black uppercase tracking-widest text-xs italic">Sincronizando Inventario...</p>
@@ -134,7 +272,7 @@ export default function ProductsPage() {
             <p className="text-muted-foreground font-medium">No pudimos sincronizar con el centro de datos. Reintente en un momento.</p>
             <Button onClick={() => window.location.reload()} variant="outline" className="mt-6 font-black uppercase">Reintentar</Button>
           </div>
-        ) : products.length === 0 ? (
+        ) : (products || []).length === 0 ? (
           <div className="text-center py-20 border-2 border-dashed border-border rounded-2xl bg-white/50 backdrop-blur max-w-2xl mx-auto px-6 shadow-inner">
             <Database className="mx-auto mb-4 text-muted-foreground opacity-20" size={64} />
             <h3 className="text-2xl font-black uppercase italic mb-2">Base de Datos no Inicializada</h3>
@@ -153,13 +291,10 @@ export default function ProductsPage() {
             <p className="text-lg font-black uppercase italic text-muted-foreground">No se encontraron productos coincidentes</p>
             <Button 
               variant="link" 
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedCategoryId(null);
-              }} 
+              onClick={handleResetFilters} 
               className="mt-2 font-bold uppercase text-primary"
             >
-              Limpiar búsqueda y filtros
+              Restablecer filtros
             </Button>
           </div>
         ) : (

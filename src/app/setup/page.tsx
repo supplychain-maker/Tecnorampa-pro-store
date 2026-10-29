@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -6,29 +5,40 @@ import { useUser, useFirestore } from '@/firebase';
 import { doc, setDoc, collection, addDoc, serverTimestamp, getDocs, deleteDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Loader2, Database, ShieldAlert, CheckCircle2, ArrowRight, AlertTriangle, Info, UserCheck } from 'lucide-react';
+import { Loader2, Database, ShieldAlert, CheckCircle2, ArrowRight, AlertTriangle, Info, UserCheck, Layers } from 'lucide-react';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-const INITIAL_PRODUCTS = [
-  {
-    name: "Producto de Prueba Stripe",
-    slug: "test-stripe-product",
-    categoryNames: ["Pruebas"],
-    price: 1,
-    shortDescription: "Producto de $1 para pruebas de pago seguro.",
-    description: "Este es un producto ficticio con valor de $1 MXN creado específicamente para validar la integración con la pasarela de pagos Stripe y la generación de órdenes en Firestore.",
-    image: "https://picsum.photos/seed/stripe-test/800/600",
-    images: ["https://picsum.photos/seed/stripe-test/800/600"],
-    active: true,
-    benefits: ["Validación de pasarela", "Prueba de centavos en Stripe", "Verificación de webhook"],
-    specs: { "Valor": "$1.00 MXN", "Tipo": "Digital/Prueba" },
-    operationSteps: ["Añadir al carrito", "Proceder al checkout", "Usar tarjeta de prueba 4242"]
-  },
+export const INITIAL_CATEGORIES = [
+  // Grupos Principales (Macro)
+  { name: "Andén de Carga", slug: "anden", isMainGroup: true, order: 1, icon: "Warehouse" },
+  { name: "Estacionamiento", slug: "estacionamiento", isMainGroup: true, order: 2, icon: "Car" },
+  { name: "Refacciones Industriales", slug: "refacciones", isMainGroup: true, order: 3, icon: "Wrench" },
+
+  // Subgrupos de Andén de Carga
+  { name: "Niveladoras y Mini Docks", slug: "niveladoras-y-mini-docks", mainGroup: "anden", parentName: "Andén de Carga", order: 10 },
+  { name: "Seguridad e Iluminación", slug: "seguridad-e-iluminacion", mainGroup: "anden", parentName: "Andén de Carga", order: 11 },
+  { name: "Protección de Andén", slug: "proteccion-de-anden", mainGroup: "anden", parentName: "Andén de Carga", order: 12 },
+
+  // Subgrupos de Estacionamiento
+  { name: "Duplicadores de Autos", slug: "duplicadores-de-autos", mainGroup: "estacionamiento", parentName: "Estacionamiento", order: 20 },
+
+  // Subgrupos de Refacciones Industriales
+  { name: "Mecánicas y Retención", slug: "mecanicas-y-retencion", mainGroup: "refacciones", parentName: "Refacciones Industriales", order: 30 },
+  { name: "Hidráulica", slug: "hidraulica", mainGroup: "refacciones", parentName: "Refacciones Industriales", order: 31 },
+  { name: "Control y Eléctrico", slug: "control-y-electrico", mainGroup: "refacciones", parentName: "Refacciones Industriales", order: 32 },
+  { name: "Baleros y Rodamientos", slug: "baleros-y-rodamientos", mainGroup: "refacciones", parentName: "Refacciones Industriales", order: 33 },
+];
+
+export const INITIAL_PRODUCTS = [
+  // --- GRUPO: ANDÉN DE CARGA ---
   {
     name: "Niveladora Hidráulica de Andén",
     slug: "niveladora-hidraulica-premium",
-    categoryNames: ["Rampas", "Equipos de Andén"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Niveladoras y Mini Docks",
+    categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
     price: 125000,
     shortDescription: "Operación automática con un solo botón. Capacidad de 30k a 50k lbs.",
     description: "La niveladora hidráulica de Tecnorampa ofrece la máxima eficiencia y seguridad. Su sistema electro-hidráulico elimina el esfuerzo manual y reduce el mantenimiento significativamente.",
@@ -47,7 +57,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Niveladora Mecánica de Andén",
     slug: "niveladora-mecanica-industrial",
-    categoryNames: ["Rampas", "Equipos de Andén"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Niveladoras y Mini Docks",
+    categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
     price: 95000,
     shortDescription: "Operación manual robusta mediante cadena y resortes de alta tensión.",
     description: "Solución confiable y de bajo costo operativo. Fabricada con acero estructural de alta resistencia, diseñada para soportar tráfico pesado constante.",
@@ -65,7 +78,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Mini Dock Hidráulico",
     slug: "mini-dock-hidraulico",
-    categoryNames: ["Mini Docks", "Equipos de Andén"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Niveladoras y Mini Docks",
+    categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
     price: 65000,
     shortDescription: "Compacto y automático. Ideal para renovaciones de andenes existentes.",
     description: "Se instala directamente en el borde del andén sin necesidad de fosa profunda. Operación electro-hidráulica de un solo toque.",
@@ -87,7 +103,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Mini Dock Mecánico",
     slug: "mini-dock-mecanico",
-    categoryNames: ["Mini Docks", "Equipos de Andén"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Niveladoras y Mini Docks",
+    categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
     price: 45000,
     shortDescription: "La solución más económica y rápida para nivelar andenes.",
     description: "Niveladora de orilla de andén manual. Se acciona mediante una palanca, ideal para operaciones ligeras y medias sin suministro eléctrico.",
@@ -107,37 +126,12 @@ const INITIAL_PRODUCTS = [
     ]
   },
   {
-    name: "Rampa Estacionamiento TR Evolution",
-    slug: "rampa-parking-evolution",
-    categoryNames: ["Estacionamiento"],
-    price: 185000,
-    shortDescription: "Premium. Duplica tu espacio de estacionamiento con máxima seguridad.",
-    description: "Sistema de elevación de alta gama. Permite abrir las puertas del auto completamente gracias a su diseño de postes delgados pero ultra resistentes.",
-    image: "https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb",
-    images: ["https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb"],
-    active: true,
-    benefits: ["Ahorro de espacio", "IP Protection (Exterior)", "Alta estética"],
-    specs: { "Capacidad": "7,000 lbs", "Protección": "IP65", "Seguro": "Bloqueo mecánico automático" },
-    operationSteps: ["Posicionar auto", "Girar llave de ascenso", "Verificar bloqueos"]
-  },
-  {
-    name: "Rampa Parking Lift",
-    slug: "rampa-parking-lift",
-    categoryNames: ["Estacionamiento"],
-    price: 145000,
-    shortDescription: "Robusta y funcional para condominios y residencias.",
-    description: "Solución de elevación electro-hidráulica para dos autos. Ideal para garajes con techos altos que buscan optimizar el área de parqueo.",
-    image: "https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR",
-    images: ["https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR"],
-    active: true,
-    benefits: ["Operación silenciosa", "Estructura de acero", "Fácil de usar"],
-    specs: { "Capacidad": "6,000 lbs", "Tiempo ascenso": "45 seg", "Voltaje": "220V" },
-    operationSteps: ["Estacionar en plataforma", "Activar mando eléctrico", "Asegurar posición"]
-  },
-  {
     name: "Semáforo de Andén LED",
     slug: "semaforo-led-industrial",
-    categoryNames: ["Seguridad", "Señalización"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Seguridad e Iluminación",
+    categoryNames: ["Andén de Carga", "Seguridad e Iluminación"],
     price: 8500,
     shortDescription: "Señalización roja/verde de alta visibilidad para maniobras seguras.",
     description: "Controla el flujo de camiones en tu andén. Carcasa de policarbonato resistente a impactos y LED de larga duración.",
@@ -151,7 +145,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Lámpara de Andén Articulada",
     slug: "lampara-anden-articulada",
-    categoryNames: ["Iluminación", "Equipos de Andén"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Seguridad e Iluminación",
+    categoryNames: ["Andén de Carga", "Seguridad e Iluminación"],
     price: 4500,
     shortDescription: "Ilumina el interior de los trailers para cargas seguras.",
     description: "Brazo articulado de 40 pulgadas con cabezal LED de alta potencia. Resistente a vibraciones y golpes típicos del área de carga.",
@@ -165,10 +162,13 @@ const INITIAL_PRODUCTS = [
   {
     name: "Tope de Andén Reforzado",
     slug: "tope-anden-acero",
-    categoryNames: ["Protección", "Accesorios"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Protección de Andén",
+    categoryNames: ["Andén de Carga", "Protección de Andén"],
     price: 2500,
     shortDescription: "Protección con cara de acero para tráfico rudo de trailers.",
-    description: "El tope de andén definitivo. Incluye una placa de acero frontal que evita el patrimonio prematuro del hule por la fricción de la suspensión del trailer.",
+    description: "El tope de andén definitivo. Incluye una placa de acero frontal que evita el desgaste prematuro del hule por la fricción de la suspensión del trailer.",
     image: "https://lh3.googleusercontent.com/d/1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH",
     images: ["https://lh3.googleusercontent.com/d/1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH"],
     active: true,
@@ -179,7 +179,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Tope de Andén Laminado",
     slug: "tope-anden-laminado",
-    categoryNames: ["Protección", "Accesorios"],
+    mainGroup: "anden",
+    mainGroupName: "Andén de Carga",
+    subGroup: "Protección de Andén",
+    categoryNames: ["Andén de Carga", "Protección de Andén"],
     price: 1800,
     shortDescription: "Protección estándar de hule laminado para andenes.",
     description: "Absorción de impactos eficiente para trailers estándar. Fabricado con neumáticos reciclados de alta densidad.",
@@ -190,10 +193,51 @@ const INITIAL_PRODUCTS = [
     specs: { "Material": "Hule reciclado", "Instalación": "Anclaje mecánico", "Dureza": "70 Shore A" },
     operationSteps: ["Marcar barrenos", "Fijar al muro del andén", "Verificar firmeza"]
   },
+
+  // --- GRUPO: ESTACIONAMIENTO ---
+  {
+    name: "Rampa Estacionamiento TR Evolution",
+    slug: "rampa-parking-evolution",
+    mainGroup: "estacionamiento",
+    mainGroupName: "Estacionamiento",
+    subGroup: "Duplicadores de Autos",
+    categoryNames: ["Estacionamiento", "Duplicadores de Autos"],
+    price: 185000,
+    shortDescription: "Premium. Duplica tu espacio de estacionamiento con máxima seguridad.",
+    description: "Sistema de elevación de alta gama. Permite abrir las puertas del auto completamente gracias a su diseño de postes delgados pero ultra resistentes.",
+    image: "https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb",
+    images: ["https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb"],
+    active: true,
+    benefits: ["Ahorro de espacio", "IP Protection (Exterior)", "Alta estética"],
+    specs: { "Capacidad": "7,000 lbs", "Protección": "IP65", "Seguro": "Bloqueo mecánico automático" },
+    operationSteps: ["Posicionar auto", "Girar llave de ascenso", "Verificar bloqueos"]
+  },
+  {
+    name: "Rampa Parking Lift",
+    slug: "rampa-parking-lift",
+    mainGroup: "estacionamiento",
+    mainGroupName: "Estacionamiento",
+    subGroup: "Duplicadores de Autos",
+    categoryNames: ["Estacionamiento", "Duplicadores de Autos"],
+    price: 145000,
+    shortDescription: "Robusta y funcional para condominios y residencias.",
+    description: "Solución de elevación electro-hidráulica para dos autos. Ideal para garajes con techos altos que buscan optimizar el área de parqueo.",
+    image: "https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR",
+    images: ["https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR"],
+    active: true,
+    benefits: ["Operación silenciosa", "Estructura de acero", "Fácil de usar"],
+    specs: { "Capacidad": "6,000 lbs", "Tiempo ascenso": "45 seg", "Voltaje": "220V" },
+    operationSteps: ["Estacionar en plataforma", "Activar mando eléctrico", "Asegurar posición"]
+  },
+
+  // --- GRUPO: REFACCIONES INDUSTRIALES ---
   {
     name: "Mecanismo de Freno para Rampa con Auto-Release",
     slug: "mecanismo-freno-rampa-auto-release",
-    categoryNames: ["Refacciones Mecánicas", "Equipos de Andén"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Mecánicas y Retención",
+    categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
     price: 9800,
     shortDescription: "Ensamble de cremallera dentada y trinquete con sistema A/R Auto Release para niveladoras mecánicas.",
     description: "Mecanismo de freno y sujeción (Hold-Down Box) de uso extra rudo para rampas mecánicas de andén. Incorpora la tecnología A/R Auto Release de Multi-Ear Products para permitir la flotación libre de la rampa durante el movimiento del camión en carga y descarga, evitando deformaciones estructurales.",
@@ -207,7 +251,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Resorte de Extensión Amarillo para Niveladora Mecánica",
     slug: "resorte-extension-amarillo-rampa",
-    categoryNames: ["Refacciones Mecánicas", "Equipos de Andén"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Mecánicas y Retención",
+    categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
     price: 2850,
     shortDescription: "Resorte helicoidal de alta tensión con gancho abierto y pintura electrostática de alta resistencia.",
     description: "Resorte principal de elevación para niveladoras mecánicas de andén. Fabricado en acero aleado de alto carbono tratado térmicamente para garantizar ciclos continuos sin pérdida de elasticidad. Acabado en amarillo industrial para fácil inspección visual y resistencia a la corrosión.",
@@ -219,23 +266,29 @@ const INITIAL_PRODUCTS = [
     operationSteps: ["Descomprimir sistema de la rampa", "Fijar gancho en el anclaje trasero", "Tensar y asegurar el perno frontal"]
   },
   {
-    name: "Botonera Colgante de Control Tipo Banana con Llave",
-    slug: "botonera-colgante-banana-llave",
-    categoryNames: ["Control Eléctrico", "Equipos de Andén"],
-    price: 3200,
-    shortDescription: "Estación de mando colgante ergonómica con paro de emergencia con llave y botones de subida/bajada.",
-    description: "Estación de control colgante tipo banana de alta resistencia a caídas y golpes industriales. Cuenta con un botón de paro de emergencia tipo hongo bloqueable con llave para evitar uso no autorizado, junto con botones sellados con flechas direccionales de subida y bajada. Incluye pasacables de goma flexible.",
-    image: "/products/botonera-banana-frente.jpeg",
-    images: ["/products/botonera-banana-frente.jpeg", "/products/botonera-banana-lado1.jpeg", "/products/botonera-banana-lado2.jpeg"],
+    name: "Poleas Industriales para Cable de Acero (Par)",
+    slug: "poleas-industriales-cable-acero",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Mecánicas y Retención",
+    categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
+    price: 1950,
+    shortDescription: "Juego de poleas de canal maquinadas en polímero técnico de alta densidad para cables de tracción.",
+    description: "Poleas de carga maquinadas en polímero de alta resistencia mecánica (Nylamid / Polímero técnico antifricción). Diseñadas para guiar cables de acero en sistemas de elevación, contrapesos y niveladoras de andén sin desgastar ni morder el cable, reduciendo el ruido y eliminando la fricción excesiva.",
+    image: "/products/poleas-industriales-frente.jpeg",
+    images: ["/products/poleas-industriales-frente.jpeg", "/products/poleas-industriales-lado1.jpeg", "/products/poleas-industriales-lado2.jpeg"],
     active: true,
-    benefits: ["Bloqueo de seguridad con llave", "Carcasa ergonómica antichoque", "Pasacables con protector de tensión", "Contactos eléctricos de alta durabilidad"],
-    specs: { "Funciones": "Paro de emergencia (con llave) + Subida ⬆️ + Bajada ⬇️", "Protección": "IP65", "Material": "Polímero ABS de alto impacto", "Voltaje": "Hasta 380V AC" },
-    operationSteps: ["Conectar cableado de control según diagrama", "Fijar cable de acero de soporte", "Desbloquear con llave antes de operar"]
+    benefits: ["Material autolubricado que prolonga la vida del cable", "No genera chispas ni corrosión", "Canal de precisión para cable de acero de 1/4\" a 3/8\"", "Operación silenciosa y suave"],
+    specs: { "Material": "Polímero técnico maquinado", "Aplicación": "Guía de cable en rampas y elevadores", "Canal": "Ranura en V/U para cable de acero", "Buje": "Barreno central maquinado para eje" },
+    operationSteps: ["Colocar sobre el eje correspondiente", "Alinear cable de tracción en la garganta", "Asegurar con rondana y pasador de retención"]
   },
   {
     name: "Válvula Reguladora de Caudal Parker con Micrómetro",
     slug: "valvula-reguladora-caudal-parker",
-    categoryNames: ["Sistemas Hidráulicos"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
     price: 4650,
     shortDescription: "Válvula de aguja de precisión Parker con perilla graduada para ajuste de velocidad hidráulica.",
     description: "Válvula de control de flujo hidráulico de alta precisión original Parker. Su perilla estriada y graduada micrométricamente permite regular con exactitud milimétrica la velocidad de descenso del cilindro de la rampa o equipo elevador, garantizando un aterrizaje suave y seguro sobre el remolque.",
@@ -247,9 +300,29 @@ const INITIAL_PRODUCTS = [
     operationSteps: ["Intercalar en la línea del pistón principal", "Girar perilla para calibrar velocidad", "Apretar prisionero de seguridad"]
   },
   {
+    name: "Botonera Colgante de Control Tipo Banana con Llave",
+    slug: "botonera-colgante-banana-llave",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Control y Eléctrico",
+    categoryNames: ["Refacciones Industriales", "Control y Eléctrico"],
+    price: 3200,
+    shortDescription: "Estación de mando colgante ergonómica con paro de emergencia con llave y botones de subida/bajada.",
+    description: "Estación de control colgante tipo banana de alta resistencia a caídas y golpes industriales. Cuenta con un botón de paro de emergencia tipo hongo bloqueable con llave para evitar uso no autorizado, junto con botones sellados con flechas direccionales de subida y bajada. Incluye pasacables de goma flexible.",
+    image: "/products/botonera-banana-frente.jpeg",
+    images: ["/products/botonera-banana-frente.jpeg", "/products/botonera-banana-lado1.jpeg", "/products/botonera-banana-lado2.jpeg"],
+    active: true,
+    benefits: ["Bloqueo de seguridad con llave", "Carcasa ergonómica antichoque", "Pasacables con protector de tensión", "Contactos eléctricos de alta durabilidad"],
+    specs: { "Funciones": "Paro de emergencia (con llave) + Subida ⬆️ + Bajada ⬇️", "Protección": "IP65", "Material": "Polímero ABS de alto impacto", "Voltaje": "Hasta 380V AC" },
+    operationSteps: ["Conectar cableado de control según diagrama", "Fijar cable de acero de soporte", "Desbloquear con llave antes de operar"]
+  },
+  {
     name: "Botón de Paro de Emergencia Schneider Electric (Giro)",
     slug: "paro-emergencia-schneider-giro",
-    categoryNames: ["Seguridad Industrial", "Control Eléctrico"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Control y Eléctrico",
+    categoryNames: ["Refacciones Industriales", "Control y Eléctrico"],
     price: 1450,
     shortDescription: "Pulsador de seguridad tipo hongo rojo con desenclavamiento por giro Schneider Electric Harmony.",
     description: "Botón de paro de emergencia original Schneider Electric serie Harmony. Diseñado para tableros y cajas de mando en andenes y rampas. Cabeza tipo hongo roja con flechas indicadoras de liberación por giro (Turn-to-release) y cuello metálico roscado de máxima durabilidad.",
@@ -263,7 +336,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Botón de Paro de Emergencia Schneider con Llave",
     slug: "paro-emergencia-schneider-llave",
-    categoryNames: ["Seguridad Industrial", "Control Eléctrico"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Control y Eléctrico",
+    categoryNames: ["Refacciones Industriales", "Control y Eléctrico"],
     price: 2100,
     shortDescription: "Pulsador de paro de emergencia con cerradura y llaves de seguridad Schneider Electric.",
     description: "Botón de seguridad para aplicaciones críticas donde el restablecimiento del equipo solo debe ser ejecutado por personal autorizado o supervisores de mantenimiento. Cuenta con cerradura central y 2 llaves incluidas, impidiendo el reinicio accidental de la rampa o sistema de elevación.",
@@ -277,7 +353,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Gabinete Estanco para Riel DIN IP65",
     slug: "gabinete-estanco-riel-din-ip65",
-    categoryNames: ["Tableros Eléctricos", "Control Eléctrico"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Control y Eléctrico",
+    categoryNames: ["Refacciones Industriales", "Control y Eléctrico"],
     price: 850,
     shortDescription: "Caja de distribución termoplástica hermética con riel DIN y ventana abatible transparente.",
     description: "Gabinete de distribución eléctrica estanco con grado de protección IP65, diseñado para proteger interruptores termomagnéticos, relevadores o bloques de terminales en ambientes polvorientos o húmedos como bahías de carga. Incluye riel DIN de acero galvanizado instalado y ventana abatible oscurecida.",
@@ -285,27 +364,16 @@ const INITIAL_PRODUCTS = [
     images: ["/products/caja-din-frente.jpeg", "/products/caja-din-abierta.jpeg"],
     active: true,
     benefits: ["Protección IP65 contra agua y polvo", "Riel DIN galvanizado preinstalado", "Tapa transparente con bisagra para monitoreo", "Material ABS retardante de flama"],
-    specs: { "Capacidad": "4 a 5 módulos DIN estándar", "Protección": "IP65", "Montaje": "Sobreponer en muro", "Accesorios": "Riel DIN y empaque hermético" }
-    ,operationSteps: ["Fijar caja al muro mediante barrenos sellados", "Montar interruptor o pastilla en el riel DIN", "Cerrar y verificar ajuste de empaque hermético"]
-  },
-  {
-    name: "Poleas Industriales para Cable de Acero (Par)",
-    slug: "poleas-industriales-cable-acero",
-    categoryNames: ["Refacciones Mecánicas", "Equipos de Andén"],
-    price: 1950,
-    shortDescription: "Juego de poleas de canal maquinadas en polímero técnico de alta densidad para cables de tracción.",
-    description: "Poleas de carga maquinadas en polímero de alta resistencia mecánica (Nylamid / Polímero técnico antifricción). Diseñadas para guiar cables de acero en sistemas de elevación, contrapesos y niveladoras de andén sin desgastar ni morder el cable, reduciendo el ruido y eliminando la fricción excesiva.",
-    image: "/products/poleas-industriales-frente.jpeg",
-    images: ["/products/poleas-industriales-frente.jpeg", "/products/poleas-industriales-lado1.jpeg", "/products/poleas-industriales-lado2.jpeg"],
-    active: true,
-    benefits: ["Material autolubricado que prolonga la vida del cable", "No genera chispas ni corrosión", "Canal de precisión para cable de acero de 1/4\" a 3/8\"", "Operación silenciosa y suave"],
-    specs: { "Material": "Polímero técnico maquinado", "Aplicación": "Guía de cable en rampas y elevadores", "Canal": "Ranura en V/U para cable de acero", "Buje": "Barreno central maquinado para eje" }
-    ,operationSteps: ["Colocar sobre el eje correspondiente", "Alinear cable de tracción en la garganta", "Asegurar con rondana y pasador de retención"]
+    specs: { "Capacidad": "4 a 5 módulos DIN estándar", "Protección": "IP65", "Montaje": "Sobreponer en muro", "Accesorios": "Riel DIN y empaque hermético" },
+    operationSteps: ["Fijar caja al muro mediante barrenos sellados", "Montar interruptor o pastilla en el riel DIN", "Cerrar y verificar ajuste de empaque hermético"]
   },
   {
     name: "Rodamiento / Balero de Doble Hilera 5205J-2RS C3",
     slug: "rodamiento-balero-5205j-2rs-c3",
-    categoryNames: ["Baleros y Rodamientos", "Refacciones Mecánicas"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Baleros y Rodamientos",
+    categoryNames: ["Refacciones Industriales", "Baleros y Rodamientos"],
     price: 650,
     shortDescription: "Balero de bolas de contacto angular de doble hilera con doble sello de caucho y holgura C3.",
     description: "Rodamiento industrial de alta precisión 5205J-2RS C3. Su diseño de contacto angular de doble hilera soporta cargas radiales intensas y cargas axiales combinadas en ambos sentidos. Equipado con sellos de goma 2RS en ambas caras para retener la grasa y evitar la entrada de suciedad.",
@@ -319,7 +387,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Rodamiento / Balero Rígido de Bolas 6005-2RS",
     slug: "rodamiento-balero-6005-2rs",
-    categoryNames: ["Baleros y Rodamientos", "Refacciones Mecánicas"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Baleros y Rodamientos",
+    categoryNames: ["Refacciones Industriales", "Baleros y Rodamientos"],
     price: 380,
     shortDescription: "Balero rígido de bolas con doble sello de goma 2RS para motores y poleas industriales.",
     description: "Rodamiento estándar de gran versatilidad y bajo rozamiento 6005-2RS. Ideal para poleas guía, motores de unidades electrohidráulicas y rodillos de andén. Sus sellos de elastómero 2RS proporcionan un aislamiento confiable en ambientes con presencia de polvo o salpicaduras.",
@@ -333,7 +404,10 @@ const INITIAL_PRODUCTS = [
   {
     name: "Rodamiento de Rodillos Cilíndricos NCF2208V-2RS",
     slug: "rodamiento-rodillos-ncf2208v-2rs",
-    categoryNames: ["Baleros y Rodamientos", "Refacciones Mecánicas"],
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Baleros y Rodamientos",
+    categoryNames: ["Refacciones Industriales", "Baleros y Rodamientos"],
     price: 1750,
     shortDescription: "Rodamiento de rodillos cilíndricos de complemento completo para cargas radiales extremas.",
     description: "Balero de rodillos cilíndricos de capacidad extrema modelo NCF2208V-2RS. Al contar con un complemento completo de rodillos (sin jaula espaciadora), maximiza el área de contacto para resistir impactos severos y cargas radiales pesadas en los ejes principales de elevación y nivelación de andén.",
@@ -372,36 +446,33 @@ export default function SetupPage() {
         uid: user.uid
       }, { merge: true });
 
-      setStep('Eliminando productos anteriores...');
+      setStep('Eliminando productos anteriores y pruebas...');
       const oldProducts = await getDocs(collection(db, 'products'));
       for (const oldDoc of oldProducts.docs) {
         await deleteDoc(oldDoc.ref);
       }
 
-      setStep('Sincronizando grupos y categorías industriales...');
-      const allCategoryNames = Array.from(new Set(INITIAL_PRODUCTS.flatMap(p => p.categoryNames || [])));
-      const existingCatsSnapshot = await getDocs(collection(db, 'categories'));
+      setStep('Reestructurando grupos y subgrupos...');
+      const oldCategories = await getDocs(collection(db, 'categories'));
+      for (const oldCatDoc of oldCategories.docs) {
+        await deleteDoc(oldCatDoc.ref);
+      }
+
       const catMap = new Map<string, string>();
-
-      for (const catDoc of existingCatsSnapshot.docs) {
-        catMap.set(catDoc.data().name, catDoc.id);
+      for (const cat of INITIAL_CATEGORIES) {
+        const docRef = await addDoc(collection(db, 'categories'), {
+          ...cat,
+          createdAt: serverTimestamp()
+        });
+        catMap.set(cat.name, docRef.id);
       }
 
-      for (const catName of allCategoryNames) {
-        if (!catMap.has(catName)) {
-          const slug = catName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-          const newDoc = await addDoc(collection(db, 'categories'), {
-            name: catName,
-            slug,
-            createdAt: serverTimestamp()
-          });
-          catMap.set(catName, newDoc.id);
-        }
-      }
-
-      setStep('Cargando catálogo maestro con imágenes locales...');
+      setStep('Cargando los 21 productos en sus grupos correspondientes...');
       for (const product of INITIAL_PRODUCTS) {
-        const categoryIds = (product.categoryNames || []).map(name => catMap.get(name)).filter((id): id is string => !!id);
+        const categoryIds = (product.categoryNames || [])
+          .map(name => catMap.get(name))
+          .filter((id): id is string => !!id);
+
         await addDoc(collection(db, 'products'), {
           ...product,
           categoryIds,
@@ -412,7 +483,7 @@ export default function SetupPage() {
       }
 
       setSuccess(true);
-      setStep('¡Catálogo Maestro Restaurado con Éxito!');
+      setStep('¡Catálogo Restaurado con Éxito con 3 Grupos y Subgrupos!');
     } catch (err: any) {
       console.error("Setup error:", err);
       setError(err.message || 'Error desconocido. Revisa las reglas de Firestore.');
@@ -451,7 +522,7 @@ export default function SetupPage() {
             <span className="text-xs font-bold uppercase tracking-widest">Sesión activa: {user.email}</span>
           </div>
           <CardTitle className="text-3xl font-black italic uppercase flex items-center gap-3">
-            <Database className="text-primary" /> Setup Industrial Pro
+            <Database className="text-primary" /> Setup Catálogo Jerárquico
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 pt-4">
@@ -465,8 +536,16 @@ export default function SetupPage() {
 
           {!success ? (
             <div className="space-y-6">
-              <div className="bg-muted p-4 rounded-lg text-sm italic">
-                Este proceso restaurará los **22 productos y refacciones industriales** con soporte para múltiples grupos, imágenes locales y galerías completas.
+              <div className="bg-muted p-4 rounded-lg text-sm space-y-2">
+                <p className="font-bold flex items-center gap-2">
+                  <Layers className="text-primary" size={18} /> Reorganización en 3 Macro-Grupos:
+                </p>
+                <ul className="text-xs list-disc pl-5 space-y-1 text-muted-foreground font-medium">
+                  <li><strong>Andén de Carga</strong>: Niveladoras, Mini Docks, Seguridad, Topes</li>
+                  <li><strong>Estacionamiento</strong>: Duplicadores de autos TR Evolution y Parking Lift</li>
+                  <li><strong>Refacciones Industriales</strong>: Freno Auto-Release, Resorte, Válvula Parker, Botoneras Schneider y Baleros</li>
+                  <li className="text-destructive font-bold">Producto de prueba Stripe eliminado permanentemente (Total: 21 productos).</li>
+                </ul>
               </div>
               
               {loading && (
@@ -484,13 +563,15 @@ export default function SetupPage() {
             <div className="text-center space-y-8 py-6">
               <CheckCircle2 className="mx-auto text-green-500" size={64} />
               <h3 className="text-2xl font-black uppercase italic">¡Catálogo Restaurado!</h3>
-              <p className="text-muted-foreground text-sm">Ya puedes ver las opciones industriales con sus galerías y grupos múltiples.</p>
+              <p className="text-muted-foreground text-sm">
+                Se han organizado los 21 productos en Andén, Estacionamiento y Refacciones con sus respectivos subgrupos.
+              </p>
               <div className="grid grid-cols-2 gap-4">
                 <Link href="/products" className="w-full">
                   <Button variant="outline" className="w-full font-black uppercase">Ver Tienda</Button>
                 </Link>
-                <Link href="/admin/products" className="w-full">
-                  <Button className="w-full font-black uppercase">Gestionar</Button>
+                <Link href="/" className="w-full">
+                  <Button className="w-full font-black uppercase">Ir al Inicio</Button>
                 </Link>
               </div>
             </div>

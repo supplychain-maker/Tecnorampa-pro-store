@@ -49,8 +49,18 @@ export function ProductCard({ product }: ProductCardProps) {
             data-ai-hint="industrial product photo"
             unoptimized
           />
-          <div className="absolute top-4 left-4 flex flex-wrap gap-1">
-            {product.categoryNames?.slice(0, 1).map((cat, i) => (
+          <div className="absolute top-4 left-4 flex flex-wrap gap-1.5 max-w-[90%] pointer-events-none">
+            {product.mainGroupName && (
+              <Badge className="font-black uppercase text-[9px] tracking-widest shadow-sm bg-primary text-primary-foreground border-none">
+                {product.mainGroupName}
+              </Badge>
+            )}
+            {product.subGroup && (
+              <Badge className="font-black uppercase text-[9px] tracking-widest shadow-sm bg-neutral-900/85 text-white backdrop-blur-sm border border-neutral-700/50">
+                {product.subGroup}
+              </Badge>
+            )}
+            {!product.mainGroupName && !product.subGroup && product.categoryNames?.slice(0, 1).map((cat, i) => (
               <Badge key={i} className="font-black uppercase text-[9px] tracking-widest shadow-sm" variant="secondary">
                 {cat}
               </Badge>

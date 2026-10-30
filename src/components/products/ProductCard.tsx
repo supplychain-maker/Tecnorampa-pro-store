@@ -4,7 +4,7 @@ import { Product } from '@/app/lib/products';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ShoppingCart, MapPin } from 'lucide-react';
+import { ArrowRight, ShoppingCart, MapPin, FileText } from 'lucide-react';
 import { getDirectImageUrl } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +17,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const displayImage = getDirectImageUrl(product.image);
+
+  const hasTechnicalSheet = !!product.technicalSheetUrl || 
+    product.slug === 'tope-anden-acero' || 
+    product.slug === 'tope-anden-laminado';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -66,6 +70,13 @@ export function ProductCard({ product }: ProductCardProps) {
               </Badge>
             ))}
           </div>
+
+          {hasTechnicalSheet && (
+            <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-md text-[9px] font-black uppercase text-foreground/85 border border-primary/40 shadow-xs tracking-wider">
+              <FileText size={11} className="text-primary" />
+              <span>Ficha Técnica</span>
+            </div>
+          )}
         </div>
         
         <CardContent className="p-6">

@@ -23,10 +23,18 @@ interface ProductTechnicalSheetProps {
 
 export function ProductTechnicalSheet({ product, currentVariantName }: ProductTechnicalSheetProps) {
   const [viewMode, setViewMode] = useState<'preview' | 'specs'>('preview');
+  const [previewType, setPreviewType] = useState<'sheets' | 'iframe'>('sheets');
+  const [activeSheet, setActiveSheet] = useState<number>(1);
 
   // URL de la ficha técnica: personalizada o derivada automáticamente por slug
   const pdfUrl = product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`;
   const downloadFileName = `Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`;
+
+  // Láminas en alta definición generadas para vista directa sin dependencias de plugins PDF
+  const hasSheetImages = {
+    p1: `/fichas-tecnicas/${product.slug}-pag1.png`,
+    p2: `/fichas-tecnicas/${product.slug}-pag2.png`,
+  };
 
   const handlePrint = () => {
     const printWindow = window.open(pdfUrl, '_blank');
@@ -83,22 +91,22 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
         </div>
       </div>
 
-      {/* Selector de Vista: Previsualización de Documento vs Tabla de Especificaciones */}
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <div className="flex items-center gap-2">
+      {/* Selector de Vista: Láminas HD vs Visor PDF vs Tabla */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant={viewMode === 'preview' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('preview')}
-            className={`h-8 text-xs font-black uppercase tracking-wider italic ${viewMode === 'preview' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+            className={`h-8 text-xs font-black uppercase tracking-wider italic ${viewMode === 'preview' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}
           >
-            <Eye size={14} className="mr-1.5" /> Previsualización del PDF
+            <Sparkles size={14} className="mr-1.5" /> Ficha Técnica Oficial (HD)
           </Button>
           <Button
             variant={viewMode === 'specs' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('specs')}
-            className={`h-8 text-xs font-black uppercase tracking-wider italic ${viewMode === 'specs' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+            className={`h-8 text-xs font-black uppercase tracking-wider italic ${viewMode === 'specs' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}
           >
             <Layers size={14} className="mr-1.5" /> Datos Técnicos en Tabla
           </Button>
@@ -113,20 +121,116 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
       {/* Contenido según el modo seleccionado */}
       {viewMode === 'preview' ? (
         <div className="space-y-4">
-          <div className="relative w-full rounded-2xl overflow-hidden border-2 border-border bg-muted/30 shadow-lg">
-            {/* Visor nativo de PDF embebido */}
-            <iframe
-              src={`${pdfUrl}#toolbar=0&navpanes=0&view=FitH`}
-              title={`Ficha Técnica - ${product.name}`}
-              className="w-full h-[620px] md:h-[780px] bg-white border-0"
-              loading="lazy"
-            />
+          {/* Sub-barra para cambiar entre Láminas HD y Visor Embebido */}
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-muted/40 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground italic mr-1">
+                Modo de Visualización:
+              </span>
+              <button
+                type="button"
+                onClick={() => setPreviewType('sheets')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider italic transition-all ${
+                  previewType === 'sheets'
+                    ? 'bg-card text-foreground border-2 border-primary shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Láminas Oficiales (2 Páginas)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewType('iframe')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider italic transition-all ${
+                  previewType === 'iframe'
+                    ? 'bg-card text-foreground border-2 border-primary shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Visor PDF Interactivo
+              </button>
+            </div>
+
+            {previewType === 'sheets' && (
+              <div className="flex items-center gap-1.5 bg-background p-1 rounded-lg border border-border">
+                <button
+                  type="button"
+                  onClick={() => setActiveSheet(1)}
+                  className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeSheet === 1
+                      ? 'bg-primary text-primary-foreground shadow-xs'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Pág 1: Catálogo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSheet(2)}
+                  className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeSheet === 2
+                      ? 'bg-primary text-primary-foreground shadow-xs'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Pág 2: Plano Ortográfico
+                </button>
+              </div>
+            )}
           </div>
+
+          {/* Renderizado de Láminas HD o Visor PDF */}
+          {previewType === 'sheets' ? (
+            <div className="relative w-full rounded-2xl overflow-hidden border-2 border-border bg-white shadow-xl p-2 md:p-6 flex flex-col items-center">
+              <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-border">
+                <img
+                  src={activeSheet === 1 ? hasSheetImages.p1 : hasSheetImages.p2}
+                  alt={`Ficha Técnica ${product.name} - Página ${activeSheet}`}
+                  className="w-full h-auto object-contain select-none"
+                  loading="eager"
+                />
+              </div>
+
+              {/* Botones de cambio de página inferiores */}
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setActiveSheet(1)}
+                  disabled={activeSheet === 1}
+                  className="font-black uppercase tracking-wider text-xs italic"
+                >
+                  Anterior: Pág. 1 (Catálogo)
+                </Button>
+                <span className="text-xs font-black uppercase tracking-widest text-primary italic">
+                  Página {activeSheet} de 2
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setActiveSheet(2)}
+                  disabled={activeSheet === 2}
+                  className="font-black uppercase tracking-wider text-xs italic"
+                >
+                  Siguiente: Pág. 2 (Plano)
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full rounded-2xl overflow-hidden border-2 border-border bg-muted/30 shadow-lg">
+              <iframe
+                src={`${pdfUrl}#toolbar=0&navpanes=0&view=FitH`}
+                title={`Ficha Técnica - ${product.name}`}
+                className="w-full h-[620px] md:h-[780px] bg-white border-0"
+                loading="lazy"
+              />
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 bg-muted/40 rounded-xl border border-border text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5 font-medium">
               <FileCheck2 size={15} className="text-primary shrink-0" />
-              Si tu navegador no soporta el visor embebido, puedes abrir o descargar el documento directamente.
+              Documento oficial de ingeniería emitido por Tecnorampa S.A. de C.V.
             </span>
             <a
               href={pdfUrl}

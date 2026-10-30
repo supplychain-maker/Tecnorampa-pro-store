@@ -56,9 +56,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const currentVariant = product.variants?.find(v => v.id === selectedVariant);
   const finalPrice = product.price + (currentVariant?.priceModifier || 0);
 
-  const imagesToDisplay = (product.images && product.images.length > 0) 
+  // Galería de imágenes enriquecida: añade el plano ortográfico técnico si existe para el producto
+  const rawImages = (product.images && product.images.length > 0) 
     ? product.images.map(img => getDirectImageUrl(img))
     : [getDirectImageUrl(product.image)];
+
+  const imagesToDisplay = [...rawImages];
+  if (slug === 'tope-anden-acero' && !imagesToDisplay.some(img => img.includes('diagrama-tope-acero'))) {
+    imagesToDisplay.push('/fichas-tecnicas/diagrama-tope-acero.png');
+  } else if (slug === 'tope-anden-laminado' && !imagesToDisplay.some(img => img.includes('diagrama-tope-laminado'))) {
+    imagesToDisplay.push('/fichas-tecnicas/diagrama-tope-laminado.png');
+  }
 
   const handleAddToCart = () => {
     addItem({

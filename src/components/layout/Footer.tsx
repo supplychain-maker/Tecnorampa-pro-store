@@ -12,18 +12,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              {logo ? (
-                <Image 
-                  src={logo.imageUrl} 
-                  alt="Tecnorampa Logo" 
-                  width={180} 
-                  height={50} 
-                  className="h-10 w-auto object-contain"
-                  unoptimized
-                />
-              ) : (
-                <span className="text-xl font-black tracking-tighter text-primary">TECNORAMPA</span>
-              )}
+              <Image 
+                src={logo?.imageUrl || "/images/tecnorampa-logo.png"} 
+                alt="Tecnorampa Logo" 
+                width={180} 
+                height={50} 
+                className="h-10 w-auto object-contain"
+                unoptimized
+              />
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Líderes en soluciones industriales para andenes de carga. Robustez, seguridad y eficiencia para su operación logística.

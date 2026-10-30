@@ -49,19 +49,15 @@ export function Navbar() {
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            {logo ? (
-              <Image 
-                src={logo.imageUrl} 
-                alt="Tecnorampa Logo" 
-                width={200} 
-                height={60} 
-                className="h-12 w-auto object-contain"
-                priority
-                unoptimized
-              />
-            ) : (
-              <span className="text-2xl font-black tracking-tighter text-primary">TECNORAMPA</span>
-            )}
+            <Image 
+              src={logo?.imageUrl || "/images/tecnorampa-logo.png"} 
+              alt="Tecnorampa Logo" 
+              width={200} 
+              height={60} 
+              className="h-12 w-auto object-contain"
+              priority
+              unoptimized
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">

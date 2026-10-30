@@ -18,8 +18,8 @@ export default function AboutPage() {
       <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src={factoryImage?.imageUrl || 'https://lh3.googleusercontent.com/d/1_Y2pEPJ8uyXAIptUQ7ojmq-oOLi2gbJ-'} 
-            alt="Instalaciones Tecnorampa" 
+            src={factoryImage?.imageUrl || "/images/fabrica-tecnorampa.jpg"} 
+            alt="Instalaciones y Fábrica Tecnorampa" 
             fill 
             className="object-cover brightness-50"
             priority
@@ -77,7 +77,7 @@ export default function AboutPage() {
               <div className="absolute -inset-4 bg-primary/20 rounded-2xl rotate-3 group-hover:rotate-1 transition-transform" />
               <div className="relative aspect-square rounded-xl overflow-hidden border-4 border-white shadow-2xl">
                 <Image 
-                  src={qualityImage?.imageUrl || 'https://lh3.googleusercontent.com/d/1TbDZYrXdoic-RXqv8SAnagJNPCBEu5jE'} 
+                  src={qualityImage?.imageUrl || '/images/calidad-industrial.jpg'} 
                   alt="Operación Logística de Calidad" 
                   fill 
                   className="object-cover"
@@ -171,7 +171,7 @@ export default function AboutPage() {
             
             <div className="h-96 relative rounded-xl overflow-hidden shadow-2xl border-4 border-white">
               <Image 
-                src={mapImage?.imageUrl || 'https://lh3.googleusercontent.com/d/1NX3CwYmcMoQa3o-Izb3X_dONg4THJuSE'} 
+                src={mapImage?.imageUrl || '/images/mapa-ubicacion.png'} 
                 alt="Mapa de Ubicación Tecnorampa" 
                 fill 
                 className="object-cover"

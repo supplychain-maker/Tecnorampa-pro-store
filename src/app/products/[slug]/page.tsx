@@ -8,7 +8,7 @@ import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText } from 'lucide-react';
+import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -16,6 +16,7 @@ import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { Product } from '@/app/lib/products';
 import { getDirectImageUrl, cn } from '@/lib/utils';
+import { ProductTechnicalSheet } from '@/components/products/ProductTechnicalSheet';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -180,13 +181,26 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
-            <div className="flex gap-4 pt-4">
-              <Button onClick={handleAddToCart} size="lg" className="flex-grow h-14 text-lg font-black uppercase italic tracking-widest shadow-xl">
-                <ShoppingCart className="mr-2 h-5 w-5" /> AGREGAR AL CARRITO
-              </Button>
-              <Button size="icon" variant="outline" className="h-14 w-14 shrink-0 border-2">
-                <ShieldCheck className="w-6 h-6" />
-              </Button>
+            <div className="flex flex-col gap-3 pt-4">
+              <div className="flex gap-4">
+                <Button onClick={handleAddToCart} size="lg" className="flex-grow h-14 text-lg font-black uppercase italic tracking-widest shadow-xl">
+                  <ShoppingCart className="mr-2 h-5 w-5" /> AGREGAR AL CARRITO
+                </Button>
+                <Button size="icon" variant="outline" className="h-14 w-14 shrink-0 border-2">
+                  <ShieldCheck className="w-6 h-6" />
+                </Button>
+              </div>
+
+              <a 
+                href={product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`}
+                download={`Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-card border-2 border-border hover:border-primary text-xs font-black uppercase tracking-wider text-muted-foreground hover:text-primary transition-all shadow-sm hover:shadow-md italic group"
+              >
+                <FileText size={16} className="text-primary group-hover:scale-110 transition-transform" />
+                Descargar Ficha Técnica Oficial (PDF)
+              </a>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
@@ -233,20 +247,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           </TabsList>
           
           <TabsContent value="specs" className="animate-in fade-in-50">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-4 max-w-5xl">
-              {Object.entries(product.specs || {}).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center py-4 border-b border-border">
-                  <span className="text-muted-foreground font-black uppercase text-[10px] tracking-widest">{key}</span>
-                  <span className="font-bold text-sm">{String(value)}</span>
-                </div>
-              ))}
-              {currentVariant && (
-                <div className="flex justify-between items-center py-4 border-b-2 border-primary bg-primary/5 px-4 rounded-t-lg">
-                  <span className="text-primary font-black uppercase text-[10px] tracking-widest">Variante Seleccionada</span>
-                  <span className="font-black text-sm text-primary uppercase italic">{currentVariant.name}</span>
-                </div>
-              )}
-            </div>
+            <ProductTechnicalSheet 
+              product={product} 
+              currentVariantName={currentVariant?.name} 
+            />
           </TabsContent>
 
           <TabsContent value="benefits" className="animate-in fade-in-50">

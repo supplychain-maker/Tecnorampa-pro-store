@@ -14,7 +14,7 @@ import { collection, addDoc, doc, updateDoc, serverTimestamp, query, orderBy } f
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Loader2, Save, X, Plus, Trash2, LayoutGrid, Info, Tag, ImageIcon, Settings2 } from 'lucide-react';
+import { Loader2, Save, X, Plus, Trash2, LayoutGrid, Info, Tag, ImageIcon, Settings2, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -345,6 +345,30 @@ export function ProductForm({ initialData }: ProductFormProps) {
                   </div>
                 ))}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Ficha Técnica (PDF) */}
+        <Card className="border-border shadow-lg">
+          <CardHeader className="bg-muted/30 border-b">
+            <CardTitle className="text-sm font-black uppercase tracking-[0.2em] italic flex items-center gap-2">
+              <FileText size={16} className="text-primary" /> Ficha Técnica Oficial (PDF)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-8 space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                Ruta del PDF o Enlace Directo (Opcional)
+              </Label>
+              <Input 
+                value={formData.technicalSheetUrl || ''} 
+                onChange={e => setFormData({ ...formData, technicalSheetUrl: e.target.value })} 
+                placeholder={`/fichas-tecnicas/${formData.slug || 'nombre-producto'}.pdf`} 
+              />
+              <p className="text-[10px] text-muted-foreground font-medium">
+                Por defecto, el sistema asocia automáticamente el archivo ubicado en la carpeta <code>fichas-tecnicas/{`{slug}`}.pdf</code>.
+              </p>
             </div>
           </CardContent>
         </Card>

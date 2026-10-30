@@ -26,6 +26,7 @@ export interface Product {
   operationSteps: string[];
   variants?: ProductVariant[];
   active?: boolean;
+  technicalSheetUrl?: string;
 }
 
 /**

@@ -1,0 +1,739 @@
+[
+  {
+    "id": "2L6rZ8WJEPowArexKZBi",
+    "slug": "gabinete-estanco-riel-din-ip65",
+    "name": "Gabinete Estanco para Riel DIN IP65",
+    "description": "Gabinete de distribución eléctrica estanco con grado de protección IP65, diseñado para proteger interruptores termomagnéticos, relevadores o bloques de terminales en ambientes polvorientos o húmedos como bahías de carga. Incluye riel DIN de acero galvanizado instalado y ventana abatible oscurecida.",
+    "shortDescription": "Caja de distribución termoplástica hermética con riel DIN y ventana abatible transparente.",
+    "price": 850,
+    "image": "/products/caja-din-frente.jpeg",
+    "images": [
+      "/products/caja-din-frente.jpeg",
+      "/products/caja-din-abierta.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Control y Eléctrico"
+    ],
+    "benefits": [
+      "Protección IP65 contra agua y polvo",
+      "Riel DIN galvanizado preinstalado",
+      "Tapa transparente con bisagra para monitoreo",
+      "Material ABS retardante de flama"
+    ],
+    "operationSteps": [
+      "Fijar caja al muro mediante barrenos sellados",
+      "Montar interruptor o pastilla en el riel DIN",
+      "Cerrar y verificar ajuste de empaque hermético"
+    ],
+    "specs": {
+      "Accesorios": "Riel DIN y empaque hermético",
+      "Capacidad": "4 a 5 módulos DIN estándar",
+      "Montaje": "Sobreponer en muro",
+      "Protección": "IP65"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Control y Eléctrico"
+  },
+  {
+    "id": "2jwyoQ6QTPc5M53CLNmU",
+    "slug": "paro-emergencia-schneider-llave",
+    "name": "Botón de Paro de Emergencia Schneider con Llave",
+    "description": "Botón de seguridad para aplicaciones críticas donde el restablecimiento del equipo solo debe ser ejecutado por personal autorizado o supervisores de mantenimiento. Cuenta con cerradura central y 2 llaves incluidas, impidiendo el reinicio accidental de la rampa o sistema de elevación.",
+    "shortDescription": "Pulsador de paro de emergencia con cerradura y llaves de seguridad Schneider Electric.",
+    "price": 2100,
+    "image": "/products/paro-emergencia-llave-frente.jpeg",
+    "images": [
+      "/products/paro-emergencia-llave-frente.jpeg",
+      "/products/paro-emergencia-llave-lado1.jpeg",
+      "/products/paro-emergencia-llave-lado2.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Control y Eléctrico"
+    ],
+    "benefits": [
+      "Seguridad de acceso restringido con llave",
+      "Incluye juego de 2 llaves maestras",
+      "Construcción metálica de grado industrial",
+      "Evita arranques no autorizados"
+    ],
+    "operationSteps": [
+      "Instalar en panel de control",
+      "Verificar extracción de llave en posición bloqueada",
+      "Conectar línea de parada de emergencia"
+    ],
+    "specs": {
+      "Marca": "Schneider Electric",
+      "Desbloqueo": "Llave (Key-release)",
+      "Diámetro montaje": "22mm",
+      "Protección": "IP66 / NEMA 4X"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Control y Eléctrico"
+  },
+  {
+    "id": "4DV1kw7jTDbfVGT8mDGt",
+    "slug": "semaforo-led-industrial",
+    "name": "Semáforo de Andén LED",
+    "description": "Controla el flujo de camiones en tu andén. Carcasa de policarbonato resistente a impactos y LED de larga duración.",
+    "shortDescription": "Señalización roja/verde de alta visibilidad para maniobras seguras.",
+    "price": 8500,
+    "image": "https://lh3.googleusercontent.com/d/1568T4cpn4B6QnskbqgI4b5oICkt8oV8t",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1568T4cpn4B6QnskbqgI4b5oICkt8oV8t"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Seguridad e Iluminación"
+    ],
+    "benefits": [
+      "Bajo consumo",
+      "Alta visibilidad diurna",
+      "Protección IP65"
+    ],
+    "operationSteps": [
+      "Montaje en muro",
+      "Conexión a control",
+      "Sincronización"
+    ],
+    "specs": {
+      "Voltaje": "110V/220V",
+      "Iluminación": "LED Dual",
+      "Material": "Policarbonato"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Seguridad e Iluminación"
+  },
+  {
+    "id": "4P8Fb9U1UfXr5eaf7fzv",
+    "slug": "rodamiento-balero-5205j-2rs-c3",
+    "name": "Rodamiento / Balero de Doble Hilera 5205J-2RS C3",
+    "description": "Rodamiento industrial de alta precisión 5205J-2RS C3. Su diseño de contacto angular de doble hilera soporta cargas radiales intensas y cargas axiales combinadas en ambos sentidos. Equipado con sellos de goma 2RS en ambas caras para retener la grasa y evitar la entrada de suciedad.",
+    "shortDescription": "Balero de bolas de contacto angular de doble hilera con doble sello de caucho y holgura C3.",
+    "price": 650,
+    "image": "/products/balero-5205-frente.jpeg",
+    "images": [
+      "/products/balero-5205-frente.jpeg",
+      "/products/balero-5205-lado.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Baleros y Rodamientos"
+    ],
+    "benefits": [
+      "Capacidad radial y axial bidireccional",
+      "Sellos 2RS a prueba de polvo y humedad",
+      "Holgura radial interna C3 para dilatación térmica",
+      "Preengrasado de fábrica libre de mantenimiento"
+    ],
+    "operationSteps": [
+      "Limpiar el alojamiento y el eje",
+      "Montar con prensa o empujador de pista",
+      "Verificar giro libre y alineación"
+    ],
+    "specs": {
+      "Tipo": "Contacto angular doble hilera",
+      "Holgura": "C3",
+      "Sellos": "Caucho sintético 2RS",
+      "Modelo": "5205J-2RS C3"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Baleros y Rodamientos"
+  },
+  {
+    "id": "837F7d8muCzJrPfJNOEi",
+    "slug": "resorte-extension-amarillo-rampa",
+    "name": "Resorte de Extensión Amarillo para Niveladora Mecánica",
+    "description": "Resorte principal de elevación para niveladoras mecánicas de andén. Fabricado en acero aleado de alto carbono tratado térmicamente para garantizar ciclos continuos sin pérdida de elasticidad. Acabado en amarillo industrial para fácil inspección visual y resistencia a la corrosión.",
+    "shortDescription": "Resorte helicoidal de alta tensión con gancho abierto y pintura electrostática de alta resistencia.",
+    "price": 2850,
+    "image": "/products/resorte-rampa-frente.jpeg",
+    "images": [
+      "/products/resorte-rampa-frente.jpeg",
+      "/products/resorte-rampa-lado.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Mecánicas y Retención"
+    ],
+    "benefits": [
+      "Acero de alta resiliencia tratado térmicamente",
+      "Acabado electrostático amarillo anticorrosivo",
+      "Gancho forjado integrado de máxima sujeción",
+      "Larga vida útil en tráfico pesado"
+    ],
+    "operationSteps": [
+      "Descomprimir sistema de la rampa",
+      "Fijar gancho en el anclaje trasero",
+      "Tensar y asegurar el perno frontal"
+    ],
+    "specs": {
+      "Tipo": "Extensión con gancho",
+      "Capacidad": "Niveladoras de 30k a 50k lbs",
+      "Acabado": "Pintura electrostática amarilla",
+      "Material": "Acero al carbono para resortes"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Mecánicas y Retención"
+  },
+  {
+    "id": "A8YqjpxLD5HlrpOvxZvu",
+    "slug": "botonera-colgante-banana-llave",
+    "name": "Botonera Colgante de Control Tipo Banana con Llave",
+    "description": "Estación de control colgante tipo banana de alta resistencia a caídas y golpes industriales. Cuenta con un botón de paro de emergencia tipo hongo bloqueable con llave para evitar uso no autorizado, junto con botones sellados con flechas direccionales de subida y bajada. Incluye pasacables de goma flexible.",
+    "shortDescription": "Estación de mando colgante ergonómica con paro de emergencia con llave y botones de subida/bajada.",
+    "price": 3200,
+    "image": "/products/botonera-banana-frente.jpeg",
+    "images": [
+      "/products/botonera-banana-frente.jpeg",
+      "/products/botonera-banana-lado1.jpeg",
+      "/products/botonera-banana-lado2.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Control y Eléctrico"
+    ],
+    "benefits": [
+      "Bloqueo de seguridad con llave",
+      "Carcasa ergonómica antichoque",
+      "Pasacables con protector de tensión",
+      "Contactos eléctricos de alta durabilidad"
+    ],
+    "operationSteps": [
+      "Conectar cableado de control según diagrama",
+      "Fijar cable de acero de soporte",
+      "Desbloquear con llave antes de operar"
+    ],
+    "specs": {
+      "Voltaje": "Hasta 380V AC",
+      "Protección": "IP65",
+      "Material": "Polímero ABS de alto impacto",
+      "Funciones": "Paro de emergencia (con llave) + Subida ⬆️ + Bajada ⬇️"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Control y Eléctrico"
+  },
+  {
+    "id": "GMOD6llkGmrR6NKolj3p",
+    "slug": "mini-dock-hidraulico",
+    "name": "Mini Dock Hidráulico",
+    "description": "Se instala directamente en el borde del andén sin necesidad de fosa profunda. Operación electro-hidráulica de un solo toque.",
+    "shortDescription": "Compacto y automático. Ideal para renovaciones de andenes existentes.",
+    "price": 65000,
+    "image": "https://lh3.googleusercontent.com/d/1LMVZcXnswjpUyDD-ITyqOsQKuFloJUHr",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1LMVZcXnswjpUyDD-ITyqOsQKuFloJUHr",
+      "https://lh3.googleusercontent.com/d/1djDAfRNiCHTfN68du2cm8X7pyHt3PySR",
+      "https://lh3.googleusercontent.com/d/1WJPlItAwHvdDIoKV6iD5u_LZeX40l7rk"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Niveladoras y Mini Docks"
+    ],
+    "benefits": [
+      "Instalación rápida",
+      "Operación con botón",
+      "Ahorro de espacio"
+    ],
+    "operationSteps": [
+      "Alinear camión",
+      "Activar nivelación",
+      "Verificar contacto"
+    ],
+    "specs": {
+      "Ancho": "66\" / 72\"",
+      "Capacidad": "30,000 lbs",
+      "Motor": "1 HP"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Niveladoras y Mini Docks"
+  },
+  {
+    "id": "JThJC8r88BAwXSFaSYmA",
+    "slug": "niveladora-mecanica-industrial",
+    "name": "Niveladora Mecánica de Andén",
+    "description": "Solución confiable y de bajo costo operativo. Fabricada con acero estructural de alta resistencia, diseñada para soportar tráfico pesado constante.",
+    "shortDescription": "Operación manual robusta mediante cadena y resortes de alta tensión.",
+    "price": 95000,
+    "image": "https://lh3.googleusercontent.com/d/1Vr6or92_otUzLfLMaWoHpXBwpspb1n0d",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1Vr6or92_otUzLfLMaWoHpXBwpspb1n0d"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Niveladoras y Mini Docks"
+    ],
+    "benefits": [
+      "Sin consumo eléctrico",
+      "Altamente resistente",
+      "Fácil mantenimiento"
+    ],
+    "operationSteps": [
+      "Jalar cadena de liberación",
+      "Caminar sobre la rampa",
+      "Asentamiento en remolque"
+    ],
+    "specs": {
+      "Material": "Acero Estructural",
+      "Capacidad": "30,000 lbs",
+      "Sistema": "Mecánico por cadena"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Niveladoras y Mini Docks"
+  },
+  {
+    "id": "N5I2aOWFucpPD8upMTdO",
+    "slug": "poleas-industriales-cable-acero",
+    "name": "Poleas Industriales para Cable de Acero (Par)",
+    "description": "Poleas industriales maquinadas en barra redonda sólida de polímero técnico Nylon PA66 / Nylamid de alta densidad y resistencia mecánica. Diseñadas para sistemas de elevación, contrapesos, cables de tracción y rampas niveladoras de andén. Disponibles en diámetros maquinados a medida desde 1\" hasta 12\". No muerden ni deforman el cable de acero, eliminan la fricción metálica y garantizan una operación silenciosa y duradera.",
+    "shortDescription": "Juego de poleas de canal maquinadas en barra de Nylon PA66 / Nylamid con diámetros de 1\" a 12\".",
+    "price": 650,
+    "image": "/products/poleas-industriales-frente.jpeg",
+    "images": [
+      "/products/poleas-industriales-frente.jpeg",
+      "/products/poleas-industriales-lado1.jpeg",
+      "/products/poleas-industriales-lado2.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Mecánicas y Retención"
+    ],
+    "benefits": [
+      "Maquinadas desde barra redonda sólida de Nylon PA66 / Nylamid",
+      "Variantes en todos los diámetros comerciales: 1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\" y 12\"",
+      "Material autolubricado que prolonga la vida útil del cable de acero",
+      "Resistencia química, sin riesgo de chispas ni corrosión por humedad"
+    ],
+    "operationSteps": [
+      "Seleccionar diámetro adecuado para el cable y carga",
+      "Colocar sobre el eje correspondiente",
+      "Alinear cable de tracción en la garganta",
+      "Asegurar con rondana y pasador de retención"
+    ],
+    "specs": {
+      "Materia Prima": "Redondo sólido de Nylamid / Nylon PA66",
+      "Gama de Diámetros": "1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\", 12\"",
+      "Canal": "Ranura en V/U maquinada de precisión para cable de acero",
+      "Buje": "Barreno central maquinado a medida de flecha o balero",
+      "Aplicación": "Guía de cable en rampas niveladoras, elevadores y contrapesos"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Mecánicas y Retención"
+  },
+  {
+    "id": "SfNZpf6EETmzdJsQtomL",
+    "slug": "tope-anden-laminado",
+    "name": "Tope de Andén Laminado",
+    "description": "Absorción de impactos eficiente para trailers estándar. Fabricado con neumáticos reciclados de alta densidad.",
+    "shortDescription": "Protección estándar de hule laminado para andenes.",
+    "price": 1800,
+    "image": "https://lh3.googleusercontent.com/d/1JQyUblYuT0fNwsLnjnMKX6xZQe8F8qYT",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1JQyUblYuT0fNwsLnjnMKX6xZQe8F8qYT"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Protección de Andén"
+    ],
+    "benefits": [
+      "Económico",
+      "Sustentable",
+      "Efectivo"
+    ],
+    "operationSteps": [
+      "Marcar barrenos",
+      "Fijar al muro del andén",
+      "Verificar firmeza"
+    ],
+    "specs": {
+      "Dureza": "70 Shore A",
+      "Material": "Hule reciclado",
+      "Instalación": "Anclaje mecánico"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Protección de Andén"
+  },
+  {
+    "id": "UUq1ro9ox5TGeySLAnK0",
+    "slug": "tope-anden-acero",
+    "name": "Tope de Andén Reforzado",
+    "description": "El tope de andén definitivo. Incluye una placa de acero frontal que evita el desgaste prematuro del hule por la fricción de la suspensión del trailer.",
+    "shortDescription": "Protección con cara de acero para tráfico rudo de trailers.",
+    "price": 2500,
+    "image": "https://lh3.googleusercontent.com/d/1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Protección de Andén"
+    ],
+    "benefits": [
+      "Larga duración",
+      "Absorción de impacto",
+      "Fácil anclaje"
+    ],
+    "operationSteps": [
+      "Perforar concreto",
+      "Insertar taquetes expansivos",
+      "Apretar tornillería"
+    ],
+    "specs": {
+      "Material": "Hule laminado y acero",
+      "Medida": "10\" x 12\" x 4\"",
+      "Peso": "15 kg"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Protección de Andén"
+  },
+  {
+    "id": "Wzbr9NcoKtOvX9pyO2Ts",
+    "slug": "rodamiento-rodillos-ncf2208v-2rs",
+    "name": "Rodamiento de Rodillos Cilíndricos NCF2208V-2RS",
+    "description": "Balero de rodillos cilíndricos de capacidad extrema modelo NCF2208V-2RS. Al contar con un complemento completo de rodillos (sin jaula espaciadora), maximiza el área de contacto para resistir impactos severos y cargas radiales pesadas en los ejes principales de elevación y nivelación de andén.",
+    "shortDescription": "Rodamiento de rodillos cilíndricos de complemento completo para cargas radiales extremas.",
+    "price": 1750,
+    "image": "/products/rodamiento-ncf2208-frente.jpeg",
+    "images": [
+      "/products/rodamiento-ncf2208-frente.jpeg",
+      "/products/rodamiento-ncf2208-dentro.jpeg",
+      "/products/rodamiento-ncf2208-lado.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Baleros y Rodamientos"
+    ],
+    "benefits": [
+      "Máxima capacidad de carga radial del mercado",
+      "Complemento completo de rodillos de acero endurecido",
+      "Sellos 2RS para protección contra contaminantes",
+      "Resistente a impactos y vibración pesada"
+    ],
+    "operationSteps": [
+      "Revisar asiento del eje",
+      "Prensado uniforme sobre la pista exterior/interior",
+      "Verificar juego axial permitido"
+    ],
+    "specs": {
+      "Tipo": "Rodillos cilíndricos complemento completo",
+      "Sellos": "Doble retén de protección 2RS",
+      "Modelo": "NCF2208V-2RS",
+      "Lubricación": "Grasa industrial para extrema presión"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Baleros y Rodamientos"
+  },
+  {
+    "id": "XlVO2fZ43Si5wdRE1zTW",
+    "slug": "mini-dock-mecanico",
+    "name": "Mini Dock Mecánico",
+    "description": "Niveladora de orilla de andén manual. Se acciona mediante una palanca, ideal para operaciones ligeras y medias sin suministro eléctrico.",
+    "shortDescription": "La solución más económica y rápida para nivelar andenes.",
+    "price": 45000,
+    "image": "https://lh3.googleusercontent.com/d/1SPv_oOqflDA3RfrarRdGvF3jiEIbkvSm",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1SPv_oOqflDA3RfrarRdGvF3jiEIbkvSm",
+      "https://lh3.googleusercontent.com/d/1zpSvdCjwm53ePHSkXr6WY37xlhYupYmI",
+      "https://lh3.googleusercontent.com/d/1If7SEwYlWmpL4uSH1B41kp0BPA7bVTc6"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Niveladoras y Mini Docks"
+    ],
+    "benefits": [
+      "Cero electricidad",
+      "Precio competitivo",
+      "Mantenimiento simple"
+    ],
+    "operationSteps": [
+      "Insertar palanca",
+      "Jalar hacia atrás",
+      "Empujar hacia adelante"
+    ],
+    "specs": {
+      "Operación": "Manual con palanca",
+      "Capacidad": "30,000 lbs",
+      "Labio": "16\""
+    },
+    "mainGroup": "anden",
+    "subGroup": "Niveladoras y Mini Docks"
+  },
+  {
+    "id": "bMzihdSo3heY75v4kRzz",
+    "slug": "valvula-reguladora-caudal-parker",
+    "name": "Válvula Reguladora de Caudal Parker con Micrómetro",
+    "description": "Válvula de control de flujo hidráulico de alta precisión original Parker. Su perilla estriada y graduada micrométricamente permite regular con exactitud milimétrica la velocidad de descenso del cilindro de la rampa o equipo elevador, garantizando un aterrizaje suave y seguro sobre el remolque.",
+    "shortDescription": "Válvula de aguja de precisión Parker con perilla graduada para ajuste de velocidad hidráulica.",
+    "price": 4650,
+    "image": "/products/valvula-parker-frente.jpeg",
+    "images": [
+      "/products/valvula-parker-frente.jpeg",
+      "/products/valvula-parker-lado1.jpeg",
+      "/products/valvula-parker-lado2.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Hidráulica"
+    ],
+    "benefits": [
+      "Precisión micrométrica Parker",
+      "Cuerpo de acero forjado anodizado",
+      "Tornillo de bloqueo de posición",
+      "Rango de alta presión hidráulica"
+    ],
+    "operationSteps": [
+      "Intercalar en la línea del pistón principal",
+      "Girar perilla para calibrar velocidad",
+      "Apretar prisionero de seguridad"
+    ],
+    "specs": {
+      "Fluido": "Aceite hidráulico estándar",
+      "Ajuste": "Perilla micrométrica calibrada",
+      "Marca": "Parker Hannifin",
+      "Tipo": "Válvula de aguja y control de flujo"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Hidráulica"
+  },
+  {
+    "id": "fvCdgOxEN1LbmPKIR9i7",
+    "slug": "mecanismo-freno-rampa-auto-release",
+    "name": "Mecanismo de Freno para Rampa con Auto-Release",
+    "description": "Mecanismo de freno y sujeción (Hold-Down Box) de uso extra rudo para rampas mecánicas de andén. Incorpora la tecnología A/R Auto Release de Multi-Ear Products para permitir la flotación libre de la rampa durante el movimiento del camión en carga y descarga, evitando deformaciones estructurales.",
+    "shortDescription": "Ensamble de cremallera dentada y trinquete con sistema A/R Auto Release para niveladoras mecánicas.",
+    "price": 9800,
+    "image": "/products/freno-rampa-frente.jpeg",
+    "images": [
+      "/products/freno-rampa-frente.jpeg",
+      "/products/freno-rampa-zoom.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Mecánicas y Retención"
+    ],
+    "benefits": [
+      "Sistema A/R Auto Release patentado",
+      "Cadena de tracción galvanizada de alta resistencia",
+      "Protección contra sobrecargas estructurales",
+      "Compatibilidad universal con niveladoras mecánicas"
+    ],
+    "operationSteps": [
+      "Instalar en el bastidor de la fosa",
+      "Alinear la barra dentada con el trinquete",
+      "Conectar cadena al sistema de liberación"
+    ],
+    "specs": {
+      "Aplicación": "Niveladoras mecánicas de andén",
+      "Sistema": "A/R Auto Release",
+      "Marca": "Multi-Ear Products",
+      "Mecanismo": "Cremallera y trinquete"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Mecánicas y Retención"
+  },
+  {
+    "id": "g1jYxDqqJMez0x3nWgxn",
+    "slug": "rodamiento-balero-6005-2rs",
+    "name": "Rodamiento / Balero Rígido de Bolas 6005-2RS",
+    "description": "Rodamiento estándar de gran versatilidad y bajo rozamiento 6005-2RS. Ideal para poleas guía, motores de unidades electrohidráulicas y rodillos de andén. Sus sellos de elastómero 2RS proporcionan un aislamiento confiable en ambientes con presencia de polvo o salpicaduras.",
+    "shortDescription": "Balero rígido de bolas con doble sello de goma 2RS para motores y poleas industriales.",
+    "price": 380,
+    "image": "/products/balero-6005-frente.jpeg",
+    "images": [
+      "/products/balero-6005-frente.jpeg",
+      "/products/balero-6005-lado.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Baleros y Rodamientos"
+    ],
+    "benefits": [
+      "Bajo coeficiente de fricción",
+      "Excelente desempeño a revoluciones altas y medias",
+      "Sellado hermético contra partículas",
+      "Acero al cromo de alta pureza"
+    ],
+    "operationSteps": [
+      "Verificar tolerancia del eje (25mm)",
+      "Insertar suavemente sin golpear la pista interna",
+      "Comprobar lubricación y sellado"
+    ],
+    "specs": {
+      "Tipo": "Rígido de una hilera de bolas",
+      "Dimensiones": "25mm int x 47mm ext x 12mm ancho",
+      "Modelo": "6005-2RS",
+      "Sellos": "2RS (ambos lados)"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Baleros y Rodamientos"
+  },
+  {
+    "id": "gxEoVyrMl2JRAOU4m5fa",
+    "slug": "niveladora-hidraulica-premium",
+    "name": "Niveladora Hidráulica de Andén",
+    "description": "La niveladora hidráulica de Tecnorampa ofrece la máxima eficiencia y seguridad. Su sistema electro-hidráulico elimina el esfuerzo manual y reduce el mantenimiento significativamente.",
+    "shortDescription": "Operación automática con un solo botón. Capacidad de 30k a 50k lbs.",
+    "price": 125000,
+    "image": "https://lh3.googleusercontent.com/d/1OnmLSVRZVsaBKHlIi_V4IsHhJ4RrSGvV",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1OnmLSVRZVsaBKHlIi_V4IsHhJ4RrSGvV"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Niveladoras y Mini Docks"
+    ],
+    "benefits": [
+      "Operación manos libres",
+      "Mantenimiento mínimo",
+      "Seguridad estructural superior"
+    ],
+    "operationSteps": [
+      "Verificar posicionamiento",
+      "Presionar botón elevación",
+      "Extensión automática"
+    ],
+    "specs": {
+      "Garantía": "12 meses",
+      "Capacidad Max": "50,000 lbs",
+      "Operación": "Hidráulica"
+    },
+    "mainGroup": "anden",
+    "subGroup": "Niveladoras y Mini Docks"
+  },
+  {
+    "id": "i20qljEbFBPMgK1Ptqug",
+    "slug": "rampa-parking-lift",
+    "name": "Rampa Parking Lift",
+    "description": "Solución de elevación electro-hidráulica para dos autos. Ideal para garajes con techos altos que buscan optimizar el área de parqueo.",
+    "shortDescription": "Robusta y funcional para condominios y residencias.",
+    "price": 145000,
+    "image": "https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR"
+    ],
+    "categoryNames": [
+      "Estacionamiento",
+      "Duplicadores de Autos"
+    ],
+    "benefits": [
+      "Operación silenciosa",
+      "Estructura de acero",
+      "Fácil de usar"
+    ],
+    "operationSteps": [
+      "Estacionar en plataforma",
+      "Activar mando eléctrico",
+      "Asegurar posición"
+    ],
+    "specs": {
+      "Tiempo ascenso": "45 seg",
+      "Voltaje": "220V",
+      "Capacidad": "6,000 lbs"
+    },
+    "mainGroup": "estacionamiento",
+    "subGroup": "Duplicadores de Autos"
+  },
+  {
+    "id": "ld006jZanqsLeQNkmlfG",
+    "slug": "paro-emergencia-schneider-giro",
+    "name": "Botón de Paro de Emergencia Schneider Electric (Giro)",
+    "description": "Botón de paro de emergencia original Schneider Electric serie Harmony. Diseñado para tableros y cajas de mando en andenes y rampas. Cabeza tipo hongo roja con flechas indicadoras de liberación por giro (Turn-to-release) y cuello metálico roscado de máxima durabilidad.",
+    "shortDescription": "Pulsador de seguridad tipo hongo rojo con desenclavamiento por giro Schneider Electric Harmony.",
+    "price": 1450,
+    "image": "/products/paro-emergencia-giro-frente.jpeg",
+    "images": [
+      "/products/paro-emergencia-giro-frente.jpeg",
+      "/products/paro-emergencia-giro-lado.jpeg"
+    ],
+    "categoryNames": [
+      "Refacciones Industriales",
+      "Control y Eléctrico"
+    ],
+    "benefits": [
+      "Certificación internacional Schneider Electric",
+      "Desenclavamiento rápido por giro",
+      "Cuerpo metálico roscado robusto",
+      "Normativa internacional de seguridad industrial"
+    ],
+    "operationSteps": [
+      "Montar en perforación de panel de 22mm",
+      "Apretar tuerca de fijación posterior",
+      "Conectar bloque de contactos NC"
+    ],
+    "specs": {
+      "Diámetro": "22mm industrial",
+      "Serie": "Harmony",
+      "Acción": "Girar para desenclavar (Turn-to-release)",
+      "Marca": "Schneider Electric"
+    },
+    "mainGroup": "refacciones",
+    "subGroup": "Control y Eléctrico"
+  },
+  {
+    "id": "qLSPjHOTRTzBkbJcSs45",
+    "slug": "rampa-parking-evolution",
+    "name": "Rampa Estacionamiento TR Evolution",
+    "description": "Sistema de elevación de alta gama. Permite abrir las puertas del auto completamente gracias a su diseño de postes delgados pero ultra resistentes.",
+    "shortDescription": "Premium. Duplica tu espacio de estacionamiento con máxima seguridad.",
+    "price": 185000,
+    "image": "https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb"
+    ],
+    "categoryNames": [
+      "Estacionamiento",
+      "Duplicadores de Autos"
+    ],
+    "benefits": [
+      "Ahorro de espacio",
+      "IP Protection (Exterior)",
+      "Alta estética"
+    ],
+    "operationSteps": [
+      "Posicionar auto",
+      "Girar llave de ascenso",
+      "Verificar bloqueos"
+    ],
+    "specs": {
+      "Seguro": "Bloqueo mecánico automático",
+      "Protección": "IP65",
+      "Capacidad": "7,000 lbs"
+    },
+    "mainGroup": "estacionamiento",
+    "subGroup": "Duplicadores de Autos"
+  },
+  {
+    "id": "yG4eZ5XgAfPD37PDgjir",
+    "slug": "lampara-anden-articulada",
+    "name": "Lámpara de Andén Articulada",
+    "description": "Brazo articulado de 40 pulgadas con cabezal LED de alta potencia. Resistente a vibraciones y golpes típicos del área de carga.",
+    "shortDescription": "Ilumina el interior de los trailers para cargas seguras.",
+    "price": 4500,
+    "image": "https://lh3.googleusercontent.com/d/1Uic5BVA-nQ_lkKIwcVSeLjZWqhASLsyG",
+    "images": [
+      "https://lh3.googleusercontent.com/d/1Uic5BVA-nQ_lkKIwcVSeLjZWqhASLsyG"
+    ],
+    "categoryNames": [
+      "Andén de Carga",
+      "Seguridad e Iluminación"
+    ],
+    "benefits": [
+      "Brazo flexible",
+      "LED de alto brillo",
+      "Resistente a impactos"
+    ],
+    "operationSteps": [
+      "Instalar cerca del andén",
+      "Ajustar ángulo",
+      "Encender para carga"
+    ],
+    "specs": {
+      "Vida útil": "50,000 hrs",
+      "Cabezal": "Aluminio",
+      "Largo Brazo": "40\""
+    },
+    "mainGroup": "anden",
+    "subGroup": "Seguridad e Iluminación"
+  }
+]

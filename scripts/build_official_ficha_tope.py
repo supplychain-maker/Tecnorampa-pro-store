@@ -4,16 +4,25 @@ Generador Maestro de Ficha Técnica Oficial Tecnorampa para:
 TOPE LAMINADO CON PLACA DE ACERO (REFORZADO) - MODELO TR-RA20-TFW-1310
 
 Produce un documento de 2 páginas con máxima fidelidad a la identidad Tecnorampa:
-- PÁGINA 1: Diseño exacto del catálogo/manual oficial Tecnorampa (fotografía de andén,
-  tipografía industrial gigante, fotos 3D y frontal flotantes, especificaciones y diagrama isométrico con cotas en amarillo).
-- PÁGINA 2: Plano de ingeniería con vistas ortográficas (Superior, Frontal, Lateral)
-  respetando el 100% de la escala y proporción natural sin estiramiento, lista de materiales (BOM),
-  especificaciones métricas/imperiales y notas de anclaje.
+- PÁGINA 1:
+  * Encabezado con fotografía logística del catálogo oficial y título industrial gigante "TOPE LAMINADO CON PLACA DE ACERO".
+  * Logotipo oficial Tecnorampa con badge blanco en la esquina superior izquierda.
+  * Única fotografía del producto: la imagen oficial de alta resolución de la tienda (tope-acero.jpg con fondo blanco puro).
+  * Sin las fotos viejas del manual y sin el plano de medidas (según solicitud del usuario).
+  * Descripción técnica detallada, características operativas y ventajas competitivas del tope reforzado.
+  * Detalles en amarillo oficial Tecnorampa (#FFD830).
+- PÁGINA 2:
+  * Memoria técnica y plano ortográfico de ingeniería respetando el 100% de la proporción natural (sin estiramiento).
+  * Color amarillo corporativo exacto del logotipo (#FFD830).
+  * Tablas de Lista de Materiales (BOM) y Tolerancias con encabezados en amarillo y tipografía contrastante.
+  * Protocolo de anclaje mecánico y fijación por soldadura.
+  * Detalles en amarillo al final de la hoja: franja de seguridad industrial con franjas diagonales (hazard stripes) y datos de planta Querétaro.
 """
 
 import os
 import io
-import pypdf
+import fitz # PyMuPDF
+from PIL import Image as PILImage
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import (
@@ -21,7 +30,7 @@ from reportlab.platypus import (
 )
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
-from PIL import Image as PILImage
+import pypdf
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
@@ -30,22 +39,22 @@ FINAL_PDF = os.path.join(OUTPUT_DIR, 'tope-anden-acero.pdf')
 BRAIN_DIR = '/Users/inigo/.gemini/antigravity-ide/brain/c903e527-b82a-4f7b-a36c-c0f099dcbd43'
 SCRATCH_DIR = os.path.join(BRAIN_DIR, 'scratch')
 os.makedirs(SCRATCH_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Colores corporativos Tecnorampa
-C_YELLOW = colors.HexColor('#F59E0B')       # Amarillo Tecnorampa
-C_YELLOW_LIGHT = colors.HexColor('#FEF3C7') # Fondo amarillo claro
-C_DARK = colors.HexColor('#111827')         # Casi negro
-C_GRAY = colors.HexColor('#374151')         # Gris oscuro para texto
+# Exact colors from Tecnorampa logo
+C_YELLOW = colors.HexColor('#FFD830')       # Amarillo exacto del logotipo Tecnorampa
+C_YELLOW_DARK = colors.HexColor('#DDAA00')  # Tono oscuro para bordes y contraste
+C_YELLOW_LIGHT = colors.HexColor('#FFFDEB') # Fondo cálido suave
+C_DARK = colors.HexColor('#1E1E1E')         # Carbón oscuro industrial
+C_GRAY = colors.HexColor('#374151')         # Gris para textos secundarios
 C_BORDER = colors.HexColor('#E5E7EB')       # Borde sutil
-C_BG_LIGHT = colors.HexColor('#F9FAFB')     # Fondo alterno suave
 C_WHITE = colors.white
 
 def build_page_1():
-    """Genera la Página 1 basada en la página 11 del manual oficial con el logo Tecnorampa overlay."""
+    """Genera la Página 1 con el encabezado oficial, título industrial, foto única de la tienda y descripción técnica."""
     catalog_pdf_path = os.path.join(BRAIN_DIR, '.user_uploaded', 'media_1793387574599.pdf')
     reader = pypdf.PdfReader(catalog_pdf_path)
-    # Página 11 es el índice 10
-    base_page = reader.pages[10]
+    base_page = reader.pages[10] # Página 11 del manual
     
     pw = float(base_page.mediabox.width)
     ph = float(base_page.mediabox.height)
@@ -62,23 +71,212 @@ def build_page_1():
     # 2. Pastilla de Metadatos del Documento en la esquina superior derecha
     can.setFillColorRGB(1, 1, 1, 0.96)
     can.roundRect(pw - 195, ph - 56, 170, 36, 7, fill=1, stroke=0)
-    can.setFillColorRGB(0.08, 0.08, 0.1, 1)
+    can.setFillColor(C_DARK)
     can.setFont('Helvetica-Bold', 8)
     can.drawRightString(pw - 35, ph - 36, 'FICHA TÉCNICA OFICIAL')
     can.setFont('Helvetica', 7)
-    can.setFillColorRGB(0.4, 0.4, 0.4, 1)
+    can.setFillColor(C_GRAY)
     can.drawRightString(pw - 35, ph - 48, 'CÓDIGO: TR-FT-TOPE-ACERO-1310')
     
-    # 3. Pie de página corporativo sutil
-    can.setFillColorRGB(1, 1, 1, 0.95)
-    can.roundRect(26, 12, pw - 52, 22, 5, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 6)
-    can.setFillColorRGB(0.1, 0.1, 0.1, 1)
-    can.drawString(36, 20, 'TECNORAMPA S.A. DE C.V.')
-    can.setFont('Helvetica', 6)
-    can.setFillColorRGB(0.35, 0.35, 0.35, 1)
-    can.drawString(128, 20, '| Pedro Escobedo, Qro. | Tel. 800 6230 332')
-    can.drawRightString(pw - 36, 20, 'ventas@tecnorampa.com.mx | www.tecnorampa.com.mx • Página 1 de 2')
+    # 3. Cubrir el cuerpo inferior de la página original (se eliminan las fotos viejas y el dibujo de medidas)
+    # Conservamos la mitad superior intacta: foto de andén logística y el título "TOPE LAMINADO CON PLACA DE ACERO"
+    can.setFillColor(C_WHITE)
+    can.rect(0, 0, pw, 524, fill=1, stroke=0)
+    
+    # Línea divisoria en amarillo Tecnorampa (#FFD830) bajo el título
+    can.setFillColor(C_YELLOW)
+    can.rect(30, 523, pw - 60, 3, fill=1, stroke=0)
+    
+    # 4. Pie de página corporativo con detalles en amarillo Tecnorampa
+    can.setFillColor(C_YELLOW)
+    can.rect(0, 0, pw, 26, fill=1, stroke=0) # Franja amarilla
+    can.setFillColor(C_DARK)
+    can.rect(0, 25, pw, 1.2, fill=1, stroke=0) # Borde superior oscuro
+    
+    # Detalle de franjas diagonales en el pie de página
+    stripe_w = 5
+    gap = 5
+    for i in range(6):
+        x_base = 16 + i * (stripe_w + gap)
+        p = can.beginPath()
+        p.moveTo(x_base, 0)
+        p.lineTo(x_base + 6, 25)
+        p.lineTo(x_base + 6 + stripe_w, 25)
+        p.lineTo(x_base + stripe_w, 0)
+        p.close()
+        can.drawPath(p, fill=1, stroke=0)
+        
+    can.setFont('Helvetica-Bold', 7)
+    can.setFillColor(C_DARK)
+    can.drawString(90, 10, 'TECNORAMPA S.A. DE C.V.')
+    can.setFont('Helvetica', 6.5)
+    can.drawString(198, 10, '| Planta Querétaro • Tel: 800 6230 332 • ventas@tecnorampa.com.mx')
+    can.setFont('Helvetica-Bold', 6.5)
+    can.drawRightString(pw - 24, 10, 'www.tecnorampa.com.mx • Página 1 de 2')
+    
+    # 5. CONTENIDO DE PÁGINA 1
+    # Columna Izquierda: Única Foto del Tope (tope-acero.jpg de la tienda) + Tarjeta de Ventajas
+    img_store_path = os.path.join(PUBLIC_DIR, 'products', 'tope-acero.jpg')
+    img_x = 30
+    img_w = 244
+    img_h = 178
+    img_y = 328
+    
+    # Contenedor fotográfico premium
+    can.setFillColor(C_WHITE)
+    can.setStrokeColor(C_BORDER)
+    can.setLineWidth(1)
+    can.roundRect(img_x, img_y, img_w, img_h, 8, fill=1, stroke=1)
+    can.drawImage(img_store_path, img_x + 6, img_y + 6, width=img_w - 12, height=img_h - 12, mask='auto', preserveAspectRatio=True)
+    
+    # Tarjeta de Ventajas Técnicas debajo de la foto
+    card_y = 42
+    card_h = 272
+    can.setFillColor(C_YELLOW_LIGHT)
+    can.setStrokeColor(C_YELLOW)
+    can.setLineWidth(1.2)
+    can.roundRect(img_x, card_y, img_w, card_h, 7, fill=1, stroke=1)
+    
+    # Encabezado de la tarjeta en amarillo Tecnorampa
+    can.setFillColor(C_YELLOW)
+    can.roundRect(img_x, card_y + card_h - 24, img_w, 24, 7, fill=1, stroke=0)
+    can.rect(img_x, card_y + card_h - 24, img_w, 8, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 8.5)
+    can.setFillColor(C_DARK)
+    can.drawString(img_x + 10, card_y + card_h - 16, 'VENTAJAS DEL TOPE REFORZADO')
+    
+    # Puntos clave técnicos en la tarjeta izquierda
+    bullet_items = [
+        ("Placa de Acero de 3/8\" (10 mm):", "Protege el hule del roce vertical de la suspensión."),
+        ("Bloque Laminado de Alta Presión:", "Absorbe y disipa hasta el 95% del impacto del camión."),
+        ("Base 100% Plana y Firme:", "Asiento homogéneo que no daña el muro de concreto."),
+        ("4 Barrenos de Anclaje Ø 1\":", "Fijación ultra-robusta con taquetes expansivos de 3/4\"."),
+        ("Varillas Roscadas de 3/4\":", "Tirantes de acero pasantes de máxima compresión."),
+        ("Acabado Anticorrosivo:", "Pintura horneada para resistencia climática extrema."),
+        ("Garantía de Fábrica Tecnorampa:", "12 meses con respaldo directo de planta en Querétaro.")
+    ]
+    
+    curr_y = card_y + card_h - 40
+    for title, desc in bullet_items:
+        can.setFont('Helvetica-Bold', 7)
+        can.setFillColor(C_DARK)
+        can.drawString(img_x + 8, curr_y, f"• {title}")
+        can.setFont('Helvetica', 6.5)
+        can.setFillColor(C_GRAY)
+        can.drawString(img_x + 16, curr_y - 10, desc)
+        curr_y -= 28
+        
+    # Columna Derecha: Especificaciones y Descripción Técnica
+    right_x = 292
+    right_w = pw - right_x - 30 # 290 pt
+    
+    # Encabezado con flecha amarilla
+    can.setFillColor(C_YELLOW)
+    path = can.beginPath()
+    path.moveTo(right_x, 498)
+    path.lineTo(right_x + 9, 493)
+    path.lineTo(right_x, 488)
+    path.close()
+    can.drawPath(path, fill=1, stroke=0)
+    
+    can.setFont('Helvetica-Bold', 12)
+    can.setFillColor(C_DARK)
+    can.drawString(right_x + 14, 489, 'ESPECIFICACIONES TÉCNICAS')
+    
+    # Párrafo introductorio
+    can.setFont('Helvetica', 8)
+    can.setFillColor(C_GRAY)
+    intro_lines = [
+        "Línea de hule sintético EPDM de alto rendimiento combinado con elastómero",
+        "SBR y capas textiles de nylon vulcanizadas a alta presión, garantizando la",
+        "máxima memoria elástica y resistencia al aplastamiento continuo.",
+        "",
+        "Especialmente ensamblado con ángulos laterales de acero estructural y una",
+        "placa frontal de acero al carbón de 3/8\" (10 mm) de espesor para absorber",
+        "el impacto rudo de tractocamiones y semirremolques pesados."
+    ]
+    t_y = 470
+    for line in intro_lines:
+        if line:
+            can.drawString(right_x, t_y, line)
+        t_y -= 11.5
+        
+    # Subtítulo Características Operativas
+    can.setFont('Helvetica-Bold', 9.5)
+    can.setFillColor(C_DARK)
+    can.drawString(right_x, 375, 'CARACTERÍSTICAS OPERATIVAS')
+    
+    can.setStrokeColor(C_YELLOW)
+    can.setLineWidth(2)
+    can.line(right_x, 368, right_x + 140, 368)
+    
+    # Viñetas detalladas con flecha amarilla
+    specs_bullets = [
+        ("Placa Frontal de Deslizamiento Flotante:", 
+         "Permite que los camiones y cajas con suspensión neumática deslicen suavemente hacia arriba y hacia abajo al cargar o descargar, eliminando por completo el desgarro del hule."),
+        ("Amortiguación Homogénea de Impacto:", 
+         "Disipa eficazmente la inercia del vehículo, absorbiendo uniformemente la energía de frenado para que no se transmita al muro ni a la rampa."),
+        ("Asiento Firme y Base 100% Plana:", 
+         "Diseño completamente plano en su base que reparte la fuerza de impacto de forma uniforme, garantizando máxima firmeza y evitando daños colaterales al muro de concreto."),
+        ("Protección Integral del Andén:", 
+         "Protege el edificio, marquesina, sellos perimetrales de andén y rampa niveladora contra impactos accidentales y desgaste por uso continuo.")
+    ]
+    
+    b_y = 348
+    for b_title, b_text in specs_bullets:
+        # Flecha amarilla en viñeta
+        can.setFillColor(C_YELLOW)
+        bp = can.beginPath()
+        bp.moveTo(right_x, b_y + 6)
+        bp.lineTo(right_x + 6, b_y + 3)
+        bp.lineTo(right_x, b_y)
+        bp.close()
+        can.drawPath(bp, fill=1, stroke=0)
+        
+        can.setFont('Helvetica-Bold', 7.5)
+        can.setFillColor(C_DARK)
+        can.drawString(right_x + 10, b_y, b_title)
+        
+        can.setFont('Helvetica', 7)
+        can.setFillColor(C_GRAY)
+        words = b_text.split()
+        line = ""
+        text_y = b_y - 10
+        for w in words:
+            test_line = line + (" " if line else "") + w
+            if can.stringWidth(test_line, 'Helvetica', 7) <= right_w - 12:
+                line = test_line
+            else:
+                can.drawString(right_x + 10, text_y, line)
+                text_y -= 9
+                line = w
+        if line:
+            can.drawString(right_x + 10, text_y, line)
+            text_y -= 9
+            
+        b_y = text_y - 8
+        
+    # Cuadro inferior de aplicación
+    app_box_y = 42
+    app_box_h = 58
+    can.setFillColor(colors.HexColor('#F9FAFB'))
+    can.setStrokeColor(C_BORDER)
+    can.setLineWidth(0.8)
+    can.roundRect(right_x, app_box_y, right_w, app_box_h, 6, fill=1, stroke=1)
+    
+    # Acento lateral amarillo
+    can.setFillColor(C_YELLOW)
+    can.rect(right_x, app_box_y, 4, app_box_h, fill=1, stroke=0)
+    
+    can.setFont('Helvetica-Bold', 7.5)
+    can.setFillColor(C_DARK)
+    can.drawString(right_x + 12, app_box_y + app_box_h - 15, 'APLICACIÓN Y RECOMENDACIÓN DE USO')
+    
+    can.setFont('Helvetica', 6.8)
+    can.setFillColor(C_GRAY)
+    can.drawString(right_x + 12, app_box_y + app_box_h - 28, 'Recomendado para andenes de carga con alto flujo vehicular, remolques con')
+    can.drawString(right_x + 12, app_box_y + app_box_h - 38, 'suspensión de aire y centros de distribución de operaciones 24/7.')
+    can.drawString(right_x + 12, app_box_y + app_box_h - 48, 'Compatible con rampas mecánicas, hidráulicas, minidocks y fosos abiertos.')
     
     can.save()
     packet.seek(0)
@@ -88,7 +286,7 @@ def build_page_1():
     return base_page
 
 def build_page_2_stream():
-    """Genera la Página 2 con el plano técnico ortográfico sin distorsión y datos de ingeniería."""
+    """Genera la Página 2 con el plano ortográfico a escala real, tablas en amarillo Tecnorampa y detalles hazard en el pie."""
     temp_p2_path = os.path.join(SCRATCH_DIR, 'page_2_engineered.pdf')
     
     doc = SimpleDocTemplate(
@@ -96,8 +294,8 @@ def build_page_2_stream():
         pagesize=letter,
         leftMargin=26,
         rightMargin=26,
-        topMargin=22,
-        bottomMargin=22
+        topMargin=20,
+        bottomMargin=38 # Espacio para el footer con detalles en amarillo
     )
     
     content_w = letter[0] - 52 # 560 pt
@@ -136,7 +334,7 @@ def build_page_2_stream():
         parent=styles['Normal'],
         fontName='Helvetica',
         fontSize=6.5,
-        leading=9,
+        leading=9.2,
         textColor=C_DARK
     )
     
@@ -158,12 +356,12 @@ def build_page_2_stream():
     if os.path.exists(logo_path):
         with PILImage.open(logo_path) as pimg:
             lw, lh = pimg.size
-            disp_w = 135
+            disp_w = 140
             disp_h = disp_w * (lh / lw)
             logo_img = RLImage(logo_path, width=disp_w, height=disp_h)
             
     header_info = [
-        Paragraph("<b>MEMORIA TÉCNICA Y PLANO ORTOGRÁFICO</b>", ParagraphStyle('H2Head', parent=meta_right, fontName='Helvetica-Bold', fontSize=8, textColor=C_DARK)),
+        Paragraph("<b>MEMORIA TÉCNICA Y PLANO DE INGENIERÍA</b>", ParagraphStyle('H2Head', parent=meta_right, fontName='Helvetica-Bold', fontSize=8.5, textColor=C_DARK)),
         Paragraph("Documento de Fabricación: <b>TR-FT-TDS-RA20-1310</b> | Rev. 2026", meta_right),
         Paragraph("Modelo: <b>TR-RA20-TFW-1310 (13\" × 10\" × 4.5\"/5.5\")</b>", meta_right),
         Paragraph("Fabricante: <b>TECNORAMPA S.A. DE C.V.</b> | Planta Querétaro, México", meta_right),
@@ -176,10 +374,10 @@ def build_page_2_stream():
         ('TOPPADDING', (0,0), (-1,-1), 0),
     ]))
     story.append(header_tbl)
-    story.append(Spacer(1, 3))
-    
-    # Barra amarilla divisoria
-    bar = Table([['']], colWidths=[content_w], rowHeights=[2.5])
+    story.append(Spacer(1, 4))
+
+    # Barra amarilla del logo (#FFD830)
+    bar = Table([['']], colWidths=[content_w], rowHeights=[3])
     bar.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), C_YELLOW),
         ('BOTTOMPADDING', (0,0), (-1,-1), 0),
@@ -189,19 +387,16 @@ def build_page_2_stream():
     story.append(Spacer(1, 5))
 
     # TÍTULO DEL PLANO TÉCNICO
-    story.append(Paragraph("<font color='#F59E0B'>▸</font> VISTAS ORTOGRÁFICAS Y COTAS DE FABRICACIÓN (COTAS EN MM [PULGADAS])", h2_style))
+    story.append(Paragraph("<font color='#FFD830'>■</font> <b>VISTAS ORTOGRÁFICAS Y COTAS DE FABRICACIÓN</b> (COTAS EN MM [PULGADAS])", h2_style))
     story.append(Spacer(1, 3))
 
-    # DIBUJO TÉCNICO ORTOGRÁFICO CON PROPORCIÓN 100% REAL Y EXACTA
+    # DIBUJO TÉCNICO ORTOGRÁFICO CON PROPORCIÓN 100% REAL Y EXACTA (Sin estiramiento)
     diag_path = os.path.join(PUBLIC_DIR, 'fichas-tecnicas', 'diagrama-tope-acero.png')
     if os.path.exists(diag_path):
         with PILImage.open(diag_path) as dimg:
             dw, dh = dimg.size
-            aspect_ratio = dw / dh # ~2.455
-            
-            # Ancho del plano técnico: 535 pt (respetando márgenes)
+            aspect_ratio = dw / dh # ~2.45528
             target_w = 535
-            # Altura calculada matemáticamente para 0% distorsión
             target_h = target_w / aspect_ratio # ~217.9 pt
             
             diag_rl = RLImage(diag_path, width=target_w, height=target_h)
@@ -209,7 +404,8 @@ def build_page_2_stream():
             diag_frame = Table([[diag_rl]], colWidths=[content_w])
             diag_frame.setStyle(TableStyle([
                 ('BACKGROUND', (0,0), (-1,-1), C_WHITE),
-                ('BOX', (0,0), (-1,-1), 0.5, C_BORDER),
+                ('BOX', (0,0), (-1,-1), 0.8, C_BORDER),
+                ('LINELEFT', (0,0), (-1,-1), 3.5, C_YELLOW), # Acento amarillo
                 ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                 ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
                 ('TOPPADDING', (0,0), (-1,-1), 4),
@@ -225,7 +421,7 @@ def build_page_2_stream():
     col_left_w = 270
     col_right_w = content_w - col_left_w - 12 # 278 pt
     
-    # 1. LISTA DE MATERIALES (BOM)
+    # 1. LISTA DE MATERIALES (BOM) con encabezado en amarillo Tecnorampa
     bom_data = [
         [Paragraph("<b>ITEM</b>", label_style), Paragraph("<b>CANT.</b>", label_style), Paragraph("<b>DESCRIPCIÓN DE MATERIAL (BOM)</b>", label_style)],
         [Paragraph("ITEM 1", label_style), Paragraph("4 pzas", val_style), Paragraph("3\" × 3/16\" Ángulo Estructural de Acero (8 mm)", val_style)],
@@ -235,8 +431,8 @@ def build_page_2_stream():
     ]
     bom_tbl = Table(bom_data, colWidths=[42, 42, col_left_w - 84])
     bom_styles = [
-        ('BACKGROUND', (0,0), (-1,0), C_YELLOW_LIGHT),
-        ('LINEBELOW', (0,0), (-1,0), 1, C_YELLOW),
+        ('BACKGROUND', (0,0), (-1,0), C_YELLOW),
+        ('LINEBELOW', (0,0), (-1,0), 1.2, C_DARK),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
         ('TOPPADDING', (0,0), (-1,-1), 2.5),
         ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
@@ -246,7 +442,7 @@ def build_page_2_stream():
     ]
     for r in range(1, len(bom_data)):
         if r % 2 == 1:
-            bom_styles.append(('BACKGROUND', (0, r), (-1, r), C_BG_LIGHT))
+            bom_styles.append(('BACKGROUND', (0, r), (-1, r), colors.HexColor('#F9FAFB')))
     bom_tbl.setStyle(TableStyle(bom_styles))
     
     # 2. ESPECIFICACIONES Y TOLERANCIAS
@@ -262,8 +458,8 @@ def build_page_2_stream():
     ]
     specs_tbl = Table(specs_data, colWidths=[120, col_left_w - 120])
     specs_styles = [
-        ('BACKGROUND', (0,0), (-1,0), C_YELLOW_LIGHT),
-        ('LINEBELOW', (0,0), (-1,0), 1, C_YELLOW),
+        ('BACKGROUND', (0,0), (-1,0), C_YELLOW),
+        ('LINEBELOW', (0,0), (-1,0), 1.2, C_DARK),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
         ('TOPPADDING', (0,0), (-1,-1), 2.5),
         ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
@@ -273,15 +469,15 @@ def build_page_2_stream():
     ]
     for r in range(1, len(specs_data)):
         if r % 2 == 1:
-            specs_styles.append(('BACKGROUND', (0, r), (-1, r), C_BG_LIGHT))
+            specs_styles.append(('BACKGROUND', (0, r), (-1, r), colors.HexColor('#F9FAFB')))
     specs_tbl.setStyle(TableStyle(specs_styles))
 
     left_col = [
-        Paragraph("<font color='#F59E0B'>▸</font> LISTA DE MATERIALES (BOM)", h2_style),
+        Paragraph("<font color='#FFD830'>■</font> <b>LISTA DE MATERIALES (BOM)</b>", h2_style),
         Spacer(1, 2),
         bom_tbl,
         Spacer(1, 5),
-        Paragraph("<font color='#F59E0B'>▸</font> TOLERANCIAS DIMENSIONALES", h2_style),
+        Paragraph("<font color='#FFD830'>■</font> <b>TOLERANCIAS DIMENSIONALES</b>", h2_style),
         Spacer(1, 2),
         specs_tbl
     ]
@@ -297,10 +493,10 @@ def build_page_2_stream():
     ]
     install_tbl = Table(install_box, colWidths=[col_right_w])
     install_tbl.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), C_BG_LIGHT),
-        ('BOX', (0,0), (-1,-1), 0.5, C_BORDER),
-        ('LINEBELOW', (0,0), (0,0), 1, C_YELLOW),
-        ('LINELEFT', (0,0), (0,-1), 2, C_YELLOW),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FBFBFB')),
+        ('BOX', (0,0), (-1,-1), 0.8, C_BORDER),
+        ('LINEBELOW', (0,0), (0,0), 1.5, C_YELLOW),
+        ('LINELEFT', (0,0), (0,-1), 3.5, C_YELLOW),
         ('TOPPADDING', (0,0), (-1,-1), 3.5),
         ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
         ('LEFTPADDING', (0,0), (-1,-1), 6),
@@ -308,7 +504,7 @@ def build_page_2_stream():
     ]))
 
     right_col = [
-        Paragraph("<font color='#F59E0B'>▸</font> PROTOCOLO DE ANCLAJE Y OPERACIÓN", h2_style),
+        Paragraph("<font color='#FFD830'>■</font> <b>PROTOCOLO DE ANCLAJE Y OPERACIÓN</b>", h2_style),
         Spacer(1, 2),
         install_tbl
     ]
@@ -322,24 +518,52 @@ def build_page_2_stream():
         ('BOTTOMPADDING', (0,0), (-1,-1), 0),
     ]))
     story.append(bottom_grid)
-    story.append(Spacer(1, 6))
 
-    # PIE DE PÁGINA PÁGINA 2
-    story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceBefore=0, spaceAfter=3))
-    foot_p = (
-        "<b>TECNORAMPA S.A. DE C.V.</b> | Carretera Federal México-Querétaro km 176 + 500, El Sauz, Pedro Escobedo, Qro. CP. 76729<br/>"
-        "Lada sin costo: <b>800 6230 332</b> | Conmutador: <b>(427) 272 8119 / (427) 272 4041</b> | <b>ventas@tecnorampa.com.mx</b> | <b>www.tecnorampa.com.mx</b> • Página 2 de 2"
-    )
-    story.append(Paragraph(foot_p, ParagraphStyle('FP2', parent=styles['Normal'], fontName='Helvetica', fontSize=6, leading=7.5, alignment=1, textColor=C_GRAY)))
+    # DETALLES EN AMARILLO AL FINAL DE LA HOJA
+    def add_footer_decorations(canvas_obj, doc_obj):
+        pw, ph = letter
+        
+        # 1. Franja industrial inferior en amarillo Tecnorampa (#FFD830)
+        canvas_obj.setFillColor(C_YELLOW)
+        canvas_obj.rect(0, 0, pw, 26, fill=1, stroke=0)
+        
+        # 2. Línea negra superior de la franja
+        canvas_obj.setFillColor(C_DARK)
+        canvas_obj.rect(0, 25, pw, 1.2, fill=1, stroke=0)
+        
+        # 3. Rayas diagonales de advertencia industrial (Hazard stripes)
+        canvas_obj.setFillColor(C_DARK)
+        stripe_w = 5
+        gap = 5
+        for i in range(6):
+            x_base = 16 + i * (stripe_w + gap)
+            p = canvas_obj.beginPath()
+            p.moveTo(x_base, 0)
+            p.lineTo(x_base + 6, 25)
+            p.lineTo(x_base + 6 + stripe_w, 25)
+            p.lineTo(x_base + stripe_w, 0)
+            p.close()
+            canvas_obj.drawPath(p, fill=1, stroke=0)
+            
+        # 4. Texto corporativo sobre fondo amarillo
+        canvas_obj.setFont('Helvetica-Bold', 7)
+        canvas_obj.setFillColor(C_DARK)
+        canvas_obj.drawString(90, 10, 'TECNORAMPA S.A. DE C.V.')
+        canvas_obj.setFont('Helvetica', 6.5)
+        canvas_obj.drawString(198, 10, '| Planta Querétaro • Conmutador: (427) 272 8119 • ventas@tecnorampa.com.mx')
+        
+        # 5. Paginación y web a la derecha
+        canvas_obj.setFont('Helvetica-Bold', 6.5)
+        canvas_obj.drawRightString(pw - 24, 10, 'www.tecnorampa.com.mx • Página 2 de 2')
 
-    doc.build(story)
+    doc.build(story, onFirstPage=add_footer_decorations)
     return temp_p2_path
 
 def merge_and_finalize():
-    print("1. Procesando Página 1 (Estilo Catálogo Oficial)...")
+    print("1. Procesando Página 1 (Foto única de tienda + Descripción y ventajas)...")
     page_1 = build_page_1()
     
-    print("2. Generando Página 2 (Plano de Ingeniería a escala real)...")
+    print("2. Generando Página 2 (Plano de ingeniería + Amarillo #FFD830 + Detalles al pie)...")
     p2_pdf_path = build_page_2_stream()
     p2_reader = pypdf.PdfReader(p2_pdf_path)
     page_2 = p2_reader.pages[0]

@@ -13,9 +13,12 @@ export const metadata: Metadata = {
   title: 'Tecnorampa Pro-Store | Refacciones Industriales',
   description: 'Tienda oficial de refacciones industriales Tecnorampa. Lámparas de andén, semáforos y soluciones logísticas.',
   icons: {
-    icon: '/images/tecnorampa-logo.png',
-    shortcut: '/images/tecnorampa-logo.png',
-    apple: '/images/tecnorampa-logo.png',
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
 };
 

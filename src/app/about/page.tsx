@@ -77,8 +77,8 @@ export default function AboutPage() {
               <div className="absolute -inset-4 bg-primary/20 rounded-2xl rotate-3 group-hover:rotate-1 transition-transform" />
               <div className="relative aspect-square rounded-xl overflow-hidden border-4 border-white shadow-2xl">
                 <Image 
-                  src={qualityImage?.imageUrl || '/images/calidad-industrial.jpg'} 
-                  alt="Operación Logística de Calidad" 
+                  src="/images/fachada-tecnorampa.jpg" 
+                  alt="Instalaciones Tecnorampa Querétaro" 
                   fill 
                   className="object-cover"
                   unoptimized

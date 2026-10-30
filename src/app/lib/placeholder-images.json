@@ -110,9 +110,9 @@
     },
     {
       "id": "quality-guarantee-bg",
-      "description": "Imagen de calidad industrial Tecnorampa",
-      "imageUrl": "/images/calidad-industrial.jpg",
-      "imageHint": "industrial quality"
+      "description": "Instalaciones y fachada de Tecnorampa",
+      "imageUrl": "/images/fachada-tecnorampa.jpg",
+      "imageHint": "industrial building facade"
     }
   ]
 }

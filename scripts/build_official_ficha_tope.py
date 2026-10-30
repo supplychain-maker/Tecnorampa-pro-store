@@ -81,11 +81,11 @@ def build_page_1():
     # 3. Cubrir el cuerpo inferior de la página original (se eliminan las fotos viejas y el dibujo de medidas)
     # Conservamos la mitad superior intacta: foto de andén logística y el título "TOPE LAMINADO CON PLACA DE ACERO"
     can.setFillColor(C_WHITE)
-    can.rect(0, 0, pw, 524, fill=1, stroke=0)
+    can.rect(0, 0, pw, 518, fill=1, stroke=0)
     
     # Línea divisoria en amarillo Tecnorampa (#FFD830) bajo el título
     can.setFillColor(C_YELLOW)
-    can.rect(30, 523, pw - 60, 3, fill=1, stroke=0)
+    can.rect(30, 517, pw - 60, 3, fill=1, stroke=0)
     
     # 4. Pie de página corporativo con detalles en amarillo Tecnorampa
     can.setFillColor(C_YELLOW)

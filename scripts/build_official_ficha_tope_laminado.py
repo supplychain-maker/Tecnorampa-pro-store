@@ -53,8 +53,37 @@ C_WHITE = colors.white
 def build_page_1():
     """Genera la Página 1 con el encabezado oficial, título industrial, foto única de la tienda y descripción técnica."""
     catalog_pdf_path = os.path.join(BRAIN_DIR, '.user_uploaded', 'media_1793387574599.pdf')
-    reader = pypdf.PdfReader(catalog_pdf_path)
-    base_page = reader.pages[10] # Página 11 del manual (base con foto y tipografía)
+    barlow_font = os.path.join(SCRATCH_DIR, 'Barlow-Regular.ttf')
+    
+    # 1. Preparación limpia con PyMuPDF: redacción vectorial exacta de 'CON PLACA DE ACERO'
+    # sin cajas blancas superpuestas y conservando 100% intactas las letras de 'LAMINADO'
+    fitz_doc = fitz.open(catalog_pdf_path)
+    fitz_page = fitz_doc[10]
+    
+    # Redactar únicamente el texto 'CON PLACA DE ACERO' a nivel de stream de texto sin tocar la foto de fondo
+    redact_rect = fitz.Rect(260, 248, 535, 268)
+    fitz_page.add_redact_annot(redact_rect, fill=False)
+    fitz_page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE)
+    
+    # Insertar el nuevo subtítulo oficial con la tipografía Barlow oficial de Tecnorampa
+    fitz_page.insert_text(
+        fitz.Point(268.09, 258.0),
+        'PARA ANDÉN DE CARGA',
+        fontname='barlow',
+        fontfile=barlow_font,
+        fontsize=23.0,
+        color=(48/255.0, 48/255.0, 47/255.0)
+    )
+    
+    # Exportar la página base procesada a memoria
+    temp_stream = io.BytesIO()
+    doc_single = fitz.open()
+    doc_single.insert_pdf(fitz_doc, from_page=10, to_page=10)
+    doc_single.save(temp_stream)
+    temp_stream.seek(0)
+    
+    reader = pypdf.PdfReader(temp_stream)
+    base_page = reader.pages[0]
     
     pw = float(base_page.mediabox.width)
     ph = float(base_page.mediabox.height)
@@ -78,21 +107,14 @@ def build_page_1():
     can.setFillColor(C_GRAY)
     can.drawRightString(pw - 35, ph - 48, 'CÓDIGO: TR-FT-TOPE-LAM-1310')
     
-    # 3. Cubrir el subtítulo original "CON PLACA DE ACERO" para poner "PARA ANDÉN DE CARGA"
-    # y cubrir el cuerpo inferior (se eliminan las fotos viejas y el dibujo de medidas)
+    # 3. Cubrir el cuerpo inferior de la página original (fotos viejas y plano de medidas antiguo)
+    # dejando el encabezado y el bloque de títulos limpio y con margen respirable
     can.setFillColor(C_WHITE)
-    can.rect(265, 526, 265, 33, fill=1, stroke=0)
-    can.setFont('Helvetica', 22.5)
-    can.setFillColor(colors.HexColor('#30302F'))
-    can.drawString(268, 532, 'PARA ANDÉN DE CARGA')
-    
-    # Cubrir cuerpo inferior completo
-    can.setFillColor(C_WHITE)
-    can.rect(0, 0, pw, 524, fill=1, stroke=0)
+    can.rect(0, 0, pw, 518, fill=1, stroke=0)
     
     # Línea divisoria en amarillo Tecnorampa (#FFD830) bajo el título
     can.setFillColor(C_YELLOW)
-    can.rect(30, 523, pw - 60, 3, fill=1, stroke=0)
+    can.rect(30, 517, pw - 60, 3, fill=1, stroke=0)
     
     # 4. Pie de página corporativo con detalles en amarillo Tecnorampa
     can.setFillColor(C_YELLOW)

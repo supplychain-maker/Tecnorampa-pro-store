@@ -21,7 +21,9 @@ import {
   Car,
   Wrench,
   Layers,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Product } from '@/app/lib/products';
 import { Button } from '@/components/ui/button';
@@ -29,6 +31,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+
+const ITEMS_PER_PAGE = 50;
 
 const MAIN_GROUPS_CONFIG = [
   { id: 'all', name: 'Todos los Equipos', icon: LayoutGrid, subGroups: [] },
@@ -57,6 +61,7 @@ export default function ProductsPage() {
   const [selectedMainGroup, setSelectedMainGroup] = useState<string>('all');
   const [selectedSubGroup, setSelectedSubGroup] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Consulta de productos activos
   const productsQuery = useMemo(() => {
@@ -117,10 +122,17 @@ export default function ProductsPage() {
     return results;
   }, [products, selectedMainGroup, selectedSubGroup, searchTerm]);
 
+  const totalPages = Math.ceil((filteredProducts?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
   const handleResetFilters = () => {
     setSelectedMainGroup('all');
     setSelectedSubGroup(null);
     setSearchTerm('');
+    setCurrentPage(1);
   };
 
   return (
@@ -143,11 +155,17 @@ export default function ProductsPage() {
               placeholder="¿Qué refacción busca hoy?..." 
               className="pl-10 h-12 bg-white border-2 border-border focus:border-primary font-bold shadow-sm"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
             />
             {searchTerm && (
               <button 
-                onClick={() => setSearchTerm('')} 
+                onClick={() => {
+                  setSearchTerm('');
+                  setCurrentPage(1);
+                }} 
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X size={16} />
@@ -192,6 +210,7 @@ export default function ProductsPage() {
                   onClick={() => {
                     setSelectedMainGroup(group.id);
                     setSelectedSubGroup(null);
+                    setCurrentPage(1);
                   }}
                   className={cn(
                     "flex items-center justify-between p-4 rounded-xl border-2 font-black uppercase text-xs italic tracking-wider transition-all text-left",
@@ -224,7 +243,10 @@ export default function ProductsPage() {
               <Button
                 size="sm"
                 variant={selectedSubGroup === null ? "default" : "secondary"}
-                onClick={() => setSelectedSubGroup(null)}
+                onClick={() => {
+                  setSelectedSubGroup(null);
+                  setCurrentPage(1);
+                }}
                 className={cn(
                   "h-8 px-3 text-[11px] font-black uppercase tracking-wider rounded-full",
                   selectedSubGroup === null ? "bg-foreground text-background hover:bg-foreground/90" : "bg-muted hover:bg-muted/80 text-foreground"
@@ -244,7 +266,10 @@ export default function ProductsPage() {
                     key={sub}
                     size="sm"
                     variant={isSubActive ? "default" : "outline"}
-                    onClick={() => setSelectedSubGroup(sub)}
+                    onClick={() => {
+                      setSelectedSubGroup(sub);
+                      setCurrentPage(1);
+                    }}
                     className={cn(
                       "h-8 px-3 text-[11px] font-black uppercase tracking-wider rounded-full transition-all",
                       isSubActive 
@@ -298,13 +323,33 @@ export default function ProductsPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map(product => (
-              <div key={product.id || product.slug} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <ProductCard product={product} />
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {paginatedProducts.map(product => (
+                <div key={product.id || product.slug} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-16 flex justify-center items-center gap-4">
+                <Button variant="outline" size="icon" disabled={currentPage === 1} onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))} className="h-12 w-12 border-2">
+                  <ChevronLeft size={24} />
+                </Button>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button key={page} variant={currentPage === page ? "default" : "outline"} onClick={() => setCurrentPage(page)} className={cn("h-12 w-12 font-black italic", currentPage === page ? "shadow-lg" : "text-muted-foreground")}>
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                <Button variant="outline" size="icon" disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))} className="h-12 w-12 border-2">
+                  <ChevronRight size={24} />
+                </Button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
     </div>

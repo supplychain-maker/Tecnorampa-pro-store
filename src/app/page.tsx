@@ -32,7 +32,7 @@ import { Product } from '@/app/lib/products';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 50;
 
 const MAIN_GROUPS_CONFIG = [
   { id: 'all', name: 'Todos los Equipos', icon: LayoutGrid, subGroups: [] },

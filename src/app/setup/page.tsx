@@ -9,7 +9,7 @@ import { Loader2, Database, ShieldAlert, CheckCircle2, ArrowRight, AlertTriangle
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-export const INITIAL_CATEGORIES = [
+const INITIAL_CATEGORIES = [
   // Grupos Principales (Macro)
   { name: "Andén de Carga", slug: "anden", isMainGroup: true, order: 1, icon: "Warehouse" },
   { name: "Estacionamiento", slug: "estacionamiento", isMainGroup: true, order: 2, icon: "Car" },
@@ -30,7 +30,7 @@ export const INITIAL_CATEGORIES = [
   { name: "Baleros y Rodamientos", slug: "baleros-y-rodamientos", mainGroup: "refacciones", parentName: "Refacciones Industriales", order: 33 },
 ];
 
-export const INITIAL_PRODUCTS = [
+const INITIAL_PRODUCTS = [
   // --- GRUPO: ANDÉN DE CARGA ---
   {
     name: "Niveladora Hidráulica de Andén",

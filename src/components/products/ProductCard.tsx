@@ -4,7 +4,7 @@ import { Product } from '@/app/lib/products';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ShoppingCart, MapPin, FileText } from 'lucide-react';
+import { ArrowRight, ShoppingCart, MapPin, FileText, Layers } from 'lucide-react';
 import { getDirectImageUrl } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -13,10 +13,35 @@ interface ProductCardProps {
   product: Product;
 }
 
+const PRODUCT_IMAGE_COUNTS: Record<string, number> = {
+  'tope-anden-acero': 4,
+  'tope-anden-laminado': 5,
+  'lampara-anden-articulada': 4,
+  'semaforo-led-industrial': 3,
+  'niveladora-hidraulica-premium': 3,
+  'niveladora-mecanica-industrial': 3,
+  'rampa-parking-evolution': 3,
+  'rampa-parking-lift': 3,
+  'mini-dock-hidraulico': 3,
+  'mini-dock-mecanico': 3,
+  'mecanismo-freno-rampa-auto-release': 2,
+  'resorte-extension-niveladora': 2,
+  'poleas-guia-cable-traccion': 3,
+  'valvula-solenoide-parker': 3,
+  'botonera-colgante-banana': 3,
+  'boton-paro-emergencia-giro': 2,
+  'boton-paro-emergencia-llave': 3,
+  'caja-din-mando-bipolar': 2,
+  'balero-contacto-angular-5205': 2,
+  'balero-rigido-bolas-6005': 2,
+  'rodamiento-rodillos-ncf2208': 3,
+};
+
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const displayImage = getDirectImageUrl(product.image);
+  const totalImagesCount = PRODUCT_IMAGE_COUNTS[product.slug] || product.images?.length || 1;
 
   const hasTechnicalSheet = !!product.technicalSheetUrl || 
     product.slug === 'tope-anden-acero' || 
@@ -75,6 +100,13 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-md text-[9px] font-black uppercase text-foreground/85 border border-primary/40 shadow-xs tracking-wider">
               <FileText size={11} className="text-primary" />
               <span>Ficha Técnica</span>
+            </div>
+          )}
+
+          {totalImagesCount > 1 && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-neutral-950/80 text-white text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-xs border border-white/20 shadow-xs pointer-events-none">
+              <Layers size={11} className="text-primary" />
+              <span>{totalImagesCount} {product.slug.includes('tope') || product.slug.includes('lampara') || product.slug.includes('semaforo') ? 'Vistas y Planos' : 'Ángulos'}</span>
             </div>
           )}
         </div>

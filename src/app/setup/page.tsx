@@ -43,7 +43,11 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Operación automática con un solo botón. Capacidad de 30k a 50k lbs.",
     description: "La niveladora hidráulica de Tecnorampa ofrece la máxima eficiencia y seguridad. Su sistema electro-hidráulico elimina el esfuerzo manual y reduce el mantenimiento significativamente.",
     image: "/products/niveladora-hidraulica.jpg",
-    images: ["/products/niveladora-hidraulica.jpg"],
+    images: [
+      "/products/niveladora-hidraulica.jpg",
+      "/products/niveladora-hidraulica-angulo.jpg",
+      "/products/niveladora-hidraulica-cerrada.jpg"
+    ],
     active: true,
     benefits: ["Operación manos libres", "Mantenimiento mínimo", "Seguridad estructural superior"],
     specs: { "Capacidad Max": "50,000 lbs", "Operación": "Hidráulica", "Garantía": "12 meses" },
@@ -65,7 +69,11 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Operación manual robusta mediante cadena y resortes de alta tensión.",
     description: "Solución confiable y de bajo costo operativo. Fabricada con acero estructural de alta resistencia, diseñada para soportar tráfico pesado constante.",
     image: "/products/niveladora-mecanica.jpg",
-    images: ["/products/niveladora-mecanica.jpg"],
+    images: [
+      "/products/niveladora-mecanica.jpg",
+      "/products/niveladora-mecanica-angulo.jpg",
+      "/products/niveladora-hidraulica-cerrada.jpg"
+    ],
     active: true,
     benefits: ["Sin consumo eléctrico", "Altamente resistente", "Fácil mantenimiento"],
     specs: { "Capacidad": "30,000 lbs", "Sistema": "Mecánico por cadena", "Material": "Acero Estructural" },
@@ -136,7 +144,11 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Señalización roja/verde de alta visibilidad para maniobras seguras.",
     description: "Controla el flujo de camiones en tu andén. Carcasa de policarbonato resistente a impactos y LED de larga duración.",
     image: "/products/semaforo-led.jpg",
-    images: ["/products/semaforo-led.jpg"],
+    images: [
+      "/products/semaforo-led.jpg",
+      "/products/semaforo-led-frente.png",
+      "/products/semaforo-led-planos.png"
+    ],
     active: true,
     benefits: ["Bajo consumo", "Alta visibilidad diurna", "Protección IP65"],
     specs: { "Material": "Policarbonato", "Iluminación": "LED Dual", "Voltaje": "110V/220V" },
@@ -153,7 +165,12 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Ilumina el interior de los trailers para cargas seguras.",
     description: "Brazo articulado de 40 pulgadas con cabezal LED de alta potencia. Resistente a vibraciones y golpes típicos del área de carga.",
     image: "/products/lampara-anden.jpg",
-    images: ["/products/lampara-anden.jpg"],
+    images: [
+      "/products/lampara-anden.jpg",
+      "/products/lampara-anden-brazo.png",
+      "/products/lampara-anden-planos.png",
+      "/products/lampara-anden-sin-clavija.jpg"
+    ],
     active: true,
     benefits: ["Brazo flexible", "LED de alto brillo", "Resistente a impactos"],
     specs: { "Largo Brazo": "40\"", "Cabezal": "Aluminio", "Vida útil": "50,000 hrs" },
@@ -170,7 +187,12 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Protección con cara de acero para tráfico rudo de trailers.",
     description: "El tope de andén definitivo. Incluye una placa de acero frontal de 3/8\" que evita el desgaste prematuro del hule por la fricción de la suspensión del trailer.",
     image: "/products/tope-acero.jpg",
-    images: ["/products/tope-acero.jpg", "/fichas-tecnicas/diagrama-tope-acero.png"],
+    images: [
+      "/products/tope-acero.jpg",
+      "/products/tope-acero-lateral.png",
+      "/products/tope-acero-medidas.png",
+      "/fichas-tecnicas/diagrama-tope-acero.png"
+    ],
     technicalSheetUrl: "/fichas-tecnicas/tope-anden-acero.pdf",
     active: true,
     benefits: ["Placa frontal de acero 3/8\"", "Absorción de impacto 95%", "Base plana sin daño a muro", "Fácil anclaje mecánico o soldado"],
@@ -188,7 +210,13 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Protección estándar de hule laminado para andenes.",
     description: "Absorción de impactos eficiente para trailers estándar. Fabricado con capas laminadas comprimidas a alta presión de caucho de alta resiliencia.",
     image: "/products/tope-laminado.jpg",
-    images: ["/products/tope-laminado.jpg", "/fichas-tecnicas/diagrama-tope-laminado.png"],
+    images: [
+      "/products/tope-laminado.jpg",
+      "/products/tope-laminado-lateral.png",
+      "/products/tope-laminado-medidas-1.png",
+      "/products/tope-laminado-medidas-2.png",
+      "/fichas-tecnicas/diagrama-tope-laminado.png"
+    ],
     technicalSheetUrl: "/fichas-tecnicas/tope-anden-laminado.pdf",
     active: true,
     benefits: ["Económico y sustentable", "2 ángulos estructurales 3\"x1/4\"", "Amortiguación de alto impacto", "Asiento firme 100% plano"],
@@ -208,7 +236,11 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Premium. Duplica tu espacio de estacionamiento con máxima seguridad.",
     description: "Sistema de elevación de alta gama. Permite abrir las puertas del auto completamente gracias a su diseño de postes delgados pero ultra resistentes.",
     image: "/products/rampa-evolution.jpg",
-    images: ["/products/rampa-evolution.jpg"],
+    images: [
+      "/products/rampa-evolution.jpg",
+      "/products/rampa-evolution-2.jpg",
+      "/products/rampa-evolution-3.jpg"
+    ],
     active: true,
     benefits: ["Ahorro de espacio", "IP Protection (Exterior)", "Alta estética"],
     specs: { "Capacidad": "7,000 lbs", "Protección": "IP65", "Seguro": "Bloqueo mecánico automático" },
@@ -225,7 +257,11 @@ export const INITIAL_PRODUCTS = [
     shortDescription: "Robusta y funcional para condominios y residencias.",
     description: "Solución de elevación electro-hidráulica para dos autos. Ideal para garajes con techos altos que buscan optimizar el área de parqueo.",
     image: "/products/rampa-parking-lift.jpg",
-    images: ["/products/rampa-parking-lift.jpg"],
+    images: [
+      "/products/rampa-parking-lift.jpg",
+      "/products/rampa-parking-lift-2.jpg",
+      "/products/rampa-parking-lift-3.jpg"
+    ],
     active: true,
     benefits: ["Operación silenciosa", "Estructura de acero", "Fácil de usar"],
     specs: { "Capacidad": "6,000 lbs", "Tiempo ascenso": "45 seg", "Voltaje": "220V" },

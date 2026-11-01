@@ -18,6 +18,92 @@ import { Product } from '@/app/lib/products';
 import { getDirectImageUrl, cn } from '@/lib/utils';
 import { ProductTechnicalSheet } from '@/components/products/ProductTechnicalSheet';
 
+// Secondary images mapping by product slug (angles, blueprints, details)
+const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
+  'tope-anden-acero': [
+    '/products/tope-acero-lateral.png',
+    '/products/tope-acero-medidas.png',
+    '/fichas-tecnicas/diagrama-tope-acero.png',
+  ],
+  'tope-anden-laminado': [
+    '/products/tope-laminado-lateral.png',
+    '/products/tope-laminado-medidas-1.png',
+    '/products/tope-laminado-medidas-2.png',
+    '/fichas-tecnicas/diagrama-tope-laminado.png',
+  ],
+  'lampara-anden-articulada': [
+    '/products/lampara-anden-brazo.png',
+    '/products/lampara-anden-planos.png',
+    '/products/lampara-anden-sin-clavija.jpg',
+  ],
+  'semaforo-led-industrial': [
+    '/products/semaforo-led-frente.png',
+    '/products/semaforo-led-planos.png',
+  ],
+  'niveladora-hidraulica-premium': [
+    '/products/niveladora-hidraulica-angulo.jpg',
+    '/products/niveladora-hidraulica-cerrada.jpg',
+  ],
+  'niveladora-mecanica-industrial': [
+    '/products/niveladora-mecanica-angulo.jpg',
+    '/products/niveladora-hidraulica-cerrada.jpg',
+  ],
+  'rampa-parking-evolution': [
+    '/products/rampa-evolution-2.jpg',
+    '/products/rampa-evolution-3.jpg',
+  ],
+  'rampa-parking-lift': [
+    '/products/rampa-parking-lift-2.jpg',
+    '/products/rampa-parking-lift-3.jpg',
+  ],
+  'mini-dock-hidraulico': [
+    '/products/mini-dock-hidraulico-2.jpg',
+    '/products/mini-dock-hidraulico-3.jpg',
+  ],
+  'mini-dock-mecanico': [
+    '/products/mini-dock-mecanico-2.jpg',
+    '/products/mini-dock-mecanico-3.jpg',
+  ],
+  'mecanismo-freno-rampa-auto-release': [
+    '/products/freno-rampa-zoom.jpeg',
+  ],
+  'resorte-extension-niveladora': [
+    '/products/resorte-rampa-lado.jpeg',
+  ],
+  'poleas-guia-cable-traccion': [
+    '/products/poleas-industriales-lado1.jpeg',
+    '/products/poleas-industriales-lado2.jpeg',
+  ],
+  'valvula-solenoide-parker': [
+    '/products/valvula-parker-lado1.jpeg',
+    '/products/valvula-parker-lado2.jpeg',
+  ],
+  'botonera-colgante-banana': [
+    '/products/botonera-banana-lado1.jpeg',
+    '/products/botonera-banana-lado2.jpeg',
+  ],
+  'boton-paro-emergencia-giro': [
+    '/products/paro-emergencia-giro-lado.jpeg',
+  ],
+  'boton-paro-emergencia-llave': [
+    '/products/paro-emergencia-llave-lado1.jpeg',
+    '/products/paro-emergencia-llave-lado2.jpeg',
+  ],
+  'caja-din-mando-bipolar': [
+    '/products/caja-din-abierta.jpeg',
+  ],
+  'balero-contacto-angular-5205': [
+    '/products/balero-5205-lado.jpeg',
+  ],
+  'balero-rigido-bolas-6005': [
+    '/products/balero-6005-lado.jpeg',
+  ],
+  'rodamiento-rodillos-ncf2208': [
+    '/products/rodamiento-ncf2208-dentro.jpeg',
+    '/products/rodamiento-ncf2208-lado.jpeg',
+  ],
+};
+
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const db = useFirestore();
@@ -56,17 +142,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const currentVariant = product.variants?.find(v => v.id === selectedVariant);
   const finalPrice = product.price + (currentVariant?.priceModifier || 0);
 
-  // Galería de imágenes enriquecida: añade el plano ortográfico técnico si existe para el producto
-  const rawImages = (product.images && product.images.length > 0) 
+  // Galería de imágenes: Posición 1 garantizada con la imagen de portada, y desde la posición 2 en adelante planos, ángulos y detalles
+  const coverImage = getDirectImageUrl(product.image);
+  const dbImages = (product.images && product.images.length > 0) 
     ? product.images.map(img => getDirectImageUrl(img))
-    : [getDirectImageUrl(product.image)];
+    : [];
+  const secondaryConfigImages = SECONDARY_IMAGES_MAP[slug] || [];
 
-  const imagesToDisplay = [...rawImages];
-  if (slug === 'tope-anden-acero' && !imagesToDisplay.some(img => img.includes('diagrama-tope-acero'))) {
-    imagesToDisplay.push('/fichas-tecnicas/diagrama-tope-acero.png');
-  } else if (slug === 'tope-anden-laminado' && !imagesToDisplay.some(img => img.includes('diagrama-tope-laminado'))) {
-    imagesToDisplay.push('/fichas-tecnicas/diagrama-tope-laminado.png');
-  }
+  const imagesToDisplay = [
+    coverImage,
+    ...dbImages.filter(img => img && img !== coverImage),
+    ...secondaryConfigImages.filter(img => img && img !== coverImage && !dbImages.includes(img))
+  ];
 
   const handleAddToCart = () => {
     addItem({
@@ -92,7 +179,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           <div className="space-y-4">
             <div className="relative aspect-square bg-white rounded-xl overflow-hidden border border-border group p-8">
               <Image 
-                src={imagesToDisplay[activeImage]} 
+                src={imagesToDisplay[activeImage] || imagesToDisplay[0] || coverImage} 
                 alt={product.name} 
                 fill 
                 priority
@@ -106,17 +193,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                 </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {imagesToDisplay.map((img, idx) => (
-                <button 
-                  key={idx} 
-                  onClick={() => setActiveImage(idx)}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all bg-white p-2 ${activeImage === idx ? 'border-primary' : 'border-border opacity-60 hover:opacity-100'}`}
-                >
-                  <Image src={img} alt={`${product.name} ${idx}`} fill className="object-contain p-1" unoptimized />
-                </button>
-              ))}
-            </div>
+            {imagesToDisplay.length > 1 && (
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
+                {imagesToDisplay.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setActiveImage(idx)}
+                    className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all bg-white p-2 ${activeImage === idx ? 'border-primary ring-2 ring-primary/20 shadow-sm' : 'border-border opacity-70 hover:opacity-100'}`}
+                  >
+                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-contain p-1" unoptimized />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Info */}

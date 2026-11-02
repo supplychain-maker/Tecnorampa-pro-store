@@ -27,13 +27,15 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
   const [activeSheet, setActiveSheet] = useState<number>(1);
 
   // URL de la ficha técnica: personalizada o derivada automáticamente por slug
-  const pdfUrl = product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`;
+  // Parámetro de versión para forzar actualización inmediata en el navegador y evitar caché residual
+  const cacheBuster = '?v=20261102_2';
+  const pdfUrl = (product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + cacheBuster;
   const downloadFileName = `Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`;
 
   // Láminas en alta definición generadas para vista directa sin dependencias de plugins PDF
   const hasSheetImages = {
-    p1: `/fichas-tecnicas/${product.slug}-pag1.png`,
-    p2: `/fichas-tecnicas/${product.slug}-pag2.png`,
+    p1: `/fichas-tecnicas/${product.slug}-pag1.png${cacheBuster}`,
+    p2: `/fichas-tecnicas/${product.slug}-pag2.png${cacheBuster}`,
   };
 
   const handlePrint = () => {

@@ -162,7 +162,7 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Pág 1: Catálogo
+                  Pág 1: {product.slug.includes('poleas') ? 'Propiedades Mecánicas' : (product.slug.includes('tope') ? 'Catálogo' : 'Ficha Técnica')}
                 </button>
                 <button
                   type="button"
@@ -173,7 +173,7 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Pág 2: Plano Ortográfico
+                  Pág 2: {product.slug.includes('poleas') ? 'Compresión e Impacto' : (product.slug.includes('tope') ? 'Plano Ortográfico' : 'Página 2')}
                 </button>
               </div>
             )}

@@ -316,6 +316,7 @@ const INITIAL_PRODUCTS = [
     image: "/products/poleas-industriales-frente.jpeg",
     images: ["/products/poleas-industriales-frente.jpeg", "/products/poleas-industriales-lado1.jpeg", "/products/poleas-industriales-lado2.jpeg"],
     active: true,
+    technicalSheetUrl: "/fichas-tecnicas/poleas-industriales-cable-acero.pdf",
     benefits: [
       "Maquinadas desde barra redonda sólida de Nylon PA66 / Nylamid",
       "Variantes en todos los diámetros comerciales: 1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\" y 12\"",

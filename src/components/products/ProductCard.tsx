@@ -45,7 +45,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const hasTechnicalSheet = !!product.technicalSheetUrl || 
     product.slug === 'tope-anden-acero' || 
-    product.slug === 'tope-anden-laminado';
+    product.slug === 'tope-anden-laminado' ||
+    product.slug === 'poleas-industriales-cable-acero';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

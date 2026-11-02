@@ -65,10 +65,20 @@ export function ProductCard({ product }: ProductCardProps) {
     });
   };
 
+  const handleCardClick = () => {
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname === '/') {
+        sessionStorage.setItem('home_scroll_pos', window.scrollY.toString());
+      } else if (window.location.pathname.startsWith('/products')) {
+        sessionStorage.setItem('products_scroll_pos', window.scrollY.toString());
+      }
+    }
+  };
+
   return (
     <Card className="overflow-hidden border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-md group">
       {/* Área clickable de imagen y título */}
-      <Link href={`/products/${product.slug}`} className="flex-grow">
+      <Link href={`/products/${product.slug}`} onClick={handleCardClick} className="flex-grow">
         <div className="relative aspect-[4/3] overflow-hidden bg-white p-4">
           <Image 
             src={displayImage} 

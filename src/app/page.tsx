@@ -5,7 +5,7 @@
  * Versión de Producción Resiliente v3.4 - Organización en 3 Macro-Grupos y Subgrupos
  */
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ProductCard } from '@/components/products/ProductCard';
@@ -64,6 +64,53 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [connectionTimeout, setConnectionTimeout] = useState(false);
 
+  // Referencias para control de scroll en navegación hacia atrás
+  const isInitialMount = useRef(true);
+  const hasRestoredScroll = useRef(false);
+
+  // Restaurar estado de filtros desde sessionStorage al volver de un producto
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedGroup = sessionStorage.getItem('home_main_group');
+      const savedSub = sessionStorage.getItem('home_sub_group');
+      const savedPage = sessionStorage.getItem('home_page_num');
+      const savedSearch = sessionStorage.getItem('home_search_term');
+      
+      if (savedGroup) setSelectedMainGroup(savedGroup);
+      if (savedSub) setSelectedSubGroup(savedSub);
+      if (savedPage) setCurrentPage(parseInt(savedPage, 10) || 1);
+      if (savedSearch) setSearchTerm(savedSearch);
+    }
+  }, []);
+
+  // Guardar filtros en sessionStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('home_main_group', selectedMainGroup);
+      sessionStorage.setItem('home_sub_group', selectedSubGroup || '');
+      sessionStorage.setItem('home_page_num', currentPage.toString());
+      sessionStorage.setItem('home_search_term', searchTerm);
+    }
+  }, [selectedMainGroup, selectedSubGroup, currentPage, searchTerm]);
+
+  // Monitor pasivo de scroll para guardar la posición exacta
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (window.scrollY > 0) {
+          sessionStorage.setItem('home_scroll_pos', window.scrollY.toString());
+        }
+      }, 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   // Monitor de tiempo de carga para detectar fallas de red
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -74,8 +121,12 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  // EFECTO DE SCROLL: Sube al inicio cuando cambia la página o filtro
+  // EFECTO DE SCROLL: Solo sube al inicio si el usuario cambia activamente de filtro o página
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage, selectedMainGroup, selectedSubGroup]);
 
@@ -84,6 +135,24 @@ export default function Home() {
     return query(collection(db, 'products'), where('active', '==', true));
   }, [db]);
   const { data: allProducts, loading: productsLoading, error: productsError } = useCollection<Product>(productsQuery);
+
+  // Restaurar la posición exacta de scroll tan pronto como los productos se rendericen en el DOM
+  useEffect(() => {
+    if (!productsLoading && allProducts && allProducts.length > 0 && !hasRestoredScroll.current) {
+      const savedPos = sessionStorage.getItem('home_scroll_pos');
+      if (savedPos) {
+        const targetY = parseInt(savedPos, 10);
+        if (targetY > 0) {
+          hasRestoredScroll.current = true;
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              window.scrollTo({ top: targetY, behavior: 'instant' });
+            }, 60);
+          });
+        }
+      }
+    }
+  }, [productsLoading, allProducts]);
 
   const groupCounts = useMemo(() => {
     const list = allProducts || [];
@@ -145,6 +214,13 @@ export default function Home() {
     setSelectedSubGroup(null);
     setSearchTerm('');
     setCurrentPage(1);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('home_main_group');
+      sessionStorage.removeItem('home_sub_group');
+      sessionStorage.removeItem('home_page_num');
+      sessionStorage.removeItem('home_search_term');
+      sessionStorage.removeItem('home_scroll_pos');
+    }
   };
 
   return (

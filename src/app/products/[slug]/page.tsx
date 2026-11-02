@@ -2,13 +2,13 @@
 
 import { use, useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText, FileText } from 'lucide-react';
+import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText, FileText, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -106,6 +106,7 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const router = useRouter();
   const db = useFirestore();
   const { addItem } = useCart();
   const { toast } = useToast();
@@ -172,8 +173,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <div className="py-12 bg-background">
+    <div className="py-8 md:py-12 bg-background">
       <div className="container mx-auto px-4">
+        {/* Botón de Regreso Inteligente con restauración de posición */}
+        <button 
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors mb-6 group cursor-pointer"
+        >
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform text-primary" />
+          <span>Volver al Catálogo</span>
+        </button>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           {/* Gallery */}
           <div className="space-y-4">

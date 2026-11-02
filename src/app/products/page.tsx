@@ -5,7 +5,7 @@
  * Versión de Producción Resiliente v3.4 - Organización en 3 Macro-Grupos y Subgrupos
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
 import { ProductCard } from '@/components/products/ProductCard';
@@ -62,6 +62,62 @@ export default function ProductsPage() {
   const [selectedSubGroup, setSelectedSubGroup] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Referencias para control de scroll en navegación hacia atrás
+  const isInitialMount = useRef(true);
+  const hasRestoredScroll = useRef(false);
+
+  // Restaurar estado de filtros desde sessionStorage al volver de un producto
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedGroup = sessionStorage.getItem('products_main_group');
+      const savedSub = sessionStorage.getItem('products_sub_group');
+      const savedPage = sessionStorage.getItem('products_page_num');
+      const savedSearch = sessionStorage.getItem('products_search_term');
+      
+      if (savedGroup) setSelectedMainGroup(savedGroup);
+      if (savedSub) setSelectedSubGroup(savedSub);
+      if (savedPage) setCurrentPage(parseInt(savedPage, 10) || 1);
+      if (savedSearch) setSearchTerm(savedSearch);
+    }
+  }, []);
+
+  // Guardar filtros en sessionStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('products_main_group', selectedMainGroup);
+      sessionStorage.setItem('products_sub_group', selectedSubGroup || '');
+      sessionStorage.setItem('products_page_num', currentPage.toString());
+      sessionStorage.setItem('products_search_term', searchTerm);
+    }
+  }, [selectedMainGroup, selectedSubGroup, currentPage, searchTerm]);
+
+  // Monitor pasivo de scroll para guardar la posición exacta
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (window.scrollY > 0) {
+          sessionStorage.setItem('products_scroll_pos', window.scrollY.toString());
+        }
+      }, 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // EFECTO DE SCROLL: Solo sube al inicio si el usuario cambia activamente de filtro o página
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage, selectedMainGroup, selectedSubGroup]);
 
   // Consulta de productos activos
   const productsQuery = useMemo(() => {
@@ -128,11 +184,36 @@ export default function ProductsPage() {
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPage]);
 
+  // Restaurar la posición exacta de scroll tan pronto como los productos se rendericen en el DOM
+  useEffect(() => {
+    if (!productsLoading && products && products.length > 0 && !hasRestoredScroll.current) {
+      const savedPos = sessionStorage.getItem('products_scroll_pos');
+      if (savedPos) {
+        const targetY = parseInt(savedPos, 10);
+        if (targetY > 0) {
+          hasRestoredScroll.current = true;
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              window.scrollTo({ top: targetY, behavior: 'instant' });
+            }, 60);
+          });
+        }
+      }
+    }
+  }, [productsLoading, products]);
+
   const handleResetFilters = () => {
     setSelectedMainGroup('all');
     setSelectedSubGroup(null);
     setSearchTerm('');
     setCurrentPage(1);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('products_main_group');
+      sessionStorage.removeItem('products_sub_group');
+      sessionStorage.removeItem('products_page_num');
+      sessionStorage.removeItem('products_search_term');
+      sessionStorage.removeItem('products_scroll_pos');
+    }
   };
 
   return (

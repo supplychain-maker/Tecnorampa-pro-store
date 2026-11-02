@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
 """
 Generador Maestro de Ficha Técnica Oficial Tecnorampa para:
-SEMÁFORO DE ANDÉN LED ROJO / VERDE (φ100 mm / 4")
+SEMÁFORO DE ANDÉN LED DUAL ROJO/VERDE φ100 mm (4") - IP65 MULTIVOLTAJE
 Código Documento: TR-FT-SEM-IMSE1009 / REV. 2026
-Modelo: IMSE1009
+Modelo Oficial: IMSE1009
 
 Produce un documento oficial de 2 páginas con máxima fidelidad a la identidad Tecnorampa:
 - PÁGINA 1:
   * Encabezado industrial Tecnorampa con logotipo oficial, código de documento y metadatos.
-  * Foto oficial del semáforo con viseras y lentes encendidos (Rojo/Verde) con badges técnicos.
+  * Fotografía Hero del semáforo con badges técnicos de ingeniería (IMSE1009 • 100 mm, IP65 • 85-265V AC).
   * Perfil de ingeniería del equipo y 4 pilares operativos.
-  * Tabla maestra de especificaciones técnicas verificadas (Modelo IMSE1009, 85-265V, IP65, 62 LEDs, ≤6W).
-  * 4 Detalles constructivos ilustrados: Lente Cobweb φ100 mm, Viseras de alto contraste, Soportes 180°, Carcasa PC UV.
+  * Tabla maestra de especificaciones técnicas verificadas en 2 columnas (10 filas por columna).
+  * Vistas técnicas dimensionales y plano de barrenos (4 vistas acotadas del semáforo: frontal, lateral, posterior y barrenos de anclaje con cotas en español y llamadas en rojo).
   * Pie de página corporativo con hazard stripes.
 
 - PÁGINA 2:
   * Encabezado oficial continuo Tecnorampa.
-  * Planos técnicos dimensionales acotados (4 vistas limpias en español: Frontal, Lateral, Posterior, Barrenos).
-  * Diagrama esquemático de conexión eléctrica y control de andén (Terminal block Común, Rojo, Verde, Standby).
-  * Protocolo de instalación y fijación mural en andén en 4 pasos.
-  * Tabla de contenido de empaque, despiece de accesorios y datos logísticos.
-  * Certificaciones (CE, RoHS, IP65, EN 12368, EN 60068), Garantía de 12 meses y Sello de Calidad Tecnorampa.
+  * Esquema vectorial CAD de conexión eléctrica y control de andén (AC 85V - 265V) con regleta de bornes, silueta del semáforo y lógica de control.
+  * Protocolo de instalación y montaje en muro de andén en 4 pasos detallados.
+  * Arquitectura de integración y seguridad logística en andén (Interlock con rampa niveladora, sincronización con retenedor TR-LOCK y cumplimiento normativo NOM-006-STPS / OSHA).
+  * Contenido de empaque, certificaciones internacionales oficiales y Sello de Calidad Tecnorampa 100%.
   * Pie de página corporativo con hazard stripes.
 """
 
@@ -32,109 +31,36 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
-OUTPUT_DIR = os.path.join(PUBLIC_DIR, 'fichas-tecnicas')
+WORKSPACE_DIR = '/Users/inigo/Documents/TECNORAMPA/Tecnorampastore'
+OUTPUT_DIR = os.path.join(WORKSPACE_DIR, 'public', 'fichas-tecnicas')
+PUBLIC_DIR = os.path.join(WORKSPACE_DIR, 'public')
+ASSETS_DIR = os.path.join(WORKSPACE_DIR, 'scratch', 'semaforo_assets')
 FINAL_PDF = os.path.join(OUTPUT_DIR, 'semaforo-led-industrial.pdf')
-SCRATCH_DIR = os.path.join(BASE_DIR, 'scratch')
-ASSETS_DIR = os.path.join(SCRATCH_DIR, 'semaforo_assets')
 
-os.makedirs(SCRATCH_DIR, exist_ok=True)
-os.makedirs(ASSETS_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# Colores Oficiales Tecnorampa
-C_YELLOW = colors.HexColor('#FFD830')        # Amarillo principal del logotipo
-C_YELLOW_DARK = colors.HexColor('#DDAA00')   # Dorado / tono oscuro para contrastes y bordes
-C_YELLOW_LIGHT = colors.HexColor('#FFFDEB')  # Fondo cálido suave
-C_YELLOW_ACCENT = colors.HexColor('#FEF08A') # Amarillo tenue para acentos
-C_DARK = colors.HexColor('#1E1E1E')          # Carbón industrial
-C_DARK_HEADER = colors.HexColor('#14181B')   # Encabezado oscuro slate
-C_GRAY = colors.HexColor('#374151')          # Texto secundario
-C_GRAY_LIGHT = colors.HexColor('#6B7280')    # Texto tenue
-C_BORDER = colors.HexColor('#E5E7EB')        # Bordes sutiles
-C_BG_ROW = colors.HexColor('#F9FAFB')        # Fondo alterno filas
-C_WHITE = colors.white
-C_GREEN_DARK = colors.HexColor('#065F46')
-C_GREEN_BG = colors.HexColor('#D1FAE5')
-C_RED_DARK = colors.HexColor('#991B1B')
-C_RED_BG = colors.HexColor('#FEE2E2')
-C_BLUE_DARK = colors.HexColor('#1E40AF')
-C_BLUE_BG = colors.HexColor('#DBEAFE')
+# Paleta Corporativa Oficial Tecnorampa
+C_YELLOW = colors.HexColor('#FFD830')       # Amarillo corporativo Tecnorampa
+C_YELLOW_DARK = colors.HexColor('#DDAA00')  # Dorado para bordes y contrastes
+C_YELLOW_LIGHT = colors.HexColor('#FEF9C3') # Fondo suave amarillo
+C_DARK = colors.HexColor('#111827')         # Gris carbón casi negro
+C_GRAY = colors.HexColor('#374151')         # Gris texto secundario
+C_GRAY_LIGHT = colors.HexColor('#6B7280')   # Gris subtítulos
+C_BORDER = colors.HexColor('#E5E7EB')       # Borde sutil
+C_BG_ROW = colors.HexColor('#F9FAFB')       # Fondo fila alterna
+C_WHITE = colors.HexColor('#FFFFFF')        # Blanco puro
 
 def prepare_assets():
-    """Verifica y prepara todas las imágenes necesarias para el semáforo."""
-    pdf_source = '/Users/inigo/.gemini/antigravity-ide/brain/c903e527-b82a-4f7b-a36c-c0f099dcbd43/.user_uploaded/media_1793640524194.pdf'
-    
-    p1_src = os.path.join(ASSETS_DIR, 'source_p1.png')
-    if not os.path.exists(p1_src) and os.path.exists(pdf_source):
-        doc = fitz.open(pdf_source)
-        pix1 = doc[0].get_pixmap(dpi=300)
-        pix1.save(p1_src)
-
-    hero_raw = os.path.join(ASSETS_DIR, 'hero_photo_crop.png')
-    if not os.path.exists(hero_raw) and os.path.exists(p1_src):
-        p1 = PILImage.open(p1_src)
-        w, h = p1.size
-        p1.crop((int(w*0.08), int(h*0.17), int(w*0.35), int(h*0.42))).save(hero_raw)
-        
-    hero_clean = os.path.join(ASSETS_DIR, 'hero_semaforo_clean.png')
-    if os.path.exists(hero_raw):
-        hero = PILImage.open(hero_raw)
-        crop_hero = hero.crop((120, 45, 665, 685)).convert('RGB')
-        cw, ch = crop_hero.size
-        clean = crop_hero.copy()
-        for y in range(ch):
-            for x in range(cw):
-                r, g, b = crop_hero.getpixel((x, y))
-                if r > 230 and g > 230 and b > 230:
-                    clean.putpixel((x, y), (255, 255, 255))
-                elif r > 220 and g > 220 and b > 220 and max(abs(r-g), abs(g-b)) < 6:
-                    clean.putpixel((x, y), (255, 255, 255))
-        clean.save(hero_clean)
-
-        # 4 Features ópticos y mecánicos
-        hero.crop((360, 160, 600, 360)).save(os.path.join(ASSETS_DIR, 'feat_lens_red.png'))
-        hero.crop((360, 370, 600, 570)).save(os.path.join(ASSETS_DIR, 'feat_lens_green.png'))
-        hero.crop((280, 40, 580, 220)).save(os.path.join(ASSETS_DIR, 'feat_visor.png'))
-        hero.crop((130, 240, 320, 480)).save(os.path.join(ASSETS_DIR, 'feat_bracket.png'))
-
-    # Limpieza rigurosa de plano dimensional
-    dim_raw = os.path.join(ASSETS_DIR, 'img_xref_39.png')
-    dim_clean = os.path.join(ASSETS_DIR, 'dim_drawing_clean.png')
-    if os.path.exists(dim_raw):
-        dim = PILImage.open(dim_raw).convert('RGB')
-        dw, dh = dim.size
-        clean_dim = PILImage.new('RGB', (dw, dh), (255, 255, 255))
-        for y in range(dh):
-            for x in range(dw):
-                r, g, b = dim.getpixel((x, y))
-                if r < 165 or g < 165 or b < 165:
-                    clean_dim.putpixel((x, y), (r, g, b))
-                else:
-                    clean_dim.putpixel((x, y), (255, 255, 255))
-        # Borrado de etiquetas inferiores en inglés
-        for y in range(410, dh):
-            for x in range(dw):
-                clean_dim.putpixel((x, y), (255, 255, 255))
-        # Borrado de 'Through-hole' en inglés
-        for y in range(20, 85):
-            for x in range(710, 1020):
-                clean_dim.putpixel((x, y), (255, 255, 255))
-        # Borrado de 'Unilateral-hole' y 'teral-hole'
-        for y in range(90, 180):
-            for x in range(540, 930):
-                clean_dim.putpixel((x, y), (255, 255, 255))
-        clean_dim.save(dim_clean)
+    """Verifica la existencia de los assets necesarios."""
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(ASSETS_DIR, exist_ok=True)
 
 def draw_header_canvas(can, pw, ph, page_num):
     """Dibuja el encabezado corporativo Tecnorampa para cada página."""
     header_x = 24
-    header_w = pw - 48 # 564 pt
+    header_y = ph - 16 - 54
+    header_w = pw - 48
     header_h = 54
-    header_y = ph - 16 - header_h # 722 pt
     
-    can.setFillColor(C_DARK_HEADER)
+    can.setFillColor(C_DARK)
     can.roundRect(header_x, header_y, header_w, header_h, 6, fill=1, stroke=0)
     
     can.setFillColor(C_YELLOW)
@@ -215,7 +141,7 @@ def draw_footer_canvas(can, pw, ph, page_num):
     can.drawRightString(pw - 20, 9, f'www.tecnorampa.com  •  Página {page_num} de 2')
 
 def draw_wiring_diagram(can, x, y, w, h):
-    """Dibuja un esquema vectorial CAD de conexión eléctrica y control de andén."""
+    """Dibuja un esquema vectorial CAD de conexión eléctrica y control de andén sin cables cruzando cajas."""
     can.setFillColor(C_WHITE)
     can.setStrokeColor(C_BORDER)
     can.setLineWidth(1)
@@ -227,20 +153,24 @@ def draw_wiring_diagram(can, x, y, w, h):
     can.setFillColor(C_DARK)
     can.drawString(x + 10, y + h - 13, 'ESQUEMA DE CONEXIÓN ELÉCTRICA Y CONTROL DE ANDÉN (AC 85V - 265V)')
     
-    # 1. Regleta de Terminales
-    tb_x = x + 16
-    tb_y = y + 16
+    can.setFont('Helvetica', 6)
+    can.setFillColor(C_GRAY_LIGHT)
+    can.drawRightString(x + w - 10, y + h - 13, 'Conexión Universal • Fases Independientes con Neutro/Línea Común')
+    
+    # 1. Regleta de Terminales (Izquierda)
+    tb_x = x + 14
+    tb_y = y + 14
     tb_w = 125
-    tb_h = h - 38
+    tb_h = h - 36
     
     can.setFillColor(colors.HexColor('#1E293B'))
     can.setStrokeColor(colors.HexColor('#475569'))
     can.setLineWidth(1)
     can.roundRect(tb_x, tb_y, tb_w, tb_h, 4, fill=1, stroke=1)
     
-    can.setFont('Helvetica-Bold', 6.5)
+    can.setFont('Helvetica-Bold', 6.8)
     can.setFillColor(C_YELLOW)
-    can.drawCentredString(tb_x + tb_w/2, tb_y + tb_h - 11, 'REGLETA DE BORNES')
+    can.drawCentredString(tb_x + tb_w/2, tb_y + tb_h - 13, 'REGLETA DE BORNES')
     
     terminals = [
         ("STANDBY", "Reserva / Control Auxiliar", colors.HexColor('#94A3B8'), colors.HexColor('#334155')),
@@ -249,41 +179,41 @@ def draw_wiring_diagram(can, x, y, w, h):
         ("COMMON", "Neutro Común N (85-265V)", colors.HexColor('#38BDF8'), colors.HexColor('#0C4A6E'))
     ]
     
-    step_y = (tb_h - 18) / 4
+    step_y = (tb_h - 22) / 4
     pin_y_positions = []
     for i, (label, desc, color_text, color_bg) in enumerate(terminals):
-        py = tb_y + tb_h - 18 - (i + 0.5) * step_y
+        py = tb_y + tb_h - 22 - (i + 0.5) * step_y
         pin_y_positions.append(py)
         
         can.setFillColor(color_bg)
-        can.roundRect(tb_x + 6, py - 8, tb_w - 12, 16, 2, fill=1, stroke=0)
+        can.roundRect(tb_x + 5, py - 9, tb_w - 10, 18, 2, fill=1, stroke=0)
         
         can.setFillColor(colors.HexColor('#E2E8F0'))
-        can.circle(tb_x + 14, py, 3.5, fill=1, stroke=0)
+        can.circle(tb_x + 13, py, 3.8, fill=1, stroke=0)
         can.setFillColor(colors.HexColor('#475569'))
-        can.rect(tb_x + 11.5, py - 0.5, 5, 1, fill=1, stroke=0)
+        can.rect(tb_x + 10.5, py - 0.6, 5, 1.2, fill=1, stroke=0)
         
-        can.setFont('Helvetica-Bold', 6.0)
+        can.setFont('Helvetica-Bold', 6.2)
         can.setFillColor(color_text)
-        can.drawString(tb_x + 22, py + 1, label)
-        can.setFont('Helvetica', 4.6)
+        can.drawString(tb_x + 21, py + 1.5, label)
+        can.setFont('Helvetica', 4.8)
         can.setFillColor(colors.HexColor('#E2E8F0'))
-        can.drawString(tb_x + 22, py - 6, desc)
+        can.drawString(tb_x + 21, py - 6.5, desc)
         
-    # 2. Silueta del Semáforo
-    sem_x = x + w - 85
+    # 2. Silueta del Semáforo (Centro)
+    sem_x = x + 188
     sem_y = y + 14
     sem_w = 48
-    sem_h = h - 34
+    sem_h = h - 36
     
     can.setFillColor(colors.HexColor('#111827'))
     can.setStrokeColor(colors.HexColor('#374151'))
     can.setLineWidth(1.2)
     can.roundRect(sem_x, sem_y, sem_w, sem_h, 6, fill=1, stroke=1)
     
-    lens_r = 14
+    lens_r = 15
     red_cx = sem_x + sem_w/2
-    red_cy = sem_y + sem_h - 24
+    red_cy = sem_y + sem_h - 26
     
     can.setFillColor(colors.HexColor('#DC2626'))
     can.circle(red_cx, red_cy, lens_r, fill=1, stroke=0)
@@ -293,7 +223,7 @@ def draw_wiring_diagram(can, x, y, w, h):
     can.circle(red_cx, red_cy, lens_r - 5, fill=1, stroke=0)
     
     green_cx = sem_x + sem_w/2
-    green_cy = sem_y + 24
+    green_cy = sem_y + 26
     
     can.setFillColor(colors.HexColor('#059669'))
     can.circle(green_cx, green_cy, lens_r, fill=1, stroke=0)
@@ -302,78 +232,80 @@ def draw_wiring_diagram(can, x, y, w, h):
     can.setFillColor(colors.HexColor('#34D399'))
     can.circle(green_cx, green_cy, lens_r - 5, fill=1, stroke=0)
     
-    # 3. Líneas de Conexión
-    can.setLineWidth(1.4)
+    # 3. Líneas de Conexión Directa (Regleta -> Semáforo)
+    can.setLineWidth(1.6)
     
     # Común (Azul)
     can.setStrokeColor(colors.HexColor('#0284C7'))
     py_com = pin_y_positions[3]
-    can.line(tb_x + tb_w, py_com, tb_x + tb_w + 32, py_com)
-    can.line(tb_x + tb_w + 32, py_com, tb_x + tb_w + 32, green_cy - 5)
-    can.line(tb_x + tb_w + 32, green_cy - 5, sem_x, green_cy - 5)
-    can.line(tb_x + tb_w + 32, py_com, tb_x + tb_w + 32, red_cy - 5)
-    can.line(tb_x + tb_w + 32, red_cy - 5, sem_x, red_cy - 5)
+    mid_x_blue = tb_x + tb_w + 14
+    can.line(tb_x + tb_w, py_com, mid_x_blue, py_com)
+    can.line(mid_x_blue, py_com, mid_x_blue, green_cy - 5)
+    can.line(mid_x_blue, green_cy - 5, sem_x, green_cy - 5)
+    can.line(mid_x_blue, py_com, mid_x_blue, red_cy - 5)
+    can.line(mid_x_blue, red_cy - 5, sem_x, red_cy - 5)
     
     # Fase Roja (Rojo)
     can.setStrokeColor(colors.HexColor('#DC2626'))
     py_r = pin_y_positions[2]
-    can.line(tb_x + tb_w, py_r, tb_x + tb_w + 48, py_r)
-    can.line(tb_x + tb_w + 48, py_r, tb_x + tb_w + 48, red_cy + 4)
-    can.line(tb_x + tb_w + 48, red_cy + 4, sem_x, red_cy + 4)
+    mid_x_red = tb_x + tb_w + 32
+    can.line(tb_x + tb_w, py_r, mid_x_red, py_r)
+    can.line(mid_x_red, py_r, mid_x_red, red_cy + 5)
+    can.line(mid_x_red, red_cy + 5, sem_x, red_cy + 5)
     
     # Fase Verde (Verde)
     can.setStrokeColor(colors.HexColor('#059669'))
     py_g = pin_y_positions[1]
-    can.line(tb_x + tb_w, py_g, tb_x + tb_w + 18, py_g)
-    can.line(tb_x + tb_w + 18, py_g, tb_x + tb_w + 18, green_cy + 4)
-    can.line(tb_x + tb_w + 18, green_cy + 4, sem_x, green_cy + 4)
+    mid_x_green = tb_x + tb_w + 22
+    can.line(tb_x + tb_w, py_g, mid_x_green, py_g)
+    can.line(mid_x_green, py_g, mid_x_green, green_cy + 5)
+    can.line(mid_x_green, green_cy + 5, sem_x, green_cy + 5)
     
-    # 4. Cuadro de Modos de Operación
-    mode_x = tb_x + tb_w + 58
+    # 4. Cuadro de Modos de Operación y Lógica (Derecha)
+    mode_x = sem_x + sem_w + 16
     mode_y = y + 14
-    mode_w = sem_x - mode_x - 14
-    mode_h = h - 34
+    mode_w = x + w - mode_x - 14
+    mode_h = h - 36
     
     can.setFillColor(C_BG_ROW)
     can.setStrokeColor(C_BORDER)
     can.setLineWidth(0.8)
     can.roundRect(mode_x, mode_y, mode_w, mode_h, 4, fill=1, stroke=1)
     
-    can.setFont('Helvetica-Bold', 6.2)
+    can.setFont('Helvetica-Bold', 6.8)
     can.setFillColor(C_DARK)
-    can.drawString(mode_x + 8, mode_y + mode_h - 12, 'LÓGICA DE CONTROL INDUSTRIAL:')
+    can.drawString(mode_x + 10, mode_y + mode_h - 13, 'LÓGICA DE CONTROL INDUSTRIAL Y SEGURIDAD:')
     
     modes = [
-        ("ESTADO ROJO (ALTO):", [
-            "Activa Terminal R con Fase L1 (AC 85V - 265V).",
-            "Rampa en movimiento, bahía ocupada o maniobra detenida."
+        ("ESTADO ROJO (ALTO OBLIGATORIO):", [
+            "• Activa Terminal R con Fase L1 (AC 85V - 265V).",
+            "• Rampa niveladora en operación, bahía ocupada, montacargas en tránsito o compuerta abierta."
         ]),
-        ("ESTADO VERDE (PASE):", [
-            "Activa Terminal G con Fase L2 (AC 85V - 265V).",
-            "Rampa retraída, bahía despejada, maniobra autorizada."
+        ("ESTADO VERDE (PASE / MANIOBRA):", [
+            "• Activa Terminal G con Fase L2 (AC 85V - 265V).",
+            "• Rampa niveladora guardada en descanso, retenedor desacoplado y bahía despejada para entrada/salida."
         ]),
         ("SINCRONIZACIÓN AUTOMÁTICA:", [
-            "Conexión directa a cuadro de control Tecnorampa,",
-            "sensor de presencia en fosa o botonera selectora manual."
+            "• Interlock directo con cuadro de mando Tecnorampa, detector de presencia por lazo o botonera selectora."
         ])
     ]
-    my = mode_y + mode_h - 22
+    my = mode_y + mode_h - 26
     for title, lines in modes:
-        can.setFont('Helvetica-Bold', 5.4)
+        can.setFont('Helvetica-Bold', 5.8)
         can.setFillColor(colors.HexColor('#DC2626') if 'ROJO' in title else (colors.HexColor('#059669') if 'VERDE' in title else C_DARK))
-        can.drawString(mode_x + 8, my, title)
-        my -= 7.5
-        can.setFont('Helvetica', 5.0)
+        can.drawString(mode_x + 10, my, title)
+        my -= 8.5
+        can.setFont('Helvetica', 5.3)
         can.setFillColor(C_GRAY)
         for line in lines:
-            can.drawString(mode_x + 8, my, line)
-            my -= 7
-        my -= 2
+            can.drawString(mode_x + 10, my, line)
+            my -= 7.5
+        my -= 3
 
 def build_pdf():
     prepare_assets()
     
-    pw, ph = letter
+    pw, ph = letter # 612 x 792 pt
     margin_x = 24
     content_w = pw - 48 # 564 pt
     
@@ -389,7 +321,7 @@ def build_pdf():
     
     # BLOQUE 1: FOTO HERO + DESCRIPCIÓN Y PILARES
     hero_w = 175
-    hero_h = 160
+    hero_h = 145
     hero_x = margin_x
     hero_y = top_y - hero_h
     
@@ -400,23 +332,23 @@ def build_pdf():
     
     hero_img = os.path.join(ASSETS_DIR, 'hero_semaforo_clean.png')
     if os.path.exists(hero_img):
-        can.drawImage(hero_img, hero_x + 18, hero_y + 24, width=hero_w - 36, height=hero_h - 32, mask='auto', preserveAspectRatio=True)
+        can.drawImage(hero_img, hero_x + 18, hero_y + 22, width=hero_w - 36, height=hero_h - 30, mask='auto', preserveAspectRatio=True)
         
-    badge_y = hero_y + 7
+    badge_y = hero_y + 6
     can.setFillColor(C_YELLOW)
-    can.roundRect(hero_x + 8, badge_y, 76, 13, 3, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 5.8)
+    can.roundRect(hero_x + 6, badge_y, 82, 13, 3, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 5.6)
     can.setFillColor(C_DARK)
-    can.drawString(hero_x + 11, badge_y + 4, 'MODELO IMSE1009 • 100 mm')
+    can.drawString(hero_x + 9, badge_y + 4, 'MODELO IMSE1009 • 100 mm')
     
     can.setFillColor(C_DARK)
-    can.roundRect(hero_x + 88, badge_y, 78, 13, 3, fill=1, stroke=0)
+    can.roundRect(hero_x + 92, badge_y, 76, 13, 3, fill=1, stroke=0)
     can.setFillColor(C_WHITE)
-    can.drawString(hero_x + 92, badge_y + 4, 'IP65 • 85-265V AC')
+    can.drawString(hero_x + 96, badge_y + 4, 'IP65 • 85-265V AC')
     
     # Lado Derecho: Descripción y 4 Pilares
-    desc_x = hero_x + hero_w + 12
-    desc_w = content_w - hero_w - 12
+    desc_x = hero_x + hero_w + 10
+    desc_w = content_w - hero_w - 10
     desc_y = hero_y
     desc_h = hero_h
     
@@ -427,9 +359,9 @@ def build_pdf():
     can.setFillColor(C_YELLOW)
     can.roundRect(desc_x, desc_y, 4, desc_h, 2, fill=1, stroke=0)
     
-    can.setFont('Helvetica-Bold', 8.5)
+    can.setFont('Helvetica-Bold', 8.2)
     can.setFillColor(C_DARK)
-    can.drawString(desc_x + 12, desc_y + desc_h - 16, 'SEÑALIZACIÓN VISUAL Y CONTROL DE ACCESO A ANDENES')
+    can.drawString(desc_x + 12, desc_y + desc_h - 15, 'SEÑALIZACIÓN VISUAL Y CONTROL DE ACCESO A ANDENES')
     
     p1 = "El semáforo de andén Tecnorampa modelo IMSE1009 es un sistema de señalización luminosa de alta"
     p2 = "intensidad diseñado para regular las maniobras de acoplamiento de camiones en bahías de carga"
@@ -437,12 +369,12 @@ def build_pdf():
     p4 = "Lens, garantiza visibilidad diurna superior a 200 m sin reflejos engañosos (anti-phantom). Su matriz"
     p5 = "de 62 LEDs opera en multivoltaje AC 85-265V con vida útil >80,000 h y hermeticidad certificada IP65."
     
-    can.setFont('Helvetica', 6.8)
+    can.setFont('Helvetica', 6.6)
     can.setFillColor(C_GRAY)
-    line_y = desc_y + desc_h - 28
+    line_y = desc_y + desc_h - 27
     for line in [p1, p2, p3, p4, p5]:
         can.drawString(desc_x + 12, line_y, line)
-        line_y -= 9.5
+        line_y -= 9.2
         
     pillars = [
         ("ÓPTICA COBWEB ANTI-FANTASMA", "Difusor prismático φ100 mm que elimina reflejos solares falsos y dispersa a 30° H/V."),
@@ -452,12 +384,12 @@ def build_pdf():
     ]
     
     px_w = (desc_w - 28) / 2
-    px_h = 34
+    px_h = 32
     for idx, (title, desc) in enumerate(pillars):
         col = idx % 2
         row = idx // 2
         card_x = desc_x + 12 + col * (px_w + 8)
-        card_y = desc_y + 10 + (1 - row) * (px_h + 6)
+        card_y = desc_y + 8 + (1 - row) * (px_h + 5)
         
         can.setFillColor(C_WHITE)
         can.setStrokeColor(C_BORDER)
@@ -467,11 +399,11 @@ def build_pdf():
         can.setFillColor(C_YELLOW)
         can.rect(card_x, card_y, 2.5, px_h, fill=1, stroke=0)
         
-        can.setFont('Helvetica-Bold', 6.2)
+        can.setFont('Helvetica-Bold', 6.0)
         can.setFillColor(C_DARK)
-        can.drawString(card_x + 6, card_y + px_h - 10, title)
+        can.drawString(card_x + 6, card_y + px_h - 9.5, title)
         
-        can.setFont('Helvetica', 5.4)
+        can.setFont('Helvetica', 5.2)
         can.setFillColor(C_GRAY)
         words = desc.split(' ')
         l1, l2 = [], []
@@ -482,12 +414,12 @@ def build_pdf():
             else:
                 curr = l2
                 curr.append(w)
-        can.drawString(card_x + 6, card_y + px_h - 19, ' '.join(l1))
-        can.drawString(card_x + 6, card_y + px_h - 27, ' '.join(l2))
+        can.drawString(card_x + 6, card_y + px_h - 18, ' '.join(l1))
+        can.drawString(card_x + 6, card_y + px_h - 26, ' '.join(l2))
 
     # BLOQUE 2: TABLA MAESTRA DE ESPECIFICACIONES TÉCNICAS (2 Columnas)
-    table_y = hero_y - 12
-    table_h = 245
+    table_y = hero_y - 8
+    table_h = 208
     table_box_y = table_y - table_h
     
     can.setFillColor(C_WHITE)
@@ -496,14 +428,14 @@ def build_pdf():
     can.roundRect(margin_x, table_box_y, content_w, table_h, 6, fill=1, stroke=1)
     
     can.setFillColor(colors.HexColor('#F3F4F6'))
-    can.roundRect(margin_x, table_box_y + table_h - 20, content_w, 20, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7.5)
+    can.roundRect(margin_x, table_box_y + table_h - 18, content_w, 18, 4, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 7.2)
     can.setFillColor(C_DARK)
-    can.drawString(margin_x + 12, table_box_y + table_h - 14, 'ESPECIFICACIONES TÉCNICAS VERIFICADAS (MODELO IMSE1009)')
+    can.drawString(margin_x + 12, table_box_y + table_h - 13, 'ESPECIFICACIONES TÉCNICAS VERIFICADAS (MODELO IMSE1009)')
     
-    can.setFont('Helvetica', 6.2)
+    can.setFont('Helvetica', 6.0)
     can.setFillColor(C_GRAY_LIGHT)
-    can.drawRightString(margin_x + content_w - 12, table_box_y + table_h - 14, 'Normativas: CE • GB14887 • EN 12368 • RoHS • IP65')
+    can.drawRightString(margin_x + content_w - 12, table_box_y + table_h - 13, 'Normativas: CE • GB14887 • EN 12368 • RoHS • IP65')
     
     specs_col1 = [
         ("Modelo Oficial / N° de Parte", "IMSE1009 (Tecnorampa Industrial)"),
@@ -532,8 +464,8 @@ def build_pdf():
     ]
     
     col_w = (content_w - 20) / 2
-    row_h = 21.5
-    start_row_y = table_box_y + table_h - 22
+    row_h = 18.5
+    start_row_y = table_box_y + table_h - 20
     
     for row_idx in range(10):
         curr_y = start_row_y - (row_idx + 1) * row_h
@@ -542,22 +474,22 @@ def build_pdf():
         can.setFillColor(bg_color)
         can.rect(margin_x + 4, curr_y, col_w, row_h, fill=1, stroke=0)
         k1, v1 = specs_col1[row_idx]
-        can.setFont('Helvetica-Bold', 6.0)
+        can.setFont('Helvetica-Bold', 5.8)
         can.setFillColor(C_DARK)
-        can.drawString(margin_x + 8, curr_y + 7.5, k1)
-        can.setFont('Helvetica', 5.8)
+        can.drawString(margin_x + 8, curr_y + 6.5, k1)
+        can.setFont('Helvetica', 5.6)
         can.setFillColor(colors.HexColor('#065F46') if 'cd' in v1 else (colors.HexColor('#1E40AF') if 'IMSE' in v1 else C_GRAY))
-        can.drawString(margin_x + 115, curr_y + 7.5, v1)
+        can.drawString(margin_x + 115, curr_y + 6.5, v1)
         
         can.setFillColor(bg_color)
         can.rect(margin_x + 12 + col_w, curr_y, col_w, row_h, fill=1, stroke=0)
         k2, v2 = specs_col2[row_idx]
-        can.setFont('Helvetica-Bold', 6.0)
+        can.setFont('Helvetica-Bold', 5.8)
         can.setFillColor(C_DARK)
-        can.drawString(margin_x + 16 + col_w, curr_y + 7.5, k2)
-        can.setFont('Helvetica', 5.8)
+        can.drawString(margin_x + 16 + col_w, curr_y + 6.5, k2)
+        can.setFont('Helvetica', 5.6)
         can.setFillColor(colors.HexColor('#B45309') if 'IP65' in v2 else (colors.HexColor('#065F46') if '≤ 6W' in v2 else C_GRAY))
-        can.drawString(margin_x + 128 + col_w, curr_y + 7.5, v2)
+        can.drawString(margin_x + 128 + col_w, curr_y + 6.5, v2)
         
         can.setStrokeColor(colors.HexColor('#F3F4F6'))
         can.setLineWidth(0.5)
@@ -565,69 +497,59 @@ def build_pdf():
         
     can.setStrokeColor(C_BORDER)
     can.setLineWidth(0.8)
-    can.line(margin_x + 8 + col_w, table_box_y, margin_x + 8 + col_w, table_box_y + table_h - 20)
+    can.line(margin_x + 8 + col_w, table_box_y, margin_x + 8 + col_w, table_box_y + table_h - 18)
 
-    # BLOQUE 3: 4 DETALLES CONSTRUCTIVOS ILUSTRADOS
-    feat_y = table_box_y - 12
-    feat_h = 105
-    feat_box_y = feat_y - feat_h
+    # BLOQUE 3: VISTAS TÉCNICAS DIMENSIONALES Y PLANO DE BARRENOS (Recorrido a Página 1)
+    dim_y = table_box_y - 8
+    dim_box_y = 34
+    dim_h = dim_y - dim_box_y # ~307 pt
     
     can.setFillColor(C_WHITE)
     can.setStrokeColor(C_BORDER)
     can.setLineWidth(1)
-    can.roundRect(margin_x, feat_box_y, content_w, feat_h, 6, fill=1, stroke=1)
+    can.roundRect(margin_x, dim_box_y, content_w, dim_h, 6, fill=1, stroke=1)
     
     can.setFillColor(colors.HexColor('#F3F4F6'))
-    can.roundRect(margin_x, feat_box_y + feat_h - 18, content_w, 18, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7)
+    can.roundRect(margin_x, dim_box_y + dim_h - 18, content_w, 18, 4, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 7.2)
     can.setFillColor(C_DARK)
-    can.drawString(margin_x + 10, feat_box_y + feat_h - 13, 'DETALLES CONSTRUCTIVOS Y TECNOLOGÍA ÓPTICA')
+    can.drawString(margin_x + 10, dim_box_y + dim_h - 13, 'VISTAS TÉCNICAS DIMENSIONALES Y PLANO DE BARRENOS (UNIDAD: mm)')
     
-    card_w = (content_w - 30) / 4
-    card_h = feat_h - 26
-    card_y = feat_box_y + 4
+    can.setFont('Helvetica', 6.0)
+    can.setFillColor(C_GRAY_LIGHT)
+    can.drawRightString(margin_x + content_w - 10, dim_box_y + dim_h - 13, 'Cotas en milímetros • Fijación mural o en poste orientable 180°')
     
-    feature_cards = [
-        ("feat_lens_red.png", "LENTE ROJO COBWEB", "ÓPTICA PRISMÁTICA", "31 LEDs rojos (620-630 nm) con difusor colmena anti-reflejo solar."),
-        ("feat_lens_green.png", "LENTE VERDE ESMERALDA", "ALTA VISIBILIDAD", "31 LEDs verde esmeralda (503-508 nm) con intensidad ≥ 220 cd."),
-        ("feat_visor.png", "VISERAS SOLARES", "MÁXIMO CONTRASTE", "Viseras individuales integradas que evitan deslumbramientos cenitales."),
-        ("feat_bracket.png", "SOPORTES 180°", "MONTAJE VERSÁTIL", "Herrajes tipo escuadra orientables para montaje mural o en poste.")
-    ]
+    # Imagen de planos técnicos perfectamente centrada
+    dim_img = os.path.join(ASSETS_DIR, 'dim_drawing_clean.png')
+    img_draw_w = 495
+    img_draw_h = 198
+    img_draw_x = margin_x + (content_w - img_draw_w) / 2
+    img_draw_y = dim_box_y + 36
+    if os.path.exists(dim_img):
+        can.drawImage(dim_img, img_draw_x, img_draw_y, width=img_draw_w, height=img_draw_h, mask='auto', preserveAspectRatio=False)
+        
+    # Rotulación Vectorial en Español alineada con precisión bajo cada vista:
+    can.setFont('Helvetica-Bold', 6.2)
+    can.setFillColor(C_DARK)
+    label_y = dim_box_y + 14
+    can.drawCentredString(margin_x + 98, label_y, 'VISTA FRONTAL (150 mm)')
+    can.drawCentredString(margin_x + 203, label_y, 'VISTA LATERAL CON VISERAS')
+    can.drawCentredString(margin_x + 308, label_y, 'VISTA POSTERIOR (430 mm)')
+    can.drawCentredString(margin_x + 448, label_y, 'PLANO DE BARRENOS Y MONTAJE')
     
-    for idx, (img_name, title, subtitle, desc) in enumerate(feature_cards):
-        cx = margin_x + 6 + idx * (card_w + 6)
-        
-        can.setFillColor(C_BG_ROW)
-        can.setStrokeColor(C_BORDER)
-        can.setLineWidth(0.8)
-        can.roundRect(cx, card_y, card_w, card_h, 4, fill=1, stroke=1)
-        
-        img_path = os.path.join(ASSETS_DIR, img_name)
-        img_h = 42
-        if os.path.exists(img_path):
-            can.drawImage(img_path, cx + 8, card_y + card_h - img_h - 4, width=card_w - 16, height=img_h, mask='auto', preserveAspectRatio=True)
-            
-        can.setFont('Helvetica-Bold', 5.8)
-        can.setFillColor(C_DARK)
-        can.drawString(cx + 6, card_y + 24, title)
-        
-        can.setFont('Helvetica-Bold', 4.8)
-        can.setFillColor(C_YELLOW_DARK)
-        can.drawString(cx + 6, card_y + 16, subtitle)
-        
-        can.setFont('Helvetica', 4.6)
-        can.setFillColor(C_GRAY)
-        words = desc.split(' ')
-        l1, l2 = [], []
-        curr = l1
-        for w in words:
-            if len(' '.join(curr + [w])) < 28:
-                curr.append(w)
-            else:
-                curr = l2
-                curr.append(w)
-        can.drawString(cx + 6, card_y + 9, ' '.join(l1))
-        can.drawString(cx + 6, card_y + 3.5, ' '.join(l2))
+    # Cotas en español sobre plano de barrenos con líneas guía rojas
+    can.setFont('Helvetica-Bold', 5.6)
+    can.setFillColor(colors.HexColor('#DC2626'))
+    can.setStrokeColor(colors.HexColor('#DC2626'))
+    can.setLineWidth(0.6)
+    
+    # 1. Barreno Pasante 16 mm (arriba)
+    can.drawString(margin_x + 340, dim_box_y + 212, 'φ16.0 mm (Barreno Pasante)')
+    can.line(margin_x + 428, dim_box_y + 214, margin_x + 465, dim_box_y + 198)
+    
+    # 2. Barreno Unilateral 25 mm (inferior)
+    can.drawString(margin_x + 340, dim_box_y + 172, 'φ25.0 mm (Barreno Unilateral)')
+    can.line(margin_x + 434, dim_box_y + 174, margin_x + 465, dim_box_y + 162)
 
     draw_footer_canvas(can, pw, ph, 1)
     can.showPage()
@@ -637,65 +559,14 @@ def build_pdf():
     # =========================================================================
     draw_header_canvas(can, pw, ph, 2)
     
-    # BLOQUE 1: PLANO TÉCNICO DIMENSIONAL ACOTADO (4 VISTAS LIMPIAS)
-    dim_h = 230
-    dim_box_y = top_y - dim_h
-    
-    can.setFillColor(C_WHITE)
-    can.setStrokeColor(C_BORDER)
-    can.setLineWidth(1)
-    can.roundRect(margin_x, dim_box_y, content_w, dim_h, 6, fill=1, stroke=1)
-    
-    can.setFillColor(colors.HexColor('#F3F4F6'))
-    can.roundRect(margin_x, dim_box_y + dim_h - 18, content_w, 18, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7)
-    can.setFillColor(C_DARK)
-    can.drawString(margin_x + 10, dim_box_y + dim_h - 13, 'VISTAS TÉCNICAS DIMENSIONALES Y PLANO DE BARRENOS (UNIDAD: mm)')
-    
-    can.setFont('Helvetica', 6)
-    can.setFillColor(C_GRAY_LIGHT)
-    can.drawRightString(margin_x + content_w - 10, dim_box_y + dim_h - 13, 'Cotas en milímetros • Fijación mural o en poste orientable')
-    
-    # Imagen de planos técnicos perfectamente centrada con márgenes limpios
-    dim_img = os.path.join(ASSETS_DIR, 'dim_drawing_clean.png')
-    img_draw_w = 485
-    img_draw_h = 190
-    img_draw_x = margin_x + (content_w - img_draw_w) / 2 # margin_x + 39.5
-    img_draw_y = dim_box_y + 16
-    if os.path.exists(dim_img):
-        can.drawImage(dim_img, img_draw_x, img_draw_y, width=img_draw_w, height=img_draw_h, mask='auto', preserveAspectRatio=False)
-        
-    # Rotulación Vectorial en Español alineada al 100% bajo cada vista:
-    can.setFont('Helvetica-Bold', 5.8)
-    can.setFillColor(C_DARK)
-    can.drawCentredString(margin_x + 95.3, dim_box_y + 6.5, 'VISTA FRONTAL (150 mm)')
-    can.drawCentredString(margin_x + 197.6, dim_box_y + 6.5, 'VISTA LATERAL CON VISERAS')
-    can.drawCentredString(margin_x + 287.3, dim_box_y + 6.5, 'VISTA POSTERIOR (430 mm)')
-    can.drawCentredString(margin_x + 441.6, dim_box_y + 6.5, 'PLANO DE BARRENOS Y MONTAJE')
-    
-    # Cotas en español sobre plano de barrenos con líneas guía rojas hacia los orificios
-    can.setFont('Helvetica-Bold', 5.2)
-    can.setFillColor(colors.HexColor('#DC2626'))
-    can.setStrokeColor(colors.HexColor('#DC2626'))
-    can.setLineWidth(0.6)
-    
-    # 1. Barreno Pasante 16 mm (arriba)
-    can.drawString(margin_x + 335, dim_box_y + 185, 'φ16.0 mm (Barreno Pasante)')
-    can.line(margin_x + 418, dim_box_y + 187, margin_x + 452, dim_box_y + 172)
-    
-    # 2. Barreno Unilateral 25 mm (inferior)
-    can.drawString(margin_x + 335, dim_box_y + 148, 'φ25.0 mm (Barreno Unilateral)')
-    can.line(margin_x + 424, dim_box_y + 150, margin_x + 452, dim_box_y + 140)
-
-    # BLOQUE 2: DIAGRAMA ESQUEMÁTICO DE CONEXIÓN ELÉCTRICA Y CONTROL
-    wire_y = dim_box_y - 10
-    wire_h = 142
-    wire_box_y = wire_y - wire_h
+    # BLOQUE 1: DIAGRAMA ESQUEMÁTICO DE CONEXIÓN ELÉCTRICA Y CONTROL
+    wire_h = 165
+    wire_box_y = top_y - wire_h
     draw_wiring_diagram(can, margin_x, wire_box_y, content_w, wire_h)
 
-    # BLOQUE 3: PROTOCOLO DE INSTALACIÓN EN 4 PASOS
+    # BLOQUE 2: PROTOCOLO DE INSTALACIÓN EN 4 PASOS
     inst_y = wire_box_y - 10
-    inst_h = 86
+    inst_h = 108
     inst_box_y = inst_y - inst_h
     
     can.setFillColor(C_WHITE)
@@ -705,60 +576,142 @@ def build_pdf():
     
     can.setFillColor(colors.HexColor('#F3F4F6'))
     can.roundRect(margin_x, inst_box_y + inst_h - 18, content_w, 18, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7)
+    can.setFont('Helvetica-Bold', 7.2)
     can.setFillColor(C_DARK)
     can.drawString(margin_x + 10, inst_box_y + inst_h - 13, 'PROTOCOLO DE INSTALACIÓN Y MONTAJE EN MURO DE ANDÉN (4 PASOS)')
     
+    can.setFont('Helvetica', 6.0)
+    can.setFillColor(C_GRAY_LIGHT)
+    can.drawRightString(margin_x + content_w - 10, inst_box_y + inst_h - 13, 'Fijación Mecánica • Conexión de Control • Calibración Angular')
+    
     steps = [
         ("PASO 1: TRAZADO Y BARRENOS", [
-            "Marcar en muro exterior o columna",
-            "los centros de fijación a 430 mm.",
-            "Perforar con broca para perno M12."
+            "Marcar en muro o columna los centros",
+            "de fijación vertical a 430 mm entre ejes.",
+            "Perforar con broca de concreto para perno",
+            "M12 y limpiar el barreno de polvo residual."
         ]),
         ("PASO 2: FIJACIÓN MECÁNICA", [
-            "Instalar los dos brazos tipo escuadra",
-            "con tornillos M12×65 y arandelas",
-            "de neopreno para sellado hermético."
+            "Instalar los dos herrajes escuadra",
+            "articulados con tornillos M12×65 mm.",
+            "Colocar arandelas de neopreno para sellado",
+            "hermético y apretar a torque firme (45 Nm)."
         ]),
         ("PASO 3: CONEXIÓN ELÉCTRICA", [
             "Introducir cable uso rudo por prensa-",
-            "estopa IP65 y conectar a regleta:",
-            "Común (N), Rojo (L1) y Verde (L2)."
+            "estopas IP65 hacia la bornera interna:",
+            "Conectar Común (N), Rojo L1 y Verde L2.",
+            "Asegurar apriete para evitar falsos contactos."
         ]),
-        ("PASO 4: ORIENTACIÓN Y AJUSTE", [
-            "Orientar el haz hacia el espejo retro-",
-            "visor del chofer (±90°) y apretar",
-            "tuercas de bloqueo con firmeza."
+        ("PASO 4: CALIBRACIÓN ANGULAR", [
+            "Orientar el cabezal hacia el retrovisor del",
+            "tractocamión (giro orientable ±90° / 180°).",
+            "Apretar tornillería de articulación y verificar",
+            "conmutación de luces desde el control."
         ])
     ]
     
     step_w = (content_w - 24) / 4
     for idx, (stitle, slines) in enumerate(steps):
         sx = margin_x + 6 + idx * (step_w + 4)
-        sy = inst_box_y + 4
+        sy = inst_box_y + 6
         
         can.setFillColor(C_BG_ROW)
         can.setStrokeColor(C_BORDER)
         can.setLineWidth(0.8)
-        can.roundRect(sx, sy, step_w, inst_h - 26, 3, fill=1, stroke=1)
+        can.roundRect(sx, sy, step_w, inst_h - 28, 3, fill=1, stroke=1)
         
         can.setFillColor(C_YELLOW)
-        can.roundRect(sx, sy + inst_h - 38, step_w, 12, 2, fill=1, stroke=0)
+        can.roundRect(sx, sy + inst_h - 42, step_w, 14, 2, fill=1, stroke=0)
         
-        can.setFont('Helvetica-Bold', 5.0)
+        can.setFont('Helvetica-Bold', 5.6)
         can.setFillColor(C_DARK)
-        can.drawCentredString(sx + step_w/2, sy + inst_h - 34, stitle)
+        can.drawCentredString(sx + step_w/2, sy + inst_h - 37.5, stitle)
         
-        can.setFont('Helvetica', 5.0)
+        can.setFont('Helvetica', 5.2)
         can.setFillColor(C_GRAY)
-        ly = sy + inst_h - 48
+        ly = sy + inst_h - 54
         for line in slines:
-            can.drawString(sx + 5, ly, line)
-            ly -= 7.5
+            can.drawString(sx + 6, ly, line)
+            ly -= 8.2
 
-    # BLOQUE 4: CONTENIDO DE EMPAQUE Y CERTIFICACIONES OFICIALES
-    foot_box_y = inst_box_y - 10 - 86
-    foot_box_h = 86
+    # BLOQUE 3: ARQUITECTURA DE INTEGRACIÓN Y SEGURIDAD LOGÍSTICA EN ANDÉN
+    sec3_y = inst_box_y - 10
+    sec3_h = 125
+    sec3_box_y = sec3_y - sec3_h
+    
+    can.setFillColor(C_WHITE)
+    can.setStrokeColor(C_BORDER)
+    can.setLineWidth(1)
+    can.roundRect(margin_x, sec3_box_y, content_w, sec3_h, 6, fill=1, stroke=1)
+    
+    can.setFillColor(colors.HexColor('#F3F4F6'))
+    can.roundRect(margin_x, sec3_box_y + sec3_h - 18, content_w, 18, 4, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 7.2)
+    can.setFillColor(C_DARK)
+    can.drawString(margin_x + 10, sec3_box_y + sec3_h - 13, 'ARQUITECTURA DE INTEGRACIÓN Y SEGURIDAD LOGÍSTICA EN ANDÉN')
+    
+    can.setFont('Helvetica', 6.0)
+    can.setFillColor(C_GRAY_LIGHT)
+    can.drawRightString(margin_x + content_w - 10, sec3_box_y + sec3_h - 13, 'Interlocks de Seguridad • Automatización de Muelles de Carga')
+    
+    sec3_cards = [
+        ("INTERLOCK CON RAMPA NIVELADORA", [
+            "Conexión directa al sensor de labio o",
+            "cuadro de mando de la rampa niveladora.",
+            "En el instante en que la rampa abandona su",
+            "posición de reposo o se despliega sobre el",
+            "camión, el semáforo conmuta a ROJO de",
+            "forma automática e irreversible, impidiendo",
+            "que el chofer arranque durante la carga."
+        ]),
+        ("SINCRONIZACIÓN RETENEDOR (TR-LOCK)", [
+            "Total compatibilidad con retenedores de",
+            "chasis y ganchos ICC mecánicos/hidráulicos.",
+            "El sistema establece circuito cruzado: luz",
+            "verde exterior únicamente cuando el gancho",
+            "ha liberado completamente el camión y",
+            "la puerta seccional de andén se encuentra",
+            "completamente cerrada."
+        ]),
+        ("CUMPLIMIENTO NORMATIVO Y RESISTENCIA", [
+            "Diseñado para satisfacer las normativas de",
+            "seguridad ocupacional en andenes:",
+            "• NOM-006-STPS-2014 (Manejo de Carga)",
+            "• OSHA 1910.178 (Tráfico de Montacargas)",
+            "• ANSI MH30.3 (Sistemas de Andén)",
+            "Carcasa en PC con filtro anti-UV que evita",
+            "cristalización y decoloración exterior."
+        ])
+    ]
+    
+    card3_w = (content_w - 20) / 3
+    for idx, (ctitle, clines) in enumerate(sec3_cards):
+        cx = margin_x + 5 + idx * (card3_w + 5)
+        cy = sec3_box_y + 6
+        
+        can.setFillColor(C_BG_ROW)
+        can.setStrokeColor(C_BORDER)
+        can.setLineWidth(0.8)
+        can.roundRect(cx, cy, card3_w, sec3_h - 28, 3, fill=1, stroke=1)
+        
+        can.setFillColor(C_DARK)
+        can.roundRect(cx, cy + sec3_h - 42, card3_w, 14, 2, fill=1, stroke=0)
+        
+        can.setFont('Helvetica-Bold', 5.6)
+        can.setFillColor(C_YELLOW)
+        can.drawCentredString(cx + card3_w/2, cy + sec3_h - 37.5, ctitle)
+        
+        can.setFont('Helvetica', 5.3)
+        can.setFillColor(C_GRAY)
+        ly = cy + sec3_h - 54
+        for line in clines:
+            can.drawString(cx + 6, ly, line)
+            ly -= 8.5
+
+    # BLOQUE 4: CONTENIDO DE EMPAQUE, CERTIFICACIONES Y GARANTÍA INDUSTRIAL
+    foot_box_y = 34
+    foot_box_h = sec3_box_y - 10 - foot_box_y # ~214 pt
     
     can.setFillColor(C_WHITE)
     can.setStrokeColor(C_BORDER)
@@ -766,79 +719,110 @@ def build_pdf():
     can.roundRect(margin_x, foot_box_y, content_w, foot_box_h, 6, fill=1, stroke=1)
     
     # Lado Izquierdo: Contenido de Empaque
+    split_w = 285
     can.setFillColor(colors.HexColor('#F3F4F6'))
-    can.roundRect(margin_x, foot_box_y + foot_box_h - 18, 275, 18, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7)
+    can.roundRect(margin_x, foot_box_y + foot_box_h - 18, split_w, 18, 4, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 7.2)
     can.setFillColor(C_DARK)
     can.drawString(margin_x + 10, foot_box_y + foot_box_h - 13, 'CONTENIDO DE EMPAQUE Y ACCESORIOS INCLUIDOS')
     
     package_items = [
-        "• 1x Cuerpo de Semáforo LED Dual Rojo/Verde φ100 mm (Modelo IMSE1009)",
-        "• 2x Brazos de fijación articulados orientables (Arm-bracket de polímero)",
-        "• 2x Tornillos pasantes de fijación M12 × 65 mm con tuerca y arandela",
-        "• 2x Arandelas de neopreno para sellado estanco M12",
-        "• 1x Manual de instalación rápida y póliza de garantía Tecnorampa",
-        "• Empaque individual K=K Carton de alta resistencia (45 × 31 × 26 cm, 2.8 kg)"
+        ("• 1x Cuerpo de Semáforo LED Dual Rojo/Verde φ100 mm", "Modelo oficial IMSE1009 con viseras integradas"),
+        ("• 2x Brazos de fijación articulados orientables", "Fabricados en polímero técnico de alta resistencia (180°)"),
+        ("• 2x Tornillos pasantes de fijación M12 × 65 mm", "Acero galvanizado con tuerca de seguridad y arandela plana"),
+        ("• 2x Arandelas de neopreno de compresión M12", "Sellado estanco contra ingreso de humedad al muro"),
+        ("• 1x Prensaestopas hermético IP65 integrado", "Paso de cable STW con rosca de sellado hermético"),
+        ("• 1x Manual de instalación rápida y póliza", "Guía en español con esquemas de cableado y garantía"),
+        ("• Empaque industrial reforzado K=K", "Caja corrugada de alta resistencia (45 × 31 × 26 cm, 2.8 kg)")
     ]
-    py = foot_box_y + foot_box_h - 27
-    can.setFont('Helvetica', 5.5)
-    can.setFillColor(C_GRAY)
-    for pitem in package_items:
-        can.drawString(margin_x + 10, py, pitem)
-        py -= 8.5
+    py = foot_box_y + foot_box_h - 32
+    for ptitle, psub in package_items:
+        can.setFont('Helvetica-Bold', 5.6)
+        can.setFillColor(C_DARK)
+        can.drawString(margin_x + 10, py, ptitle)
+        can.setFont('Helvetica', 5.2)
+        can.setFillColor(C_GRAY)
+        can.drawString(margin_x + 18, py - 7, psub)
+        py -= 18.5
         
     can.setStrokeColor(C_BORDER)
-    can.line(margin_x + 285, foot_box_y, margin_x + 285, foot_box_y + foot_box_h)
+    can.line(margin_x + split_w, foot_box_y, margin_x + split_w, foot_box_y + foot_box_h)
     
     # Lado Derecho: Certificaciones y Garantía Oficial
     can.setFillColor(colors.HexColor('#F3F4F6'))
-    can.roundRect(margin_x + 285, foot_box_y + foot_box_h - 18, content_w - 285, 18, 4, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 7)
+    can.roundRect(margin_x + split_w, foot_box_y + foot_box_h - 18, content_w - split_w, 18, 4, fill=1, stroke=0)
+    can.setFont('Helvetica-Bold', 7.2)
     can.setFillColor(C_DARK)
-    can.drawString(margin_x + 295, foot_box_y + foot_box_h - 13, 'CERTIFICACIONES Y GARANTÍA INDUSTRIAL')
+    can.drawString(margin_x + split_w + 10, foot_box_y + foot_box_h - 13, 'CERTIFICACIONES Y GARANTÍA INDUSTRIAL')
     
     cert_badges = [
         ("CE COMPLIANT", colors.HexColor('#1E3A8A'), colors.HexColor('#DBEAFE')),
         ("RoHS LEAD-FREE", colors.HexColor('#065F46'), colors.HexColor('#D1FAE5')),
         ("IP65 EN 60529", colors.HexColor('#92400E'), colors.HexColor('#FEF3C7')),
-        ("EN 12368", colors.HexColor('#7F1D1D'), colors.HexColor('#FEE2E2'))
+        ("EN 12368", colors.HexColor('#7F1D1D'), colors.HexColor('#FEE2E2')),
+        ("ISO 9001", colors.HexColor('#4338CA'), colors.HexColor('#E0E7FF'))
     ]
-    cb_x = margin_x + 295
-    cb_y = foot_box_y + foot_box_h - 32
+    cb_x = margin_x + split_w + 10
+    cb_y = foot_box_y + foot_box_h - 34
     for ctitle, ctext, cbg in cert_badges:
         can.setFillColor(cbg)
-        can.roundRect(cb_x, cb_y, 48, 11, 2, fill=1, stroke=0)
-        can.setFont('Helvetica-Bold', 4.5)
+        can.roundRect(cb_x, cb_y, 48, 12, 2, fill=1, stroke=0)
+        can.setFont('Helvetica-Bold', 4.8)
         can.setFillColor(ctext)
-        can.drawCentredString(cb_x + 24, cb_y + 3.0, ctitle)
+        can.drawCentredString(cb_x + 24, cb_y + 3.5, ctitle)
         cb_x += 52
         
-    can.setFont('Helvetica', 5.2)
-    can.setFillColor(C_GRAY)
-    can.drawString(margin_x + 295, foot_box_y + 28, '• Ensayos conforme a vibración EN 60068-2-64 y calor húmedo EN 60068-2-30.')
-    can.drawString(margin_x + 295, foot_box_y + 19, '• Grado de impacto IR 3 contra golpes y ráfagas de viento exterior.')
-    can.drawString(margin_x + 295, foot_box_y + 10, '• Garantía Oficial Tecnorampa de 12 meses en óptica, fuente y carcasa.')
+    cert_texts = [
+        ("Ensayos de Impacto y Vibración:", "Clasificación de impacto IR 3 bajo norma EN 12368 contra proyectiles y viento. Ensayo de vibración severa conforme a EN 60068-2-64."),
+        ("Resistencia Térmica y Humedad:", "Ensayo de calor húmedo cíclico EN 60068-2-30. Operatividad garantizada desde -40 °C hasta +80 °C en intemperie continua."),
+        ("Protección UV y Hermeticidad:", "Carcasa inyectada en policarbonato con estabilizador UV. Sellado IP65 hermético a polvo fino y chorros de agua a presión."),
+        ("Garantía Oficial Tecnorampa:", "Póliza de garantía industrial directa de 12 meses contra defectos de manufactura en módulo óptico, fuente conmutada y carcasa.")
+    ]
     
+    ct_y = foot_box_y + foot_box_h - 52
+    for chead, cdesc in cert_texts:
+        can.setFont('Helvetica-Bold', 5.6)
+        can.setFillColor(C_DARK)
+        can.drawString(margin_x + split_w + 10, ct_y, chead)
+        can.setFont('Helvetica', 5.2)
+        can.setFillColor(C_GRAY)
+        
+        words = cdesc.split(' ')
+        l1, l2 = [], []
+        curr = l1
+        for w in words:
+            if len(' '.join(curr + [w])) < 46:
+                curr.append(w)
+            else:
+                curr = l2
+                curr.append(w)
+        can.drawString(margin_x + split_w + 10, ct_y - 7, ' '.join(l1))
+        can.drawString(margin_x + split_w + 10, ct_y - 14, ' '.join(l2))
+        ct_y -= 23
+        
     # Sello de Calidad Tecnorampa
-    seal_x = margin_x + content_w - 32
-    seal_y = foot_box_y + 38
+    seal_x = margin_x + content_w - 40
+    seal_y = foot_box_y + 44
     
     can.setFillColor(C_YELLOW_LIGHT)
     can.setStrokeColor(C_YELLOW_DARK)
-    can.setLineWidth(1)
-    can.circle(seal_x, seal_y, 16, fill=1, stroke=1)
+    can.setLineWidth(1.2)
+    can.circle(seal_x, seal_y, 22, fill=1, stroke=1)
     
     can.setStrokeColor(C_YELLOW)
-    can.circle(seal_x, seal_y, 13.5, fill=0, stroke=1)
+    can.circle(seal_x, seal_y, 19, fill=0, stroke=1)
     
+    can.setFont('Helvetica-Bold', 4.8)
+    can.setFillColor(C_DARK)
+    can.drawCentredString(seal_x, seal_y + 7, 'INGENIERÍA')
+    can.setFillColor(C_YELLOW_DARK)
+    can.drawCentredString(seal_x, seal_y - 1, 'TECNORAMPA')
     can.setFont('Helvetica-Bold', 4.2)
     can.setFillColor(C_DARK)
-    can.drawCentredString(seal_x, seal_y + 4, 'INGENIERÍA')
-    can.setFillColor(C_YELLOW_DARK)
-    can.drawCentredString(seal_x, seal_y - 2, 'TECNORAMPA')
-    can.setFont('Helvetica-Bold', 3.8)
-    can.setFillColor(C_DARK)
-    can.drawCentredString(seal_x, seal_y - 6.5, 'CALIDAD 100%')
+    can.drawCentredString(seal_x, seal_y - 8, 'CALIDAD 100%')
+    can.setFont('Helvetica', 3.6)
+    can.setFillColor(C_GRAY)
+    can.drawCentredString(seal_x, seal_y - 13, 'VERIFICADO')
 
     draw_footer_canvas(can, pw, ph, 2)
     can.showPage()

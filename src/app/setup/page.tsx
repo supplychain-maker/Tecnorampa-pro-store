@@ -171,10 +171,26 @@ const INITIAL_PRODUCTS = [
       "/products/lampara-anden-planos.png",
       "/products/lampara-anden-sin-clavija.jpg"
     ],
+    technicalSheetUrl: "/fichas-tecnicas/lampara-anden-articulada.pdf",
     active: true,
-    benefits: ["Brazo flexible", "LED de alto brillo", "Resistente a impactos"],
-    specs: { "Largo Brazo": "40\"", "Cabezal": "Aluminio", "Vida útil": "50,000 hrs" },
-    operationSteps: ["Instalar cerca del andén", "Ajustar ángulo", "Encender para carga"]
+    benefits: [
+      "Brazo articulado doble 40\" (Bracket B1)",
+      "Cabezal LED 20W de alta penetración (2,600 lm)",
+      "Haz concentrado 30° spot de largo alcance",
+      "Protección IP65 hermética y jaula de acero inoxidable"
+    ],
+    specs: { 
+      "Modelo Oficial": "IMLA1003",
+      "Potencia": "20W",
+      "Flujo Luminoso": "2,600 lm",
+      "Eficacia": "130 lm/W",
+      "Ángulo": "30° Spot",
+      "Brazo": "Doble articulado 40\" (Bracket B1)",
+      "Protección": "IP65",
+      "Voltaje": "100-277V AC",
+      "Vida Útil": ">50,000 hrs"
+    },
+    operationSteps: ["Montaje en jamba de andén (2.10 - 2.40 m)", "Ajustar ángulo con perilla manual", "Encender con interruptor integrado"]
   },
   {
     name: "Tope de Andén Reforzado",

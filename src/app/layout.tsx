@@ -33,6 +33,35 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (typeof window !== 'undefined') {
+                  if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                  }
+                  var navEntries = performance.getEntriesByType('navigation');
+                  var isReload = (navEntries && navEntries.length > 0 && navEntries[0].type === 'reload')
+                    || (performance.navigation && performance.navigation.type === 1);
+                  if (isReload) {
+                    sessionStorage.removeItem('home_scroll_pos');
+                    sessionStorage.removeItem('products_scroll_pos');
+                    sessionStorage.removeItem('navigated_to_product');
+                    window.scrollTo(0, 0);
+                  }
+                  window.addEventListener('pageshow', function() {
+                    var n = performance.getEntriesByType('navigation');
+                    var reload = (n && n.length > 0 && n[0].type === 'reload') || (performance.navigation && performance.navigation.type === 1);
+                    if (reload) {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
         <FirebaseClientProvider>

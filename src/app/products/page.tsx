@@ -70,15 +70,38 @@ export default function ProductsPage() {
   // Restaurar estado de filtros desde sessionStorage al volver de un producto
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedGroup = sessionStorage.getItem('products_main_group');
-      const savedSub = sessionStorage.getItem('products_sub_group');
-      const savedPage = sessionStorage.getItem('products_page_num');
-      const savedSearch = sessionStorage.getItem('products_search_term');
-      
-      if (savedGroup) setSelectedMainGroup(savedGroup);
-      if (savedSub) setSelectedSubGroup(savedSub);
-      if (savedPage) setCurrentPage(parseInt(savedPage, 10) || 1);
-      if (savedSearch) setSearchTerm(savedSearch);
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
+      let isReload = false;
+      try {
+        const perf = performance.getEntriesByType('navigation');
+        isReload = (perf && perf.length > 0 && (perf[0] as PerformanceNavigationTiming).type === 'reload')
+          || (performance.navigation && performance.navigation.type === 1);
+      } catch (e) {
+        isReload = false;
+      }
+
+      if (isReload) {
+        sessionStorage.removeItem('products_scroll_pos');
+        sessionStorage.removeItem('navigated_to_product');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        return;
+      }
+
+      const isFromProduct = sessionStorage.getItem('navigated_to_product') === 'true';
+      if (isFromProduct) {
+        const savedGroup = sessionStorage.getItem('products_main_group');
+        const savedSub = sessionStorage.getItem('products_sub_group');
+        const savedPage = sessionStorage.getItem('products_page_num');
+        const savedSearch = sessionStorage.getItem('products_search_term');
+        
+        if (savedGroup) setSelectedMainGroup(savedGroup);
+        if (savedSub) setSelectedSubGroup(savedSub);
+        if (savedPage) setCurrentPage(parseInt(savedPage, 10) || 1);
+        if (savedSearch) setSearchTerm(savedSearch);
+      }
     }
   }, []);
 
@@ -91,24 +114,6 @@ export default function ProductsPage() {
       sessionStorage.setItem('products_search_term', searchTerm);
     }
   }, [selectedMainGroup, selectedSubGroup, currentPage, searchTerm]);
-
-  // Monitor pasivo de scroll para guardar la posición exacta
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    const handleScroll = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        if (window.scrollY > 0) {
-          sessionStorage.setItem('products_scroll_pos', window.scrollY.toString());
-        }
-      }, 50);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, []);
 
   // EFECTO DE SCROLL: Solo sube al inicio si el usuario cambia activamente de filtro o página
   useEffect(() => {
@@ -184,20 +189,38 @@ export default function ProductsPage() {
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPage]);
 
-  // Restaurar la posición exacta de scroll tan pronto como los productos se rendericen en el DOM
+  // Restaurar la posición exacta de scroll SOLO al volver de un producto
   useEffect(() => {
     if (!productsLoading && products && products.length > 0 && !hasRestoredScroll.current) {
+      hasRestoredScroll.current = true;
+      const isFromProduct = sessionStorage.getItem('navigated_to_product') === 'true';
       const savedPos = sessionStorage.getItem('products_scroll_pos');
-      if (savedPos) {
+
+      if (isFromProduct && savedPos) {
         const targetY = parseInt(savedPos, 10);
+        sessionStorage.removeItem('navigated_to_product');
+        sessionStorage.removeItem('products_scroll_pos');
         if (targetY > 0) {
-          hasRestoredScroll.current = true;
           requestAnimationFrame(() => {
             setTimeout(() => {
               window.scrollTo({ top: targetY, behavior: 'instant' });
             }, 60);
           });
+          return;
         }
+      }
+
+      // En caso de recarga o visita fresca, asegurar que la vista esté siempre al inicio superior
+      let isReload = false;
+      try {
+        const perf = performance.getEntriesByType('navigation');
+        isReload = (perf && perf.length > 0 && (perf[0] as PerformanceNavigationTiming).type === 'reload')
+          || (performance.navigation && performance.navigation.type === 1);
+      } catch (e) {
+        isReload = false;
+      }
+      if (isReload) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     }
   }, [productsLoading, products]);
@@ -213,6 +236,8 @@ export default function ProductsPage() {
       sessionStorage.removeItem('products_page_num');
       sessionStorage.removeItem('products_search_term');
       sessionStorage.removeItem('products_scroll_pos');
+      sessionStorage.removeItem('navigated_to_product');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 

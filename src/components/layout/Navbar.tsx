@@ -48,7 +48,17 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 print:hidden">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
+          <Link 
+            href="/" 
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                sessionStorage.removeItem('home_scroll_pos');
+                sessionStorage.removeItem('navigated_to_product');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }
+            }}
+            className="flex items-center gap-2"
+          >
             <Image 
               src={logo?.imageUrl || "/images/tecnorampa-logo.png"} 
               alt="Tecnorampa Logo" 
@@ -61,8 +71,32 @@ export function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground">Inicio</Link>
-            <Link href="/products" className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground">Productos</Link>
+            <Link 
+              href="/" 
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  sessionStorage.removeItem('home_scroll_pos');
+                  sessionStorage.removeItem('navigated_to_product');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }
+              }}
+              className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground"
+            >
+              Inicio
+            </Link>
+            <Link 
+              href="/products" 
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  sessionStorage.removeItem('products_scroll_pos');
+                  sessionStorage.removeItem('navigated_to_product');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }
+              }}
+              className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground"
+            >
+              Productos
+            </Link>
             <Link href="/about" className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground">Nosotros</Link>
             <Link href="/assistant" className="transition-colors hover:text-primary font-bold uppercase tracking-tight text-foreground">Asistente IA</Link>
           </div>

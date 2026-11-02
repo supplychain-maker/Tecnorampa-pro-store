@@ -37,6 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const handleCardClick = () => {
     if (typeof window !== 'undefined') {
+      sessionStorage.setItem('navigated_to_product', 'true');
       if (window.location.pathname === '/') {
         sessionStorage.setItem('home_scroll_pos', window.scrollY.toString());
       } else if (window.location.pathname.startsWith('/products')) {
@@ -83,7 +84,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Botones de acción */}
       <CardFooter className="p-6 pt-0 flex flex-col gap-2">
         <Button className="w-full group/btn h-11 font-bold uppercase tracking-widest text-[10px]" variant="outline" asChild>
-          <Link href={`/products/${product.slug}`}>
+          <Link href={`/products/${product.slug}`} onClick={handleCardClick}>
             Ver Especificaciones
             <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
           </Link>

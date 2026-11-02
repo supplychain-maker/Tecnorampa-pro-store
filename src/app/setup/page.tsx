@@ -439,13 +439,14 @@ const INITIAL_PRODUCTS = [
     categoryNames: ["Refacciones Industriales", "Control y Eléctrico"],
     price: 850,
     shortDescription: "Caja de distribución termoplástica hermética con riel DIN y ventana abatible transparente.",
-    description: "Gabinete de distribución eléctrica estanco con grado de protección IP65, diseñado para proteger interruptores termomagnéticos, relevadores o bloques de terminales en ambientes polvorientos o húmedos como bahías de carga. Incluye riel DIN de acero galvanizado instalado y ventana abatible oscurecida.",
+    description: "Gabinete de distribución eléctrica estanco con grado de protección IP65 (Modelo SH-6), diseñado para proteger interruptores termomagnéticos (MCB), relevadores, guardamotores y bloques de terminales en ambientes polvorientos o húmedos como bahías de carga. Fabricado en aleación polimérica ABS retardante a la flama con visor ahumado abatible de policarbonato, orificio para candado de seguridad industrial (LOTO), riel DIN simétrico de 35 mm y bornera de latón para tierra y neutro.",
     image: "/products/caja-din-frente.jpeg",
     images: ["/products/caja-din-frente.jpeg", "/products/caja-din-abierta.jpeg"],
     active: true,
-    benefits: ["Protección IP65 contra agua y polvo", "Riel DIN galvanizado preinstalado", "Tapa transparente con bisagra para monitoreo", "Material ABS retardante de flama"],
-    specs: { "Capacidad": "4 a 5 módulos DIN estándar", "Protección": "IP65", "Montaje": "Sobreponer en muro", "Accesorios": "Riel DIN y empaque hermético" },
-    operationSteps: ["Fijar caja al muro mediante barrenos sellados", "Montar interruptor o pastilla en el riel DIN", "Cerrar y verificar ajuste de empaque hermético"]
+    benefits: ["Protección IP65 total contra agua y polvo", "Capacidad para 6 módulos DIN estándar (18 mm)", "Riel DIN 35 mm en acero galvanizado preinstalado", "Bornera de latón macizo para tierra y neutro", "Seguridad LOTO con orificio frontal para candado", "Aleación ABS retardante de flama con visor de PC"],
+    specs: { "Modelo": "SH-6 (Serie SH Industrial)", "Capacidad": "6 Módulos DIN estándar (18 mm c/u)", "Dimensiones": "158 mm (L) × 190 mm (W) × 98 mm (H)", "Protección": "IP65", "Montaje": "Sobreponer en muro (Surface Mounted)", "Material": "Base ABS de alta tenacidad + Visor PC ahumado", "Riel DIN": "35 mm simétrico galvanizado (EN 50022)", "Accesorios incluidos": "Riel DIN, Bornera de latón y tapones de sellado" },
+    technicalSheetUrl: "/fichas-tecnicas/gabinete-estanco-riel-din-ip65.pdf",
+    operationSteps: ["Abrir troqueles (knockouts) según calibre e instalar prensaestopas estancos", "Fijar base al muro con 4 tornillos e insertar tapones de silicón herméticos", "Montar interruptores o pastillas a presión en el riel DIN y conectar cables a la bornera", "Cerrar cubierta frontal ajustando tornillos para sellar la junta perimetral"]
   },
   {
     name: "Rodamiento / Balero de Doble Hilera 5205J-2RS C3",

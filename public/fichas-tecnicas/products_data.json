@@ -88,19 +88,26 @@
       "Seguridad e Iluminación"
     ],
     "benefits": [
-      "Bajo consumo",
-      "Alta visibilidad diurna",
-      "Protección IP65"
+      "Lentes prismáticos Cobweb Lens φ100 mm con tecnología anti-reflejo solar (anti-phantom)",
+      "Matriz de 62 LEDs de alto brillo con visibilidad mayor a 200 metros",
+      "Hermeticidad IP65 y carcasa en policarbonato con protección UV",
+      "Multivoltaje universal AC 85V-265V con consumo de solo 6W por sección",
+      "Soportes articulados 180° orientables con precisión"
     ],
     "operationSteps": [
-      "Montaje en muro",
-      "Conexión a control",
-      "Sincronización"
+      "Fijación mecánica de soportes en muro o poste (430 mm entre centros)",
+      "Conexión eléctrica de línea común y señal según código de control",
+      "Orientación angular y apriete de tornillería M12"
     ],
     "specs": {
-      "Voltaje": "110V/220V",
-      "Iluminación": "LED Dual",
-      "Material": "Policarbonato"
+      "Modelo": "IMSE1009",
+      "Voltaje": "AC 85V - 265V (50/60 Hz)",
+      "Iluminación": "Dual φ100 mm (4\") Cobweb Lens (62 LEDs)",
+      "Intensidad": "Rojo ≥150 cd | Verde ≥220 cd",
+      "Potencia": "≤ 6W por sección activa",
+      "Protección": "IP65 Hermético",
+      "Material": "Policarbonato (PC) con filtro UV",
+      "Rango Térmico": "-40 °C a +80 °C"
     },
     "mainGroup": "anden",
     "subGroup": "Seguridad e Iluminación"

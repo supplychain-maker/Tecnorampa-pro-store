@@ -141,8 +141,8 @@ const INITIAL_PRODUCTS = [
     subGroup: "Seguridad e Iluminación",
     categoryNames: ["Andén de Carga", "Seguridad e Iluminación"],
     price: 8500,
-    shortDescription: "Señalización roja/verde de alta visibilidad para maniobras seguras.",
-    description: "Controla el flujo de camiones en tu andén. Carcasa de policarbonato resistente a impactos y LED de larga duración.",
+    shortDescription: "Semáforo LED dual rojo/verde φ100 mm (4\") IP65 con lentes Cobweb Lens anti-reflejo y multivoltaje 85-265V AC.",
+    description: "Semáforo industrial de señalización óptica dual rojo/verde con lentes prismáticos Cobweb Lens de φ100 mm (4\") anti-fantasma. Diseñado para control de tráfico y aproximación segura de camiones en bahías de andén de carga. Equipado con 62 LEDs ultra brillantes (>80,000 h de vida útil), carcasa hermética IP65 en policarbonato con protección UV y herrajes de montaje orientables 180° para muro o poste. Alimentación universal AC 85V - 265V con consumo menor a 6W por sección.",
     image: "/products/semaforo-led.jpg",
     images: [
       "/products/semaforo-led.jpg",
@@ -150,9 +150,33 @@ const INITIAL_PRODUCTS = [
       "/products/semaforo-led-planos.png"
     ],
     active: true,
-    benefits: ["Bajo consumo", "Alta visibilidad diurna", "Protección IP65"],
-    specs: { "Material": "Policarbonato", "Iluminación": "LED Dual", "Voltaje": "110V/220V" },
-    operationSteps: ["Montaje en muro", "Conexión a control", "Sincronización"]
+    technicalSheetUrl: "/fichas-tecnicas/semaforo-led-industrial.pdf",
+    benefits: [
+      "Lentes prismáticos Cobweb Lens φ100 mm con tecnología anti-reflejo solar (anti-phantom)",
+      "Matriz de 62 LEDs de estado sólido con visibilidad garantizada superior a 200 metros",
+      "Hermeticidad certificada IP65 y carcasa en policarbonato resistente a rayos UV e impactos",
+      "Fuente conmutada universal AC 85V-265V con factor de potencia ≥0.92 y consumo de solo 6W",
+      "Herrajes articulados 180° orientables con precisión hacia el retrovisor del chofer"
+    ],
+    specs: {
+      "Modelo": "IMSE1009",
+      "Óptica": "Dual φ100 mm (4\") Cobweb Lens prismático",
+      "LEDs": "62 LEDs de alto brillo (31 Rojos + 31 Verdes)",
+      "Intensidad Lumínica": "Rojo ≥150 cd | Verde ≥220 cd",
+      "Alimentación": "AC 85V - 265V (50/60 Hz) Multivoltaje",
+      "Consumo": "≤ 6W por sección activa (≤ 12W total)",
+      "Protección": "IP65 (Hermético al polvo y agua a presión)",
+      "Rango Térmico": "-40 °C a +80 °C",
+      "Material Carcasa": "Policarbonato (PC) de alto impacto con filtro UV",
+      "Montaje": "Soportes articulados 180° con tornillería M12 incluida"
+    },
+    operationSteps: [
+      "Trazar y perforar barrenos en muro de andén o poste según plano (430 mm entre centros)",
+      "Fijar soportes mecánicos con pernos pasantes M12×65 mm y arandelas de neopreno",
+      "Introducir cable uso rudo por pasacables estanco IP65 y conectar a regleta (Común, Rojo, Verde)",
+      "Orientar cuerpo del semáforo a ±90° hacia el ángulo de visión del conductor y apretar tuercas",
+      "Interconectar con cuadro de mando de rampa niveladora, sensor o botonera selectora"
+    ]
   },
   {
     name: "Lámpara de Andén Articulada",

@@ -134,7 +134,7 @@ def draw_header_canvas(can, pw, ph, page_num):
     
     # Pastilla blanca para el Logotipo Oficial Tecnorampa (esquina superior izquierda)
     logo_path = os.path.join(PUBLIC_DIR, 'images', 'tecnorampa-logo.png')
-    logo_w = 136
+    logo_w = 128
     logo_h = 40
     logo_x = header_x + 8
     logo_y = header_y + 7
@@ -145,17 +145,17 @@ def draw_header_canvas(can, pw, ph, page_num):
         can.drawImage(logo_path, logo_x + 6, logo_y + 4, width=logo_w - 12, height=logo_h - 8, mask='auto', preserveAspectRatio=True)
         
     # Texto Central / Títulos
-    text_x = logo_x + logo_w + 12
+    text_x = logo_x + logo_w + 10
     can.setFillColor(C_YELLOW)
-    can.setFont('Helvetica-Bold', 7)
+    can.setFont('Helvetica-Bold', 6.8)
     can.drawString(text_x, header_y + 38, 'EQUIPAMIENTO DE ANDÉN • SEGURIDAD LOGÍSTICA • ILUMINACIÓN INDUSTRIAL')
     
     can.setFillColor(C_WHITE)
     can.setFont('Helvetica-Bold', 10.5)
-    can.drawString(text_x, header_y + 24, 'FICHA TÉCNICA OFICIAL: LÁMPARA DE ANDÉN ARTICULADA')
+    can.drawString(text_x, header_y + 24, 'FICHA TÉCNICA OFICIAL: LÁMPARA DE ANDÉN')
     
     can.setFillColor(colors.HexColor('#D1D5DB'))
-    can.setFont('Helvetica', 7.2)
+    can.setFont('Helvetica', 6.8)
     can.drawString(text_x, header_y + 12, 'Luminaria LED Industrial 20W con Brazo Doble de 40" (Bracket B1) • Modelo IMLA1003')
     
     # Pastilla de Metadatos en la esquina superior derecha

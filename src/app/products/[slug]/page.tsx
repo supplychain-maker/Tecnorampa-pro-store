@@ -74,6 +74,10 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
     '/products/poleas-industriales-lado1.jpeg',
     '/products/poleas-industriales-lado2.jpeg',
   ],
+  'poleas-industriales-cable-acero': [
+    '/products/poleas-industriales-lado1.jpeg',
+    '/products/poleas-industriales-lado2.jpeg',
+  ],
   'valvula-solenoide-parker': [
     '/products/valvula-parker-lado1.jpeg',
     '/products/valvula-parker-lado2.jpeg',
@@ -337,6 +341,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                   </p>
                   <p className="text-[11px] font-medium text-amber-900 leading-relaxed">
                     Esta luminaria incluye cable de uso rudo STW 18AWG de 5 pies (1.5 m) <strong>suministrado sin clavija</strong> (puntas preparadas), ideal para conexión fija directa a la caja de control del andén o para instalar la clavija industrial requerida en sus instalaciones.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {slug === 'poleas-industriales-cable-acero' && (
+              <div className="bg-primary/10 border-2 border-primary/40 p-4 rounded-xl flex items-start gap-3 shadow-xs">
+                <PackageCheck className="text-primary shrink-0 mt-0.5" size={20} />
+                <div className="space-y-1">
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">
+                    Suministro: Venta por Pieza Individual
+                  </p>
+                  <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">
+                    Las poleas se comercializan y cotizan de forma <strong>individual por unidad</strong> según el diámetro seleccionado en la lista superior. En la fotografía se muestran dos piezas con propósitos exclusivamente ilustrativos para apreciar la variedad de tamaños y maquinados disponibles.
                   </p>
                 </div>
               </div>

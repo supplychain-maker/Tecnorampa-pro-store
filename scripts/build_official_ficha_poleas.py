@@ -203,14 +203,19 @@ def build_official_ficha_poleas_pdf():
     
     pulley_img = os.path.join(PUBLIC_DIR, 'products', 'poleas-industriales-frente.jpeg')
     if os.path.exists(pulley_img):
-        can.drawImage(pulley_img, photo_x + 5, photo_y + 26, width=photo_w - 10, height=photo_h - 32, mask='auto', preserveAspectRatio=True)
+        can.drawImage(pulley_img, photo_x + 5, photo_y + 32, width=photo_w - 10, height=photo_h - 38, mask='auto', preserveAspectRatio=True)
+    
+    # Nota aclaratoria sobre variedad de tamaños ilustrada en la foto
+    can.setFont('Helvetica-Oblique', 4.8)
+    can.setFillColor(C_GRAY_LIGHT)
+    can.drawCentredString(photo_x + photo_w / 2, photo_y + 25.5, '* Foto ilustrativa de diámetros disponibles. Suministro por pieza individual.')
     
     # Badge en la parte inferior de la foto
     can.setFillColor(C_DARK)
-    can.roundRect(photo_x + 6, photo_y + 6, photo_w - 12, 18, 4, fill=1, stroke=0)
+    can.roundRect(photo_x + 6, photo_y + 6, photo_w - 12, 16.5, 3.5, fill=1, stroke=0)
     can.setFillColor(C_YELLOW)
-    can.setFont('Helvetica-Bold', 6.5)
-    can.drawCentredString(photo_x + photo_w / 2, photo_y + 11.5, 'JUEGO DE POLEAS DE NYLAMID PA66SL (PAR)')
+    can.setFont('Helvetica-Bold', 5.9)
+    can.drawCentredString(photo_x + photo_w / 2, photo_y + 11.5, 'POLEAS DE NYLAMID PA66SL • VENTA INDIVIDUAL')
     
     # Columna Derecha: Tarjeta de Perfil de Material y Metadatos
     meta_x = photo_x + photo_w + 11
@@ -763,9 +768,12 @@ def build_official_ficha_poleas_pdf():
     p.close()
     can.drawPath(p, fill=1, stroke=0)
     
-    can.setFont('Helvetica-Bold', 8)
+    can.setFont('Helvetica-Bold', 7.8)
     can.setFillColor(C_DARK)
-    can.drawString(sec1_x + 10, sec6_top_y - 6, '6. GAMA DE DIÁMETROS COMERCIALES MAQUINADOS Y CAPACIDADES DINÁMICAS')
+    can.drawString(sec1_x + 10, sec6_top_y - 6, '6. GAMA DE DIÁMETROS COMERCIALES MAQUINADOS (VENTA INDIVIDUAL)')
+    can.setFont('Helvetica-Bold', 6.0)
+    can.setFillColor(C_YELLOW_DARK)
+    can.drawRightString(sec1_x + content_w, sec6_top_y - 6, 'SUMINISTRO POR PIEZA INDIVIDUAL')
     
     # Tabla de variantes de poleas de la tienda
     sec6_tbl_y = sec6_top_y - 12

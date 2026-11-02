@@ -321,27 +321,29 @@ const INITIAL_PRODUCTS = [
     operationSteps: ["Descomprimir sistema de la rampa", "Fijar gancho en el anclaje trasero", "Tensar y asegurar el perno frontal"]
   },
   {
-    name: "Poleas Industriales para Cable de Acero (Par)",
+    name: "Poleas Industriales para Cable de Acero",
     slug: "poleas-industriales-cable-acero",
     mainGroup: "refacciones",
     mainGroupName: "Refacciones Industriales",
     subGroup: "Mecánicas y Retención",
     categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
     price: 650,
-    shortDescription: "Juego de poleas de canal maquinadas en barra de Nylon PA66 / Nylamid con diámetros de 1\" a 12\".",
-    description: "Poleas industriales maquinadas en barra redonda sólida de polímero técnico Nylon PA66 / Nylamid de alta densidad y resistencia mecánica. Diseñadas para sistemas de elevación, contrapesos, cables de tracción y rampas niveladoras de andén. Disponibles en diámetros maquinados a medida desde 1\" hasta 12\". No muerden ni deforman el cable de acero, eliminan la fricción metálica y garantizan una operación silenciosa y duradera.",
+    shortDescription: "Polea de canal maquinada en barra redonda de Nylon PA66 / Nylamid de 1\" a 12\". Venta por pieza individual.",
+    description: "Polea industrial maquinada en barra redonda sólida de polímero técnico Nylon PA66 / Nylamid de alta densidad y resistencia mecánica. Diseñada para sistemas de elevación, contrapesos, cables de tracción y rampas niveladoras de andén. Disponible en diámetros maquinados a medida desde 1\" hasta 12\". Precio y venta por pieza individual (en la fotografía se muestran dos piezas con propósitos ilustrativos para apreciar la variedad de diámetros y acabados disponibles). No muerde ni deforma el cable de acero, elimina la fricción metálica y garantiza una operación silenciosa y duradera.",
     image: "/products/poleas-industriales-frente.jpeg",
     images: ["/products/poleas-industriales-frente.jpeg", "/products/poleas-industriales-lado1.jpeg", "/products/poleas-industriales-lado2.jpeg"],
     active: true,
     technicalSheetUrl: "/fichas-tecnicas/poleas-industriales-cable-acero.pdf",
     benefits: [
-      "Maquinadas desde barra redonda sólida de Nylon PA66 / Nylamid",
+      "Venta y suministro por pieza individual según la medida requerida",
+      "Maquinadas desde barra redonda sólida de Nylon PA66 / Nylamid autolubricado",
       "Variantes en todos los diámetros comerciales: 1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\" y 12\"",
       "Material autolubricado que prolonga la vida útil del cable de acero",
       "Resistencia química, sin riesgo de chispas ni corrosión por humedad"
     ],
     specs: {
       "Materia Prima": "Redondo sólido de Nylamid / Nylon PA66",
+      "Suministro": "Venta por pieza individual",
       "Gama de Diámetros": "1\", 2\", 3\", 3.5\", 4\", 4 5/8\", 5\", 6\", 7\", 10\", 12\"",
       "Aplicación": "Guía de cable en rampas niveladoras, elevadores y contrapesos",
       "Canal": "Ranura en V/U maquinada de precisión para cable de acero",

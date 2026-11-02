@@ -327,6 +327,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                 Para solicitar factura o envío, favor de comunicarse por whatsapp al 427 276 1410
               </p>
             </div>
+
+            {slug === 'lampara-anden-articulada' && (
+              <div className="bg-amber-500/10 border-2 border-amber-500/40 p-4 rounded-xl flex items-start gap-3 shadow-xs">
+                <Lightbulb className="text-amber-600 shrink-0 mt-0.5" size={20} />
+                <div className="space-y-1">
+                  <p className="text-xs font-black uppercase tracking-wider text-amber-950">
+                    Suministro Eléctrico: Cable de Uso Rudo Sin Clavija
+                  </p>
+                  <p className="text-[11px] font-medium text-amber-900 leading-relaxed">
+                    Esta luminaria incluye cable de uso rudo STW 18AWG de 5 pies (1.5 m) <strong>suministrado sin clavija</strong> (puntas preparadas), ideal para conexión fija directa a la caja de control del andén o para instalar la clavija industrial requerida en sus instalaciones.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

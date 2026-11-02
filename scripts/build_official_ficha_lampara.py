@@ -368,7 +368,7 @@ def build_pdf():
         ("Configuración del Brazo", "Doble Brazo Articulado 40\" (Bracket B1)"),
         ("Alcance Total Extendido", "42.02 pulgadas (1,067.5 mm)"),
         ("Perfil Estructural Brazo", "Tubo de acero cuadrado 40x40 mm (1.57\")"),
-        ("Cable y Conexión", "Cable STW 18AWG de 5 ft (1.5 m) + Clavija NEMA 5-15P"),
+        ("Cable de Alimentación", "Cable STW 18AWG 5 ft (1.5 m) — SIN CLAVIJA"),
         ("Vida Útil y Garantía", "> 50,000 Horas / Garantía Oficial Tecnorampa"),
     ]
     
@@ -448,7 +448,7 @@ def build_pdf():
     
     right_boxes = [
         ("Carcasa de Aluminio Fundido", "Cuerpo en fundición de aluminio de alta resistencia que optimiza la disipación térmica de los LEDs."),
-        ("Conexión Plug-and-Play", "Incluye cable de uso rudo STW 18AWG de 5 ft (1.5 m) con clavija estándar americana 120V NEMA 5-15P."),
+        ("Cable de Alimentación (Sin Clavija)", "Cable de uso rudo STW 18AWG de 5 ft (1.5 m) sin clavija para conexión directa a caja de control o tablero."),
         ("Lente Óptica de PC 30°", "Policarbonato de alta transmitancia y resistencia a impactos, focalizado para bañar remolques largos."),
         ("Jaula de Acero Inoxidable", "Malla perimetral de varilla de acero inox que protege la óptica contra golpes fortuitos de estibas.")
     ]
@@ -606,7 +606,7 @@ def build_pdf():
     can.setFillColor(C_GRAY)
     can.drawString(pane_r_x + 10, pane_r_y + 30, '• Alcance Extendido Total: 42.02" (1,067.5 mm)  |  Perfil Tubo: 40x40 mm (1.57")')
     can.drawString(pane_r_x + 10, pane_r_y + 20, '• Tramo Primario: 23.62" (600 mm)  |  Tramo Secundario: 18.40" (467.5 mm)')
-    can.drawString(pane_r_x + 10, pane_r_y + 10, '• Placa de Montaje Mural: 232 mm (9.13") Alto x 137 mm (5.39") Ancho (4 Barrenos)')
+    can.drawString(pane_r_x + 10, pane_r_y + 10, '• Placa: 232x137 mm (4 Barrenos)  |  Alimentación: Cable 5 ft (1.5 m) SIN CLAVIJA')
     
     # =========================================================================
     # BLOQUE 2: PROTOCOLO DE INSTALACIÓN Y MONTAJE EN MURO DE ANDÉN
@@ -626,7 +626,7 @@ def build_pdf():
     can.drawString(margin_x + 10, inst_top - 12.5, 'PROCEDIMIENTO OFICIAL DE INSTALACIÓN Y MONTAJE EN MURO')
     can.setFont('Helvetica', 6.5)
     can.setFillColor(C_YELLOW)
-    can.drawRightString(margin_x + content_w - 10, inst_top - 12.5, 'ANCLAJE ESTRUCTURAL • PLUG-AND-PLAY 120V • CALIBRACIÓN')
+    can.drawRightString(margin_x + content_w - 10, inst_top - 12.5, 'ANCLAJE ESTRUCTURAL • CABLEADO DIRECTO SIN CLAVIJA • CALIBRACIÓN')
     
     steps = [
         ("PASO 1: SELECCIÓN DE ALTURA", 
@@ -636,7 +636,7 @@ def build_pdf():
         ("PASO 3: ACOPLE DE CABEZAL", 
          "Asegurar el cabezal en la horquilla con los tornillos de mariposa. Enlazar el conector rápido impermeable de 1 ft y fijar el cable con cinchos industriales."),
         ("PASO 4: ALIMENTACIÓN Y PRUEBA", 
-         "Conectar la clavija NEMA 5-15P a contacto 120V aterrizado. Encender desde el interruptor del cabezal y orientar el haz hacia el interior del remolque.")
+         "Conectar el cable de 5 ft (suministrado sin clavija) a línea 100-277V o caja de control local. Encender desde el interruptor del cabezal y orientar el haz.")
     ]
     
     step_w = (content_w - 24) / 4

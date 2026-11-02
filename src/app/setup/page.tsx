@@ -188,9 +188,10 @@ const INITIAL_PRODUCTS = [
       "Brazo": "Doble articulado 40\" (Bracket B1)",
       "Protección": "IP65",
       "Voltaje": "100-277V AC",
+      "Cable y Alimentación": "Cable STW 18AWG de 5 ft (Sin clavija)",
       "Vida Útil": ">50,000 hrs"
     },
-    operationSteps: ["Montaje en jamba de andén (2.10 - 2.40 m)", "Ajustar ángulo con perilla manual", "Encender con interruptor integrado"]
+    operationSteps: ["Montaje en jamba de andén (2.10 - 2.40 m)", "Ajustar ángulo con perilla manual", "Conectar cable a línea/control y encender con switch"]
   },
   {
     name: "Tope de Andén Reforzado",

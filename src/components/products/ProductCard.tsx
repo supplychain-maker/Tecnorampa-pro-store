@@ -16,6 +16,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
   const displayImage = getDirectImageUrl(product.image);
+  const displayName = product.slug === 'resorte-extension-amarillo-rampa'
+    ? 'Resorte de Extensión Amarillo'
+    : product.name;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
     
     addItem({
       id: product.id || product.slug,
-      name: product.name,
+      name: displayName,
       price: product.price,
       quantity: 1,
       image: product.image,
@@ -33,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     toast({
       title: "Agregado al carrito",
-      description: `${product.name} se ha añadido correctamente.`,
+      description: `${displayName} se ha añadido correctamente.`,
     });
   };
 
@@ -55,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden bg-white p-4">
           <Image 
             src={displayImage} 
-            alt={product.name} 
+            alt={displayName} 
             fill 
             className="object-contain transition-transform duration-500 group-hover:scale-105 p-2"
             data-ai-hint="industrial product photo"
@@ -76,7 +79,7 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
           <h3 className="text-xl font-black mb-2 group-hover:text-primary transition-colors uppercase italic tracking-tighter leading-tight">
-            {product.name}
+            {displayName}
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-4 font-medium">
             {product.shortDescription}

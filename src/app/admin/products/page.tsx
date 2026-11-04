@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useFirestore, useCollection, useUser, useDoc } from '@/firebase';
 import { collection, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,23 @@ export default function AdminProductsPage() {
   }, [db]);
 
   const { data: products, loading: productsLoading } = useCollection<Product>(productsQuery);
+
+  // Auto-sincronizar nombre oficial del resorte a "Resorte de Extensión Amarillo"
+  useEffect(() => {
+    if (!products || !isAdmin || !db) return;
+    const resorte = products.find(p => p.slug === 'resorte-extension-amarillo-rampa');
+    if (resorte && resorte.id && (resorte.name !== 'Resorte de Extensión Amarillo' || !resorte.technicalSheetUrl)) {
+      const productRef = doc(db, 'products', resorte.id);
+      updateDoc(productRef, { 
+        name: 'Resorte de Extensión Amarillo',
+        technicalSheetUrl: '/fichas-tecnicas/resorte-extension-amarillo-rampa.pdf'
+      }).then(() => {
+        console.log('Successfully updated Resorte de Extensión Amarillo in Firestore');
+      }).catch(err => {
+        console.error('Error auto-syncing resorte:', err);
+      });
+    }
+  }, [products, isAdmin, db]);
 
   const toggleStatus = (product: Product) => {
     if (!db || !product.id) return;
@@ -154,13 +171,17 @@ export default function AdminProductsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {products.map((product) => (
+                {products.map((product) => {
+                  const displayName = product.slug === 'resorte-extension-amarillo-rampa'
+                    ? 'Resorte de Extensión Amarillo'
+                    : product.name;
+                  return (
                   <TableRow key={product.id || product.slug} className="group hover:bg-muted/30 transition-colors">
                     <TableCell>
                       <div className="relative w-16 h-12 bg-muted rounded overflow-hidden border border-border">
                         <Image 
                           src={getDirectImageUrl(product.image)} 
-                          alt={product.name} 
+                          alt={displayName} 
                           fill 
                           className="object-cover" 
                           unoptimized 
@@ -169,7 +190,7 @@ export default function AdminProductsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-black uppercase text-sm italic">{product.name}</span>
+                        <span className="font-black uppercase text-sm italic">{displayName}</span>
                         <span className="text-[10px] text-muted-foreground font-mono">{product.id}</span>
                       </div>
                     </TableCell>
@@ -262,7 +283,8 @@ export default function AdminProductsPage() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                );
+              })}
               </TableBody>
             </Table>
           )}

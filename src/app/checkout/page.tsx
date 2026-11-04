@@ -369,7 +369,11 @@ function CheckoutContent() {
                   {items.map(item => (
                     <div key={`${item.id}-${item.variant}`} className="flex justify-between text-sm">
                       <div className="flex flex-col min-w-0 pr-2">
-                        <span className="font-black uppercase text-[11px] truncate">{item.name}</span>
+                        <span className="font-black uppercase text-[11px] truncate">
+                          {(item.id === 'xHiXSgcjjH7Tc2d0IC3V' || item.id === 'resorte-extension-amarillo-rampa' || item.name.toLowerCase().includes('resorte de extensión'))
+                            ? 'Resorte de Extensión Amarillo'
+                            : item.name}
+                        </span>
                         <span className="text-muted-foreground text-[10px] font-bold">CANT: {item.quantity}</span>
                         {item.stock !== undefined && (
                           <span className="text-[9px] text-muted-foreground font-semibold mt-0.5">

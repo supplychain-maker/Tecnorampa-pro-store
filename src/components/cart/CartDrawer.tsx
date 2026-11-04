@@ -47,12 +47,16 @@ export function CartDrawer() {
 
       <ScrollArea className="flex-grow p-6">
         <div className="space-y-6">
-          {items.map((item) => (
+          {items.map((item) => {
+            const itemName = (item.id === 'xHiXSgcjjH7Tc2d0IC3V' || item.id === 'resorte-extension-amarillo-rampa' || item.name.toLowerCase().includes('resorte de extensión'))
+              ? 'Resorte de Extensión Amarillo'
+              : item.name;
+            return (
             <div key={`${item.id}-${item.variant}`} className="flex gap-4">
               <div className="relative w-20 h-20 bg-white border border-border rounded overflow-hidden flex-shrink-0 p-1">
                 <Image 
                   src={getDirectImageUrl(item.image)} 
-                  alt={item.name} 
+                  alt={itemName} 
                   fill 
                   className="object-contain" 
                   unoptimized
@@ -60,7 +64,7 @@ export function CartDrawer() {
               </div>
               <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-black uppercase text-[11px] italic truncate pr-2 tracking-tighter">{item.name}</h4>
+                  <h4 className="font-black uppercase text-[11px] italic truncate pr-2 tracking-tighter">{itemName}</h4>
                   <button onClick={() => removeItem(item.id)} className="text-muted-foreground hover:text-destructive transition-colors">
                     <X size={16} />
                   </button>
@@ -108,7 +112,8 @@ export function CartDrawer() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </ScrollArea>
 

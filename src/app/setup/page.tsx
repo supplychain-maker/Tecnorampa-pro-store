@@ -328,21 +328,21 @@ const INITIAL_PRODUCTS = [
     operationSteps: ["Instalar en el bastidor de la fosa", "Alinear la barra dentada con el trinquete", "Conectar cadena al sistema de liberación"]
   },
   {
-    name: "Resorte de Extensión Amarillo para Niveladora Mecánica",
+    name: "Resorte de Extensión Amarillo",
     slug: "resorte-extension-amarillo-rampa",
     mainGroup: "refacciones",
     mainGroupName: "Refacciones Industriales",
     subGroup: "Mecánicas y Retención",
     categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
     price: 2850,
-    shortDescription: "Resorte helicoidal de alta tensión con gancho abierto y pintura electrostática de alta resistencia.",
-    description: "Resorte principal de elevación para niveladoras mecánicas de andén. Fabricado en acero aleado de alto carbono tratado térmicamente para garantizar ciclos continuos sin pérdida de elasticidad. Acabado en amarillo industrial para fácil inspección visual y resistencia a la corrosión.",
+    shortDescription: "Resorte de extensión en acero cromo-silicio ASTM A401 con acabado electrostático amarillo RAL 1018.",
+    description: "Resorte helicoidal de extensión y tracción lateral fabricado en acero aleado Cromo-Silicio ASTM A401 para sistemas de gancho retenedor vehicular (Rhino / Dok-Lok) y niveladoras mecánicas de andén. Acabado en pintura electrostática amarillo industrial RAL 1018 para máxima visibilidad y resistencia a la corrosión.",
     image: "/products/resorte-rampa-frente.jpeg",
     images: ["/products/resorte-rampa-frente.jpeg", "/products/resorte-rampa-lado.jpeg"],
     active: true,
-    benefits: ["Acero de alta resiliencia tratado térmicamente", "Acabado electrostático amarillo anticorrosivo", "Gancho forjado integrado de máxima sujeción", "Larga vida útil en tráfico pesado"],
-    specs: { "Material": "Acero al carbono para resortes", "Acabado": "Pintura electrostática amarilla", "Tipo": "Extensión con gancho", "Capacidad": "Niveladoras de 30k a 50k lbs" },
-    operationSteps: ["Descomprimir sistema de la rampa", "Fijar gancho en el anclaje trasero", "Tensar y asegurar el perno frontal"]
+    benefits: ["Acero aleado Cromo-Silicio ASTM A401 de alta tenacidad", "Acabado electrostático amarillo RAL 1018 anticorrosivo", "Ganchos forjados en el mismo plano (10°) de máxima sujeción", "Vida útil extendida superior a 500,000 ciclos"],
+    specs: { "Modelo": "DZ-RHINO_GSLV-SPRING", "Material": "ASTM A401 Chrome Silicon", "Diámetro Alambre": "0.4375\" (11.11 mm)", "Diámetro Exterior": "3.000\" (76.20 mm)", "Longitud Libre": "17.311\" (439.70 mm)", "Espiras": "33 espiras REF.", "Acabado": "Pintura electrostática amarilla RAL 1018" },
+    operationSteps: ["Descomprimir y bloquear mecánicamente el equipo", "Fijar gancho en anclaje trasero del bastidor", "Tensar con barra de tracción y asegurar perno pasante"]
   },
   {
     name: "Poleas Industriales para Cable de Acero",

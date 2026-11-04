@@ -67,8 +67,13 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
   'mecanismo-freno-rampa-auto-release': [
     '/products/freno-rampa-zoom.jpeg',
   ],
+  'resorte-extension-amarillo-rampa': [
+    '/products/resorte-rampa-lado.jpeg',
+    '/fichas-tecnicas/diagrama-resorte-extension-clean.png',
+  ],
   'resorte-extension-niveladora': [
     '/products/resorte-rampa-lado.jpeg',
+    '/fichas-tecnicas/diagrama-resorte-extension-clean.png',
   ],
   'poleas-guia-cable-traccion': [
     '/products/poleas-industriales-lado1.jpeg',
@@ -145,6 +150,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
+  const productName = product.slug === 'resorte-extension-amarillo-rampa'
+    ? 'Resorte de Extensión Amarillo'
+    : product.name;
+
   const currentVariant = product.variants?.find(v => v.id === selectedVariant);
   const finalPrice = product.price + (currentVariant?.priceModifier || 0);
   const stock = Number(product.stock ?? 0);
@@ -167,7 +176,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const handleAddToCart = () => {
     addItem({
       id: product.id || product.slug,
-      name: product.name,
+      name: productName,
       price: finalPrice,
       quantity: quantity,
       image: product.image,
@@ -176,7 +185,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       deliveryTime: product.deliveryTime
     });
 
-    let toastDesc = `${quantity}x ${product.name}${currentVariant ? ` (${currentVariant.name})` : ''} se ha añadido correctamente.`;
+    let toastDesc = `${quantity}x ${productName}${currentVariant ? ` (${currentVariant.name})` : ''} se ha añadido correctamente.`;
     if (hasImmediateStock && quantity > stock) {
       toastDesc = `Añadido: ${stock} en entrega inmediata y ${quantity - stock} en ${deliveryTime}.`;
     }
@@ -205,7 +214,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <div className="relative aspect-square bg-white rounded-xl overflow-hidden border border-border group p-8">
               <Image 
                 src={imagesToDisplay[activeImage] || imagesToDisplay[0] || coverImage} 
-                alt={product.name} 
+                alt={productName} 
                 fill 
                 priority
                 className="object-contain transition-transform duration-500 hover:scale-105 p-4"
@@ -226,7 +235,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     onClick={() => setActiveImage(idx)}
                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all bg-white p-2 ${activeImage === idx ? 'border-primary ring-2 ring-primary/20 shadow-sm' : 'border-border opacity-70 hover:opacity-100'}`}
                   >
-                    <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-contain p-1" unoptimized />
+                    <Image src={img} alt={`${productName} ${idx + 1}`} fill className="object-contain p-1" unoptimized />
                   </button>
                 ))}
               </div>
@@ -241,7 +250,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                   <Badge key={i} variant="outline" className="text-primary border-primary font-black uppercase text-[10px] tracking-widest">{cat}</Badge>
                 ))}
               </div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">{product.name}</h1>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">{productName}</h1>
               <p className="text-xl text-muted-foreground leading-relaxed font-medium">{product.shortDescription}</p>
             </div>
 

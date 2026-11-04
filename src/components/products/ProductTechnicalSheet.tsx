@@ -28,7 +28,7 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
 
   // URL de la ficha técnica: personalizada o derivada automáticamente por slug
   // Parámetro de versión para forzar actualización inmediata en el navegador y evitar caché residual
-  const cacheBuster = '?v=20261102_2';
+  const cacheBuster = '?v=20261104_v4';
   const pdfUrl = (product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + cacheBuster;
   const downloadFileName = `Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`;
 

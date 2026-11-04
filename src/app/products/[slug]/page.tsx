@@ -407,7 +407,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <a 
-                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261102_2'}
+                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261104_v4'}
                 download={`Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -506,7 +506,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           
           <TabsContent value="specs" className="animate-in fade-in-50">
             <ProductTechnicalSheet 
-              product={product} 
+              product={{
+                ...product,
+                name: productName
+              }} 
               currentVariantName={currentVariant?.name} 
             />
           </TabsContent>

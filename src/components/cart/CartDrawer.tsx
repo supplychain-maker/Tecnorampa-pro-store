@@ -2,7 +2,7 @@
 
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
-import { X, Plus, Minus, ShoppingBag, ArrowRight, MapPin, MessageSquareText } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, ArrowRight, MapPin, MessageSquareText, Zap, Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
@@ -65,7 +65,27 @@ export function CartDrawer() {
                     <X size={16} />
                   </button>
                 </div>
-                {item.variant && <p className="text-[9px] font-bold text-muted-foreground mb-2 uppercase tracking-widest">Config: {item.variant}</p>}
+                {item.variant && <p className="text-[9px] font-bold text-muted-foreground mb-1 uppercase tracking-widest">Config: {item.variant}</p>}
+                
+                {/* Indicador de Disponibilidad / Stock Mixto en Carrito */}
+                {item.stock !== undefined && (
+                  <div className="mb-2">
+                    {item.stock > 0 && item.quantity > item.stock ? (
+                      <p className="text-[9px] text-amber-800 bg-amber-500/10 border border-amber-500/20 rounded px-2 py-1 font-medium leading-tight">
+                        ⚠️ <strong>{item.stock}</strong> en entrega inmediata • <strong>{item.quantity - item.stock}</strong> en {item.deliveryTime || '3 a 5 días hábiles'}
+                      </p>
+                    ) : item.stock > 0 ? (
+                      <span className="text-[9px] text-emerald-700 font-black uppercase tracking-wider inline-flex items-center gap-1">
+                        <Zap size={10} className="text-emerald-600" /> Entrega Inmediata
+                      </span>
+                    ) : (
+                      <span className="text-[9px] text-muted-foreground font-semibold inline-flex items-center gap-1">
+                        <Clock size={10} className="text-primary" /> Entrega: {item.deliveryTime || '3 a 5 días hábiles'}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2 border border-border rounded-md px-2 py-1 bg-muted/50">
                     <button 

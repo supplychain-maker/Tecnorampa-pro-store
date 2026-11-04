@@ -10,6 +10,8 @@ export interface CartItem {
   quantity: number;
   image: string;
   variant?: string;
+  stock?: number;
+  deliveryTime?: string;
 }
 
 interface CartContextType {
@@ -55,7 +57,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (existing) {
         return prev.map(i => 
           (i.id === newItem.id && i.variant === newItem.variant) 
-            ? { ...i, quantity: i.quantity + newItem.quantity } 
+            ? { ...i, quantity: i.quantity + newItem.quantity, stock: newItem.stock ?? i.stock, deliveryTime: newItem.deliveryTime ?? i.deliveryTime } 
             : i
         );
       }

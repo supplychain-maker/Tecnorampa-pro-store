@@ -33,7 +33,9 @@
       "Protección": "IP65"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Control y Eléctrico"
+    "subGroup": "Control y Eléctrico",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "2jwyoQ6QTPc5M53CLNmU",
@@ -70,7 +72,9 @@
       "Protección": "IP66 / NEMA 4X"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Control y Eléctrico"
+    "subGroup": "Control y Eléctrico",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "4DV1kw7jTDbfVGT8mDGt",
@@ -110,7 +114,9 @@
       "Rango Térmico": "-40 °C a +80 °C"
     },
     "mainGroup": "anden",
-    "subGroup": "Seguridad e Iluminación"
+    "subGroup": "Seguridad e Iluminación",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "4P8Fb9U1UfXr5eaf7fzv",
@@ -146,7 +152,9 @@
       "Modelo": "5205J-2RS C3"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Baleros y Rodamientos"
+    "subGroup": "Baleros y Rodamientos",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "837F7d8muCzJrPfJNOEi",
@@ -182,7 +190,9 @@
       "Material": "Acero al carbono para resortes"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Mecánicas y Retención"
+    "subGroup": "Mecánicas y Retención",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "A8YqjpxLD5HlrpOvxZvu",
@@ -219,7 +229,9 @@
       "Funciones": "Paro de emergencia (con llave) + Subida ⬆️ + Bajada ⬇️"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Control y Eléctrico"
+    "subGroup": "Control y Eléctrico",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "GMOD6llkGmrR6NKolj3p",
@@ -254,7 +266,9 @@
       "Motor": "1 HP"
     },
     "mainGroup": "anden",
-    "subGroup": "Niveladoras y Mini Docks"
+    "subGroup": "Niveladoras y Mini Docks",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "JThJC8r88BAwXSFaSYmA",
@@ -287,7 +301,9 @@
       "Sistema": "Mecánico por cadena"
     },
     "mainGroup": "anden",
-    "subGroup": "Niveladoras y Mini Docks"
+    "subGroup": "Niveladoras y Mini Docks",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "N5I2aOWFucpPD8upMTdO",
@@ -326,7 +342,9 @@
       "Aplicación": "Guía de cable en rampas niveladoras, elevadores y contrapesos"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Mecánicas y Retención"
+    "subGroup": "Mecánicas y Retención",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "SfNZpf6EETmzdJsQtomL",
@@ -359,7 +377,9 @@
       "Instalación": "Anclaje mecánico"
     },
     "mainGroup": "anden",
-    "subGroup": "Protección de Andén"
+    "subGroup": "Protección de Andén",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "UUq1ro9ox5TGeySLAnK0",
@@ -392,7 +412,9 @@
       "Peso": "15 kg"
     },
     "mainGroup": "anden",
-    "subGroup": "Protección de Andén"
+    "subGroup": "Protección de Andén",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "Wzbr9NcoKtOvX9pyO2Ts",
@@ -429,7 +451,9 @@
       "Lubricación": "Grasa industrial para extrema presión"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Baleros y Rodamientos"
+    "subGroup": "Baleros y Rodamientos",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "XlVO2fZ43Si5wdRE1zTW",
@@ -464,7 +488,9 @@
       "Labio": "16\""
     },
     "mainGroup": "anden",
-    "subGroup": "Niveladoras y Mini Docks"
+    "subGroup": "Niveladoras y Mini Docks",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "bMzihdSo3heY75v4kRzz",
@@ -501,7 +527,9 @@
       "Tipo": "Válvula de aguja y control de flujo"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Hidráulica"
+    "subGroup": "Hidráulica",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "fvCdgOxEN1LbmPKIR9i7",
@@ -537,7 +565,9 @@
       "Mecanismo": "Cremallera y trinquete"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Mecánicas y Retención"
+    "subGroup": "Mecánicas y Retención",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "g1jYxDqqJMez0x3nWgxn",
@@ -573,7 +603,9 @@
       "Sellos": "2RS (ambos lados)"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Baleros y Rodamientos"
+    "subGroup": "Baleros y Rodamientos",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "gxEoVyrMl2JRAOU4m5fa",
@@ -606,7 +638,9 @@
       "Operación": "Hidráulica"
     },
     "mainGroup": "anden",
-    "subGroup": "Niveladoras y Mini Docks"
+    "subGroup": "Niveladoras y Mini Docks",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "i20qljEbFBPMgK1Ptqug",
@@ -639,7 +673,9 @@
       "Capacidad": "6,000 lbs"
     },
     "mainGroup": "estacionamiento",
-    "subGroup": "Duplicadores de Autos"
+    "subGroup": "Duplicadores de Autos",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "ld006jZanqsLeQNkmlfG",
@@ -675,7 +711,9 @@
       "Marca": "Schneider Electric"
     },
     "mainGroup": "refacciones",
-    "subGroup": "Control y Eléctrico"
+    "subGroup": "Control y Eléctrico",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "qLSPjHOTRTzBkbJcSs45",
@@ -708,7 +746,9 @@
       "Capacidad": "7,000 lbs"
     },
     "mainGroup": "estacionamiento",
-    "subGroup": "Duplicadores de Autos"
+    "subGroup": "Duplicadores de Autos",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   },
   {
     "id": "yG4eZ5XgAfPD37PDgjir",
@@ -741,6 +781,8 @@
       "Largo Brazo": "40\""
     },
     "mainGroup": "anden",
-    "subGroup": "Seguridad e Iluminación"
+    "subGroup": "Seguridad e Iluminación",
+    "stock": 5,
+    "deliveryTime": "3 a 5 días hábiles"
   }
 ]

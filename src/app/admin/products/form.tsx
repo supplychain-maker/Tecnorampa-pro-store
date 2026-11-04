@@ -14,7 +14,7 @@ import { collection, addDoc, doc, updateDoc, serverTimestamp, query, orderBy } f
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Loader2, Save, X, Plus, Trash2, LayoutGrid, Info, Tag, ImageIcon, Settings2, FileText } from 'lucide-react';
+import { Loader2, Save, X, Plus, Trash2, LayoutGrid, Info, Tag, ImageIcon, Settings2, FileText, Clock, Boxes, Minus, Zap, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -38,7 +38,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
   }, [db]);
   const { data: categories, loading: catsLoading } = useCollection(catsQuery);
 
-  const [formData, setFormData] = useState<Partial<Product>>(initialData || {
+  const [formData, setFormData] = useState<Partial<Product>>({
     name: '',
     slug: '',
     categoryIds: [],
@@ -52,7 +52,10 @@ export function ProductForm({ initialData }: ProductFormProps) {
     specs: {},
     operationSteps: [],
     variants: [],
-    active: true
+    active: true,
+    ...(initialData || {}),
+    stock: initialData?.stock ?? 0,
+    deliveryTime: initialData?.deliveryTime || '3 a 5 días hábiles'
   });
 
   const [newBenefit, setNewBenefit] = useState('');
@@ -73,6 +76,8 @@ export function ProductForm({ initialData }: ProductFormProps) {
     const productData = {
       ...formData,
       price: Number(formData.price),
+      stock: Number(formData.stock ?? 0),
+      deliveryTime: (formData.deliveryTime || '').trim() || '3 a 5 días hábiles',
       updatedAt: serverTimestamp(),
       ...(initialData ? {} : { createdAt: serverTimestamp() })
     };
@@ -225,6 +230,111 @@ export function ProductForm({ initialData }: ProductFormProps) {
                   placeholder="95000"
                   required
                 />
+              </div>
+            </div>
+
+            {/* Gestión de Stock y Tiempo de Entrega */}
+            <div className="p-6 bg-primary/5 rounded-xl border border-primary/20 space-y-5">
+              <div className="flex items-center justify-between border-b border-primary/10 pb-3">
+                <div className="flex items-center gap-2">
+                  <Boxes size={18} className="text-primary" />
+                  <h4 className="font-black uppercase text-xs tracking-wider italic text-foreground">
+                    Inventario y Logística de Entrega
+                  </h4>
+                </div>
+                {(formData.stock ?? 0) > 0 ? (
+                  <Badge className="bg-emerald-600/10 text-emerald-600 border-emerald-600/20 font-black text-[9px] uppercase tracking-widest">
+                    <Zap size={10} className="mr-1 inline" /> Entrega Inmediata
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-500/5 font-black text-[9px] uppercase tracking-widest">
+                    <Clock size={10} className="mr-1 inline" /> Bajo Pedido / Fabricación
+                  </Badge>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Contador de Stock */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                      Unidades en Stock Físico
+                    </Label>
+                    <span className="text-[10px] font-bold text-muted-foreground">
+                      {(formData.stock ?? 0) > 0 ? (
+                        <span className="text-emerald-600 font-black">{formData.stock} disp. inmediata</span>
+                      ) : (
+                        <span className="text-amber-600 font-bold">0 en almacén</span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-11 w-11 shrink-0 font-bold hover:bg-muted"
+                      onClick={() => setFormData(prev => ({ ...prev, stock: Math.max(0, (Number(prev.stock) || 0) - 1) }))}
+                    >
+                      <Minus size={16} />
+                    </Button>
+                    <Input 
+                      type="number"
+                      min="0"
+                      value={formData.stock ?? 0} 
+                      onChange={e => setFormData({ ...formData, stock: Math.max(0, parseInt(e.target.value) || 0) })}
+                      className="text-center font-black text-xl h-11"
+                      required
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-11 w-11 shrink-0 font-bold hover:bg-muted"
+                      onClick={() => setFormData(prev => ({ ...prev, stock: (Number(prev.stock) || 0) + 1 }))}
+                    >
+                      <Plus size={16} />
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground leading-tight">
+                    Si hay <strong>1 o más unidades</strong> en stock, en la tienda aparecerá automáticamente como <strong>Entrega Inmediata</strong>.
+                  </p>
+                </div>
+
+                {/* Tiempo de Entrega */}
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                    <Clock size={12} className="text-primary" /> Tiempo de Entrega (Sin stock o pedidos excedentes)
+                  </Label>
+                  <Input 
+                    value={formData.deliveryTime || ''} 
+                    onChange={e => setFormData({ ...formData, deliveryTime: e.target.value })}
+                    placeholder="Ej: 3 a 5 días hábiles"
+                    className="h-11 font-bold text-xs"
+                    required
+                  />
+                  {/* Presets rápidos */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {['3 a 5 días hábiles', '5 a 7 días hábiles', '1 a 2 semanas', '15 a 20 días hábiles', 'Inmediata'].map(preset => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, deliveryTime: preset }))}
+                        className={`text-[9px] px-2.5 py-1 rounded border transition-colors font-bold uppercase ${formData.deliveryTime === preset ? 'bg-primary text-primary-foreground border-primary font-black' : 'bg-background hover:bg-muted text-muted-foreground border-border'}`}
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Explicación de la regla de visualización al cliente */}
+              <div className="bg-background/90 p-3.5 rounded-lg border border-border text-[10px] text-muted-foreground leading-relaxed flex items-start gap-2.5">
+                <AlertCircle size={15} className="text-primary shrink-0 mt-0.5" />
+                <p>
+                  <strong>Regla de compra múltiple:</strong> Si en stock hay 2 unidades y el cliente selecciona 4, la tienda le mostrará automáticamente que <strong>2 unidades tienen entrega inmediata</strong> y que las <strong>2 unidades restantes</strong> se suministrarán en un tiempo de <strong>{formData.deliveryTime || '3 a 5 días hábiles'}</strong>.
+                </p>
               </div>
             </div>
 

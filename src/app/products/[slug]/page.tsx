@@ -8,7 +8,7 @@ import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText, FileText, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, ShoppingCart, ShieldCheck, Lightbulb, PackageCheck, MapPin, Loader2, MessageSquareText, FileText, ArrowLeft, Minus, Plus, Clock, Zap, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -117,6 +117,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const productQuery = useMemo(() => {
     if (!db || !slug) return null;
@@ -146,6 +147,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
   const currentVariant = product.variants?.find(v => v.id === selectedVariant);
   const finalPrice = product.price + (currentVariant?.priceModifier || 0);
+  const stock = Number(product.stock ?? 0);
+  const deliveryTime = (product.deliveryTime || '').trim() || '3 a 5 días hábiles';
+  const hasImmediateStock = stock > 0;
 
   // Galería de imágenes: Posición 1 garantizada con la imagen de portada, y desde la posición 2 en adelante planos, ángulos y detalles
   const coverImage = getDirectImageUrl(product.image);
@@ -165,14 +169,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       id: product.id || product.slug,
       name: product.name,
       price: finalPrice,
-      quantity: 1,
+      quantity: quantity,
       image: product.image,
-      variant: currentVariant ? currentVariant.name : undefined
+      variant: currentVariant ? currentVariant.name : undefined,
+      stock: product.stock,
+      deliveryTime: product.deliveryTime
     });
+
+    let toastDesc = `${quantity}x ${product.name}${currentVariant ? ` (${currentVariant.name})` : ''} se ha añadido correctamente.`;
+    if (hasImmediateStock && quantity > stock) {
+      toastDesc = `Añadido: ${stock} en entrega inmediata y ${quantity - stock} en ${deliveryTime}.`;
+    }
 
     toast({
       title: "Agregado al carrito",
-      description: `${product.name}${currentVariant ? ` (${currentVariant.name})` : ''} se ha añadido correctamente.`,
+      description: toastDesc,
     });
   };
 
@@ -234,13 +245,27 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               <p className="text-xl text-muted-foreground leading-relaxed font-medium">{product.shortDescription}</p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-baseline gap-3">
                 <span className="text-4xl font-black text-primary animate-in fade-in slide-in-from-left-2 duration-300 italic">
                   ${finalPrice.toLocaleString()}
                 </span>
                 <span className="text-muted-foreground font-black uppercase text-xs tracking-widest">MXN + IVA</span>
               </div>
+
+              {/* Indicador de Disponibilidad y Entrega */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                {hasImmediateStock ? (
+                  <Badge className="bg-emerald-600/15 text-emerald-800 border-emerald-600/30 font-black text-xs uppercase tracking-wider py-1 px-3 shadow-xs">
+                    <Zap size={13} className="mr-1.5 inline text-emerald-600" /> Entrega Inmediata ({stock} {stock === 1 ? 'disponible' : 'disponibles'})
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-amber-800 border-amber-600/40 bg-amber-500/10 font-black text-xs uppercase tracking-wider py-1 px-3 shadow-xs">
+                    <Clock size={13} className="mr-1.5 inline text-amber-600" /> Tiempo de Entrega: {deliveryTime}
+                  </Badge>
+                )}
+              </div>
+
               <div className="bg-muted/50 p-3 rounded-lg border border-border flex items-center gap-3">
                 <MapPin className="text-primary" size={20} />
                 <p className="text-xs font-black uppercase tracking-tighter text-foreground/80 italic">
@@ -292,10 +317,80 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
-            <div className="flex flex-col gap-3 pt-4">
-              <div className="flex gap-4">
+            {/* Selector de Cantidad y Aviso Dinámico de Entrega */}
+            <div className="space-y-4 pt-4 border-t border-border">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-black uppercase text-xs tracking-wider text-muted-foreground">
+                    Cantidad:
+                  </span>
+                  <div className="flex items-center border-2 border-border rounded-xl bg-card overflow-hidden shadow-xs">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                      className="h-12 w-12 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors font-bold"
+                      aria-label="Disminuir cantidad"
+                    >
+                      <Minus size={16} />
+                    </button>
+                    <span className="w-12 text-center font-black text-lg italic">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(prev => prev + 1)}
+                      className="h-12 w-12 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors font-bold"
+                      aria-label="Aumentar cantidad"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block">Total Estimado:</span>
+                  <span className="text-2xl font-black text-primary italic">
+                    ${(finalPrice * quantity).toLocaleString()} <span className="text-xs font-normal text-muted-foreground not-italic">MXN</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Mensaje dinámico según stock y cantidad solicitada */}
+              {hasImmediateStock && quantity <= stock && (
+                <div className="bg-emerald-500/10 border-2 border-emerald-500/30 p-3.5 rounded-xl flex items-center gap-3 animate-in fade-in duration-200">
+                  <CheckCircle2 className="text-emerald-600 shrink-0" size={18} />
+                  <p className="text-xs text-emerald-950 font-medium">
+                    <strong className="font-black uppercase text-emerald-900">Entrega Inmediata Garantizada:</strong> Las {quantity} {quantity === 1 ? 'unidad seleccionada está en stock' : 'unidades seleccionadas están en stock'} y listas en planta.
+                  </p>
+                </div>
+              )}
+
+              {hasImmediateStock && quantity > stock && (
+                <div className="bg-amber-500/10 border-2 border-amber-500/40 p-4 rounded-xl flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
+                  <AlertTriangle className="text-amber-600 shrink-0 mt-0.5" size={20} />
+                  <div className="space-y-1 text-xs">
+                    <p className="font-black uppercase tracking-wider text-amber-950">
+                      Disponibilidad para {quantity} unidades:
+                    </p>
+                    <p className="font-medium text-amber-900 leading-relaxed">
+                      Solo hay <strong>{stock} {stock === 1 ? 'unidad' : 'unidades'}</strong> en stock para <strong>entrega inmediata</strong>. Las <strong>{quantity - stock} {quantity - stock === 1 ? 'unidad restante' : 'unidades restantes'}</strong> se van a tiempo de entrega de <strong>{deliveryTime}</strong>.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {!hasImmediateStock && (
+                <div className="bg-blue-500/10 border-2 border-blue-500/30 p-3.5 rounded-xl flex items-center gap-3 animate-in fade-in duration-200">
+                  <Clock className="text-blue-600 shrink-0" size={18} />
+                  <p className="text-xs text-blue-950 font-medium">
+                    <strong className="font-black uppercase text-blue-900">Suministro Programado:</strong> Sin stock para entrega inmediata. Las {quantity} {quantity === 1 ? 'unidad se programará' : 'unidades se programarán'} con un tiempo de entrega de <strong>{deliveryTime}</strong>.
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-4 pt-2">
                 <Button onClick={handleAddToCart} size="lg" className="flex-grow h-14 text-lg font-black uppercase italic tracking-widest shadow-xl">
-                  <ShoppingCart className="mr-2 h-5 w-5" /> AGREGAR AL CARRITO
+                  <ShoppingCart className="mr-2 h-5 w-5" /> AGREGAR {quantity > 1 ? `(${quantity}) ` : ''}AL CARRITO
                 </Button>
                 <Button size="icon" variant="outline" className="h-14 w-14 shrink-0 border-2">
                   <ShieldCheck className="w-6 h-6" />
@@ -316,8 +411,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
               <div className="flex items-center gap-3 p-3 bg-white border border-border rounded-lg shadow-sm">
-                <PackageCheck className="text-primary" size={20} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Disponibilidad Inmediata</span>
+                {hasImmediateStock ? (
+                  <>
+                    <Zap className="text-emerald-600 shrink-0" size={20} />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700">Entrega Inmediata</span>
+                      <span className="text-[9px] text-muted-foreground font-semibold">{stock} {stock === 1 ? 'unidad lista' : 'unidades listas'} en planta</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Clock className="text-amber-600 shrink-0" size={20} />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-amber-700">Tiempo de Entrega</span>
+                      <span className="text-[9px] text-muted-foreground font-semibold">{deliveryTime}</span>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="flex items-center gap-3 p-3 bg-white border border-border rounded-lg shadow-sm">
                 <ShieldCheck className="text-primary" size={20} />

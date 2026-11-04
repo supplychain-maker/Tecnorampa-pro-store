@@ -582,6 +582,8 @@ export default function SetupPage() {
 
         await addDoc(collection(db, 'products'), {
           ...product,
+          stock: (product as any).stock ?? 0,
+          deliveryTime: (product as any).deliveryTime || '3 a 5 días hábiles',
           categoryIds,
           categoryId: categoryIds[0] || null,
           createdAt: serverTimestamp(),

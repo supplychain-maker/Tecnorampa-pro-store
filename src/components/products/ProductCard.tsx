@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Product } from '@/app/lib/products';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ShoppingCart, MapPin } from 'lucide-react';
+import { ArrowRight, ShoppingCart, MapPin, Zap, Clock } from 'lucide-react';
 import { getDirectImageUrl } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +27,8 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       quantity: 1,
       image: product.image,
+      stock: product.stock,
+      deliveryTime: product.deliveryTime
     });
 
     toast({
@@ -62,6 +64,17 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         
         <CardContent className="p-6">
+          <div className="flex items-center gap-2 mb-2.5">
+            {(product.stock ?? 0) > 0 ? (
+              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                <Zap size={10} className="text-emerald-600" /> Entrega Inmediata ({product.stock})
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground bg-muted border border-border px-2 py-0.5 rounded">
+                <Clock size={10} className="text-primary" /> Entrega: {product.deliveryTime || '3 a 5 días'}
+              </span>
+            )}
+          </div>
           <h3 className="text-xl font-black mb-2 group-hover:text-primary transition-colors uppercase italic tracking-tighter leading-tight">
             {product.name}
           </h3>

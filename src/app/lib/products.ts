@@ -27,6 +27,8 @@ export interface Product {
   variants?: ProductVariant[];
   active?: boolean;
   technicalSheetUrl?: string;
+  stock?: number;
+  deliveryTime?: string;
 }
 
 /**

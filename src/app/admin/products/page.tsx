@@ -6,7 +6,7 @@ import { useFirestore, useCollection, useUser, useDoc } from '@/firebase';
 import { collection, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, Factory, Package, ArrowLeft } from 'lucide-react';
+import { Plus, Minus, Pencil, Trash2, Eye, EyeOff, Loader2, Factory, Package, ArrowLeft, Clock, Zap } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { useRouter } from 'next/navigation';
-import { getDirectImageUrl } from '@/lib/utils';
+import { getDirectImageUrl, cn } from '@/lib/utils';
 
 export default function AdminProductsPage() {
   const db = useFirestore();
@@ -52,6 +52,26 @@ export default function AdminProductsPage() {
           path: productRef.path,
           operation: 'update',
           requestResourceData: { active: newStatus }
+        }));
+      });
+  };
+
+  const handleQuickStock = (product: Product, newStock: number) => {
+    if (!db || !product.id) return;
+    const productRef = doc(db, 'products', product.id);
+    
+    updateDoc(productRef, { stock: newStock })
+      .then(() => {
+        toast({ 
+          title: "Stock Actualizado", 
+          description: `${product.name}: ${newStock} unidades en stock (${newStock > 0 ? 'Entrega Inmediata' : 'Sin stock'}).` 
+        });
+      })
+      .catch(async () => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: productRef.path,
+          operation: 'update',
+          requestResourceData: { stock: newStock }
         }));
       });
   };
@@ -128,6 +148,7 @@ export default function AdminProductsPage() {
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Producto</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Grupos</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Precio</TableHead>
+                  <TableHead className="font-black uppercase text-[10px] tracking-widest">Stock / Entrega</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Estado</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest text-right">Acciones</TableHead>
                 </TableRow>
@@ -161,6 +182,51 @@ export default function AdminProductsPage() {
                     </TableCell>
                     <TableCell className="font-bold text-primary">
                       ${product.price.toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1.5 min-w-[150px]">
+                        <div className="flex items-center gap-1.5">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-6 w-6 text-xs p-0 shrink-0 hover:bg-muted" 
+                            title="Reducir stock"
+                            onClick={() => handleQuickStock(product, Math.max(0, (Number(product.stock) || 0) - 1))}
+                          >
+                            <Minus size={10} />
+                          </Button>
+                          <span className={cn(
+                            "font-mono font-black text-xs px-2 py-0.5 rounded border text-center min-w-[28px]",
+                            (product.stock ?? 0) > 0 
+                              ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/30" 
+                              : "bg-muted text-muted-foreground border-border"
+                          )}>
+                            {product.stock ?? 0}
+                          </span>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-6 w-6 text-xs p-0 shrink-0 hover:bg-muted" 
+                            title="Aumentar stock"
+                            onClick={() => handleQuickStock(product, (Number(product.stock) || 0) + 1)}
+                          >
+                            <Plus size={10} />
+                          </Button>
+                          {(product.stock ?? 0) > 0 ? (
+                            <Badge className="bg-emerald-600/10 text-emerald-600 border-emerald-600/30 text-[8px] font-black uppercase px-1.5 py-0 h-4">
+                              <Zap size={8} className="mr-0.5 inline" /> Inmediata
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-500/5 text-[8px] font-black uppercase px-1.5 py-0 h-4">
+                              Sin stock
+                            </Badge>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground font-medium truncate flex items-center gap-1" title={product.deliveryTime || '3 a 5 días hábiles'}>
+                          <Clock size={10} className="shrink-0 text-primary" />
+                          {product.deliveryTime || '3 a 5 días hábiles'}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell>
                       {product.active ? (

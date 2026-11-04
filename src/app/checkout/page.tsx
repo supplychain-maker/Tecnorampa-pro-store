@@ -368,11 +368,28 @@ function CheckoutContent() {
                 <div className="space-y-4">
                   {items.map(item => (
                     <div key={`${item.id}-${item.variant}`} className="flex justify-between text-sm">
-                      <div className="flex flex-col min-w-0">
+                      <div className="flex flex-col min-w-0 pr-2">
                         <span className="font-black uppercase text-[11px] truncate">{item.name}</span>
                         <span className="text-muted-foreground text-[10px] font-bold">CANT: {item.quantity}</span>
+                        {item.stock !== undefined && (
+                          <span className="text-[9px] text-muted-foreground font-semibold mt-0.5">
+                            {item.stock > 0 && item.quantity > item.stock ? (
+                              <span className="text-amber-700 font-bold">
+                                ⚡ {item.stock} inmediata • 🕒 {item.quantity - item.stock} en {item.deliveryTime || '3-5 días'}
+                              </span>
+                            ) : item.stock > 0 ? (
+                              <span className="text-emerald-700 font-bold">
+                                ⚡ Entrega Inmediata
+                              </span>
+                            ) : (
+                              <span>
+                                🕒 Entrega: {item.deliveryTime || '3-5 días hábiles'}
+                              </span>
+                            )}
+                          </span>
+                        )}
                       </div>
-                      <span className="font-black text-xs">${(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-black text-xs shrink-0">${(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

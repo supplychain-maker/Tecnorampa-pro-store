@@ -176,7 +176,7 @@ def build_pdf():
     hero_h = 170
     hero_box_y = top_y - hero_h
     
-    # Contenedor Foto (Izquierda)
+    # Contenedor Foto (Izquierda) - Limpio sin franjas superpuestas
     photo_w = 175
     can.setFillColor(C_WHITE)
     can.roundRect(margin_x, hero_box_y, photo_w, hero_h, 5, fill=1, stroke=0)
@@ -184,30 +184,10 @@ def build_pdf():
     can.setLineWidth(0.8)
     can.roundRect(margin_x, hero_box_y, photo_w, hero_h, 5, fill=0, stroke=1)
     
-    # Imagen de portada del resorte
+    # Imagen de portada del resorte (centrada y limpia)
     hero_img_path = os.path.join(PUBLIC_DIR, 'products', 'resorte-rampa-frente.jpeg')
     if os.path.exists(hero_img_path):
-        can.drawImage(hero_img_path, margin_x + 8, hero_box_y + 18, width=photo_w - 16, height=hero_h - 28, mask='auto', preserveAspectRatio=True)
-        
-    # Badges superpuestos sobre la foto
-    badge_bg = colors.HexColor('#111827EE')
-    can.setFillColor(badge_bg)
-    can.roundRect(margin_x + 6, hero_box_y + hero_h - 19, 114, 13, 2, fill=1, stroke=0)
-    can.setFont('Helvetica-Bold', 4.9)
-    can.setFillColor(C_YELLOW)
-    can.drawString(margin_x + 10, hero_box_y + hero_h - 14, '★ SERVICIO PESADO')
-    can.setFont('Helvetica-Bold', 4.8)
-    can.setFillColor(C_WHITE)
-    can.drawString(margin_x + 64, hero_box_y + hero_h - 14, '• ASTM A401')
-    
-    # Badge inferior de dimensiones
-    can.setFillColor(colors.HexColor('#FEF9C3EE'))
-    can.setStrokeColor(C_YELLOW_DARK)
-    can.setLineWidth(0.5)
-    can.roundRect(margin_x + 6, hero_box_y + 5, photo_w - 12, 12, 2, fill=1, stroke=1)
-    can.setFont('Helvetica-Bold', 4.7)
-    can.setFillColor(C_DARK)
-    can.drawCentredString(margin_x + photo_w / 2, hero_box_y + 8.5, 'd: 0.4375" (11.11 mm) • L0: 17.311" (439.7 mm) • OD: 3.000" (76.2 mm)')
+        can.drawImage(hero_img_path, margin_x + 8, hero_box_y + 8, width=photo_w - 16, height=hero_h - 16, mask='auto', preserveAspectRatio=True)
 
     # Bloque Derecho: Perfil Técnico + 4 Pilares Operativos
     desc_x = margin_x + photo_w + 10
@@ -219,6 +199,25 @@ def build_pdf():
     can.setFillColor(C_YELLOW)
     can.drawString(desc_x + 8, hero_box_y + hero_h - 13, 'PERFIL DE INGENIERÍA Y ESPECIFICACIÓN INDUSTRIAL')
     
+    # Subtítulo técnico / clasificación (Servicio Pesado, ASTM A401 y Dimensiones integradas)
+    meta_h = 13
+    meta_y = hero_box_y + hero_h - 18 - meta_h - 3
+    can.setFillColor(C_BG_ROW)
+    can.roundRect(desc_x, meta_y, desc_w, meta_h, 2, fill=1, stroke=0)
+    can.setStrokeColor(C_BORDER)
+    can.setLineWidth(0.5)
+    can.roundRect(desc_x, meta_y, desc_w, meta_h, 2, fill=0, stroke=1)
+    
+    can.setFont('Helvetica-Bold', 5.0)
+    can.setFillColor(C_DARK)
+    can.drawString(desc_x + 6, meta_y + 4.2, '★ SERVICIO PESADO')
+    can.setFont('Helvetica-Bold', 4.8)
+    can.setFillColor(C_YELLOW_DARK)
+    can.drawString(desc_x + 66, meta_y + 4.2, '•  NORMA: ASTM A401 CHROME SILICON')
+    can.setFont('Helvetica', 4.8)
+    can.setFillColor(C_GRAY)
+    can.drawString(desc_x + 185, meta_y + 4.2, '•  d: 0.4375" (11.11 mm)  •  L0: 17.311" (439.7 mm)  •  OD: 3.000" (76.2 mm)')
+
     # Texto descriptivo con Paragraph
     desc_html = (
         "El Resorte de Extensión Amarillo DZ-RHINO_GSLV-SPRING es un componente helicoidal de tracción lateral de "
@@ -227,12 +226,12 @@ def build_pdf():
         "Cromo-Silicio ASTM A401, provee máxima absorción de impacto dinámico, nula deformación plástica permanente y ciclado "
         "continuo libre de fatiga en condiciones severas de intemperie y tráfico logístico continuo."
     )
-    draw_flow_text(can, desc_html, desc_x + 2, hero_box_y + hero_h - 22, desc_w - 4, font_size=5.4, leading=7.2, text_color=C_GRAY)
+    draw_flow_text(can, desc_html, desc_x + 2, meta_y - 2, desc_w - 4, font_size=5.1, leading=6.8, text_color=C_GRAY)
         
     # 4 Pilares Operativos en tarjetas estilizadas (2x2)
     pillars_y = hero_box_y + 4
     pillar_w = (desc_w - 6) / 2
-    pillar_h = 50
+    pillar_h = 47
     
     pillars = [
         ("ACERO CROMO-SILICIO ASTM A401", "Aleación templada y revenida en aceite. Alta tenacidad a esfuerzos dinámicos de choque sin relajación elástica."),
@@ -257,11 +256,11 @@ def build_pdf():
         can.setFillColor(C_YELLOW if idx < 2 else C_DARK)
         can.rect(px, py + 2, 2.5, pillar_h - 4, fill=1, stroke=0)
         
-        can.setFont('Helvetica-Bold', 5.4)
+        can.setFont('Helvetica-Bold', 5.3)
         can.setFillColor(C_DARK)
-        can.drawString(px + 6, py + pillar_h - 10, ptitle)
+        can.drawString(px + 6, py + pillar_h - 9, ptitle)
         
-        draw_flow_text(can, pdesc, px + 6, py + pillar_h - 13, pillar_w - 10, font_size=4.8, leading=6.5, text_color=C_GRAY)
+        draw_flow_text(can, pdesc, px + 6, py + pillar_h - 12, pillar_w - 10, font_size=4.7, leading=6.2, text_color=C_GRAY)
 
     # -------------------------------------------------------------------------
     # TABLA MAESTRA DE ESPECIFICACIONES TÉCNICAS (VERIFICADAS CAD / LAB)

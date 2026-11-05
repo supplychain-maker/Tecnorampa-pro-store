@@ -19,8 +19,27 @@ import { Badge } from '@/components/ui/badge';
 import { Product } from '@/app/lib/products';
 
 const PAGE_COUNT_BY_SLUG: Record<string, number> = {
-  'rampa-parking-lift': 18,
+  'botonera-colgante-banana-llave': 1,
+  'gabinete-estanco-riel-din-ip65': 2,
+  'lampara-anden-articulada': 2,
+  'mecanismo-freno-rampa-auto-release': 1,
+  'mini-dock-hidraulico': 1,
+  'mini-dock-mecanico': 1,
+  'niveladora-hidraulica-premium': 1,
+  'niveladora-mecanica-industrial': 1,
+  'paro-emergencia-schneider-giro': 1,
+  'paro-emergencia-schneider-llave': 1,
+  'poleas-industriales-cable-acero': 2,
   'rampa-parking-evolution': 20,
+  'rampa-parking-lift': 18,
+  'resorte-extension-amarillo-rampa': 2,
+  'rodamiento-balero-5205j-2rs-c3': 1,
+  'rodamiento-balero-6005-2rs': 1,
+  'rodamiento-rodillos-ncf2208v-2rs': 1,
+  'semaforo-led-industrial': 2,
+  'tope-anden-acero': 2,
+  'tope-anden-laminado': 2,
+  'valvula-reguladora-caudal-parker': 1,
 };
 
 interface ProductTechnicalSheetProps {
@@ -33,11 +52,11 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
   const [previewType, setPreviewType] = useState<'sheets' | 'iframe'>('sheets');
   const [activeSheet, setActiveSheet] = useState<number>(1);
 
-  const totalPages = PAGE_COUNT_BY_SLUG[product.slug] || 2;
+  const totalPages = PAGE_COUNT_BY_SLUG[product.slug] || 1;
 
   // URL de la ficha técnica: personalizada o derivada automáticamente por slug
   // Parámetro de versión para forzar actualización inmediata en el navegador y evitar caché residual
-  const cacheBuster = '?v=20261104_v4';
+  const cacheBuster = '?v=20261105_v5';
   const pdfUrl = (product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + cacheBuster;
   const downloadFileName = `Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`;
 
@@ -144,7 +163,11 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {totalPages > 2 ? `Catálogo Oficial (${totalPages} Págs)` : 'Láminas Oficiales (2 Páginas)'}
+                {totalPages > 2 
+                  ? `Catálogo Oficial (${totalPages} Págs)` 
+                  : totalPages === 2 
+                    ? 'Láminas Oficiales (2 Páginas)' 
+                    : 'Lámina Oficial (1 Pág)'}
               </button>
               <button
                 type="button"
@@ -160,7 +183,13 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
             </div>
 
             {previewType === 'sheets' && (
-              totalPages <= 2 ? (
+              totalPages === 1 ? (
+                <div className="flex items-center gap-1.5 bg-background px-3 py-1 rounded-lg border border-border">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-muted-foreground italic">
+                    Pág. 1 de 1
+                  </span>
+                </div>
+              ) : totalPages === 2 ? (
                 <div className="flex items-center gap-1.5 bg-background p-1 rounded-lg border border-border">
                   <button
                     type="button"
@@ -222,33 +251,39 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                   alt={`Ficha Técnica ${product.name} - Página ${activeSheet}`}
                   className="w-full h-auto object-contain select-none"
                   loading="eager"
+                  onError={() => {
+                    // Si la imagen falla por caché o red, conmutar al visor PDF
+                    setPreviewType('iframe');
+                  }}
                 />
               </div>
 
-              {/* Botones de cambio de página inferiores */}
-              <div className="flex items-center justify-center gap-4 mt-6">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveSheet(p => Math.max(1, p - 1))}
-                  disabled={activeSheet === 1}
-                  className="font-black uppercase tracking-wider text-xs italic"
-                >
-                  Anterior: Pág. {activeSheet - 1}
-                </Button>
-                <span className="text-xs font-black uppercase tracking-widest text-primary italic">
-                  Página {activeSheet} de {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveSheet(p => Math.min(totalPages, p + 1))}
-                  disabled={activeSheet === totalPages}
-                  className="font-black uppercase tracking-wider text-xs italic"
-                >
-                  Siguiente: Pág. {activeSheet + 1}
-                </Button>
-              </div>
+              {/* Botones de cambio de página inferiores (solo para documentos multipágina) */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveSheet(p => Math.max(1, p - 1))}
+                    disabled={activeSheet === 1}
+                    className="font-black uppercase tracking-wider text-xs italic"
+                  >
+                    Anterior: Pág. {activeSheet - 1}
+                  </Button>
+                  <span className="text-xs font-black uppercase tracking-widest text-primary italic">
+                    Página {activeSheet} de {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveSheet(p => Math.min(totalPages, p + 1))}
+                    disabled={activeSheet === totalPages}
+                    className="font-black uppercase tracking-wider text-xs italic"
+                  >
+                    Siguiente: Pág. {activeSheet + 1}
+                  </Button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="relative w-full rounded-2xl overflow-hidden border-2 border-border bg-muted/30 shadow-lg">

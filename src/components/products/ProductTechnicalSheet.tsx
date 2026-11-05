@@ -10,11 +10,18 @@ import {
   Eye, 
   Printer, 
   Sparkles,
-  Layers
+  Layers,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Product } from '@/app/lib/products';
+
+const PAGE_COUNT_BY_SLUG: Record<string, number> = {
+  'rampa-parking-lift': 18,
+  'rampa-parking-evolution': 20,
+};
 
 interface ProductTechnicalSheetProps {
   product: Product;
@@ -26,17 +33,16 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
   const [previewType, setPreviewType] = useState<'sheets' | 'iframe'>('sheets');
   const [activeSheet, setActiveSheet] = useState<number>(1);
 
+  const totalPages = PAGE_COUNT_BY_SLUG[product.slug] || 2;
+
   // URL de la ficha técnica: personalizada o derivada automáticamente por slug
   // Parámetro de versión para forzar actualización inmediata en el navegador y evitar caché residual
   const cacheBuster = '?v=20261104_v4';
   const pdfUrl = (product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + cacheBuster;
   const downloadFileName = `Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`;
 
-  // Láminas en alta definición generadas para vista directa sin dependencias de plugins PDF
-  const hasSheetImages = {
-    p1: `/fichas-tecnicas/${product.slug}-pag1.png${cacheBuster}`,
-    p2: `/fichas-tecnicas/${product.slug}-pag2.png${cacheBuster}`,
-  };
+  // Lámina activa en alta definición
+  const currentSheetSrc = `/fichas-tecnicas/${product.slug}-pag${activeSheet}.png${cacheBuster}`;
 
   const handlePrint = () => {
     const printWindow = window.open(pdfUrl, '_blank');
@@ -138,7 +144,7 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Láminas Oficiales (2 Páginas)
+                {totalPages > 2 ? `Catálogo Oficial (${totalPages} Págs)` : 'Láminas Oficiales (2 Páginas)'}
               </button>
               <button
                 type="button"
@@ -154,30 +160,56 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
             </div>
 
             {previewType === 'sheets' && (
-              <div className="flex items-center gap-1.5 bg-background p-1 rounded-lg border border-border">
-                <button
-                  type="button"
-                  onClick={() => setActiveSheet(1)}
-                  className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
-                    activeSheet === 1
-                      ? 'bg-primary text-primary-foreground shadow-xs'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Pág 1: {product.slug.includes('poleas') ? 'Propiedades Mecánicas' : (product.slug.includes('tope') ? 'Catálogo' : 'Ficha Técnica')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveSheet(2)}
-                  className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
-                    activeSheet === 2
-                      ? 'bg-primary text-primary-foreground shadow-xs'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Pág 2: {product.slug.includes('poleas') ? 'Compresión e Impacto' : (product.slug.includes('tope') ? 'Plano Ortográfico' : 'Página 2')}
-                </button>
-              </div>
+              totalPages <= 2 ? (
+                <div className="flex items-center gap-1.5 bg-background p-1 rounded-lg border border-border">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSheet(1)}
+                    className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
+                      activeSheet === 1
+                        ? 'bg-primary text-primary-foreground shadow-xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Pág 1: {product.slug.includes('poleas') ? 'Propiedades Mecánicas' : (product.slug.includes('tope') ? 'Catálogo' : 'Ficha Técnica')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveSheet(2)}
+                    className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider transition-all ${
+                      activeSheet === 2
+                        ? 'bg-primary text-primary-foreground shadow-xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Pág 2: {product.slug.includes('poleas') ? 'Compresión e Impacto' : (product.slug.includes('tope') ? 'Plano Ortográfico' : 'Página 2')}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1 bg-background p-1 rounded-lg border border-border">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setActiveSheet(p => Math.max(1, p - 1))}
+                    disabled={activeSheet === 1}
+                    className="h-7 w-7 p-0"
+                  >
+                    <ChevronLeft size={15} />
+                  </Button>
+                  <span className="text-[11px] font-black uppercase tracking-wider text-primary italic px-2">
+                    Pág. {activeSheet} / {totalPages}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setActiveSheet(p => Math.min(totalPages, p + 1))}
+                    disabled={activeSheet === totalPages}
+                    className="h-7 w-7 p-0"
+                  >
+                    <ChevronRight size={15} />
+                  </Button>
+                </div>
+              )
             )}
           </div>
 
@@ -186,7 +218,7 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
             <div className="relative w-full rounded-2xl overflow-hidden border-2 border-border bg-white shadow-xl p-2 md:p-6 flex flex-col items-center">
               <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-border">
                 <img
-                  src={activeSheet === 1 ? hasSheetImages.p1 : hasSheetImages.p2}
+                  src={currentSheetSrc}
                   alt={`Ficha Técnica ${product.name} - Página ${activeSheet}`}
                   className="w-full h-auto object-contain select-none"
                   loading="eager"
@@ -198,23 +230,23 @@ export function ProductTechnicalSheet({ product, currentVariantName }: ProductTe
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setActiveSheet(1)}
+                  onClick={() => setActiveSheet(p => Math.max(1, p - 1))}
                   disabled={activeSheet === 1}
                   className="font-black uppercase tracking-wider text-xs italic"
                 >
-                  Anterior: Pág. 1 (Catálogo)
+                  Anterior: Pág. {activeSheet - 1}
                 </Button>
                 <span className="text-xs font-black uppercase tracking-widest text-primary italic">
-                  Página {activeSheet} de 2
+                  Página {activeSheet} de {totalPages}
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setActiveSheet(2)}
-                  disabled={activeSheet === 2}
+                  onClick={() => setActiveSheet(p => Math.min(totalPages, p + 1))}
+                  disabled={activeSheet === totalPages}
                   className="font-black uppercase tracking-wider text-xs italic"
                 >
-                  Siguiente: Pág. 2 (Plano)
+                  Siguiente: Pág. {activeSheet + 1}
                 </Button>
               </div>
             </div>

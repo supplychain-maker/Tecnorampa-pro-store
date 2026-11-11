@@ -17,7 +17,7 @@ Produce un documento oficial de 2 páginas con máxima fidelidad a la identidad 
 - PÁGINA 2:
   * Encabezado oficial continuo Tecnorampa.
   * Metalurgia avanzada: ASTM A401 Cromo-Silicio vs Aceros convencionales de alto carbono.
-  * Arquitectura de integración en andén: Retención vehicular (Gancho Rhino / Dok-Lok) y niveladoras mecánicas.
+  * Arquitectura de integración en andén: Retención de andén (Gancho Rhino / Dok-Lok) y niveladoras mecánicas.
   * Fotografía de detalle de gancho y espiras (resorte-rampa-lado.jpeg).
   * Protocolo industrial de instalación, tensado y mantenimiento preventivo en 4 pasos con tarjetas aisladas.
   * Contenido de empaque, normativas internacionales (NOM-006-STPS, OSHA 1910.178, ASTM A401, ISO 9001) y Sello de Calidad Tecnorampa 100%.
@@ -221,7 +221,7 @@ def build_pdf():
     # Texto descriptivo con Paragraph
     desc_html = (
         "El Resorte de Extensión Amarillo DZ-RHINO_GSLV-SPRING es un componente helicoidal de tracción lateral de "
-        "alta resistencia diseñado específicamente para sistemas de retención vehicular tipo gancho (Rhino / Dok-Lok) "
+        "alta resistencia diseñado específicamente para sistemas de retención de andén tipo gancho (Rhino / Dok-Lok) "
         "y niveladoras mecánicas de andén. Fabricado bajo especificaciones industriales únicamente con alambre de aleación "
         "Cromo-Silicio ASTM A401, provee máxima absorción de impacto dinámico, nula deformación plástica permanente y ciclado "
         "continuo libre de fatiga en condiciones severas de intemperie y tráfico logístico continuo."
@@ -438,8 +438,8 @@ def build_pdf():
             "VENTAJAS OPERATIVAS COMPROBADAS",
             "• <b>Límite elástico superior:</b> > 1,750 MPa.<br/>"
             "• <b>Resistencia térmica:</b> Operatividad hasta 230 °C sin pérdida de memoria elástica.<br/>"
-            "• <b>Tenacidad al impacto:</b> Absorbe tirones violentos del tráiler sin fractura frágil.<br/>"
-            "• <b>Cero descalibración:</b> Mantiene la fuerza de retención sobre la barra ICC del camión."
+            "• <b>Tenacidad al impacto:</b> Absorbe tirones violentos de carga dinámica sin fractura frágil.<br/>"
+            "• <b>Cero descalibración:</b> Mantiene la fuerza de retención sobre la barra de seguridad anti-impacto (ICC bar / RIG) en bahía de carga."
         )
     ]
     
@@ -482,17 +482,17 @@ def build_pdf():
     # Lado Izquierdo (Texto Técnico Retenedor + Rampa)
     left_w = content_w - 180
     
-    # Sub-bloque A: Retenedores Vehiculares (Gancho Rhino / Dok-Lok)
+    # Sub-bloque A: Retenedores de Andén (Gancho Rhino / Dok-Lok)
     can.setFont('Helvetica-Bold', 6.2)
     can.setFillColor(C_DARK)
-    can.drawString(margin_x + 8, sec2_y + sec2_h - 30, 'A) SISTEMAS DE RETENCIÓN VEHICULAR TIPO GANCHO (RHINO / DOK-LOK / TR-LOCK)')
+    can.drawString(margin_x + 8, sec2_y + sec2_h - 30, 'A) RETENEDORES DE ANDÉN TIPO GANCHO (RHINO / DOK-LOK / TR-LOCK)')
     
     text_ret = (
         "El resorte DZ-RHINO_GSLV-SPRING cumple una función crítica de seguridad en retenedores de andén electromecánicos. "
-        "Montado lateralmente al ensamble del carro deslizante, aplica una fuerza constante de recuperación sobre "
-        "el gancho oscilante, manteniéndolo firmemente enganchado en la barra de protección anti-impacto (ICC bar / RIG) del tráiler. "
-        "Esto previene de forma contundente el <i>'trailer creep'</i> (desplazamiento gradual del semirremolque) y la salida prematura "
-        "del camión mientras montacargas de 5 a 10 toneladas circulan entre el almacén y la caja de carga."
+        "Montado lateralmente al ensamble de corredera deslizante, aplica una fuerza constante de recuperación sobre "
+        "el gancho oscilante, manteniéndolo firmemente enganchado en la barra de protección anti-impacto (ICC bar / RIG) en bahía de carga. "
+        "Esto previene de forma contundente el desplazamiento accidental en andén y la separación no programada "
+        "mientras montacargas de 5 a 10 toneladas circulan entre el almacén y la caja de carga."
     )
     draw_flow_text(can, text_ret, margin_x + 8, sec2_y + sec2_h - 33, left_w - 12, font_size=5.1, leading=6.9, text_color=C_GRAY)
         
@@ -504,7 +504,7 @@ def build_pdf():
     text_rampa = (
         "En rampas mecánicas de andén, este resorte conforma el banco de tensión principal acoplado al bastidor trasero y a los "
         "brazos de elevación del labio. Al tirar de la cadena de desbloqueo, los resortes liberan energía potencial acumulada para izar "
-        "suavemente la plataforma de acero estructural y desplegar el labio abatible de 16\" o 18\" hacia la cama del remolque, reduciendo "
+        "suavemente la plataforma de acero estructural y desplegar el labio abatible de 16\" o 18\" hacia la plataforma de carga, reduciendo "
         "el esfuerzo físico del operador y garantizando un asentamiento firme y seguro."
     )
     draw_flow_text(can, text_rampa, margin_x + 8, sec2_y + sec2_h - 88, left_w - 12, font_size=5.1, leading=6.9, text_color=C_GRAY)
@@ -665,7 +665,7 @@ def build_pdf():
         
     norm_texts = [
         ("NOM-006-STPS-2014:", "Cumple con los requerimientos de seguridad para manejo y almacenamiento de materiales en andenes industriales."),
-        ("OSHA 29 CFR 1910.178:", "Garantiza retención positiva del tráiler contra el andén evitando volcaduras de carretillas elevadoras."),
+        ("OSHA 29 CFR 1910.178:", "Garantiza retención positiva y segura contra el andén evitando volcaduras de carretillas elevadoras."),
         ("ASTM A401 / A401M:", "Especificación estándar para alambre de acero aleado Cromo-Silicio de alta fatiga para resortes."),
         ("Control de Calidad ISO 9001:", "Inspección 100% de tolerancia en apertura de garganta (0.56\") y diámetro de espiras.")
     ]

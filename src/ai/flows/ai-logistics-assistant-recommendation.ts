@@ -46,7 +46,7 @@ const assistantRecommendationPrompt = ai.definePrompt({
   name: 'assistantRecommendationPrompt',
   input: {schema: AILogisticsAssistantRecommendationInputSchema},
   output: {schema: AILogisticsAssistantRecommendationOutputSchema},
-  prompt: `You are an expert industrial logistics and automotive solutions specialist for Tecnorampa. 
+  prompt: `You are an expert industrial logistics and loading dock solutions specialist for Tecnorampa. 
 The user will describe a problem, a need, or a situation in their warehouse, loading bay, or parking facility. 
 Your goal is to recommend the most suitable Tecnorampa products to solve their problem.
 

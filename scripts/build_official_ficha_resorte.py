@@ -222,7 +222,7 @@ def build_pdf():
     desc_html = (
         "El Resorte de Extensión Amarillo DZ-RHINO_GSLV-SPRING es un componente helicoidal de tracción lateral de "
         "alta resistencia diseñado específicamente para sistemas de retención vehicular tipo gancho (Rhino / Dok-Lok) "
-        "y niveladoras mecánicas de andén. Fabricado bajo especificación automotriz e industrial pesada con alambre de aleación "
+        "y niveladoras mecánicas de andén. Fabricado bajo especificaciones industriales únicamente con alambre de aleación "
         "Cromo-Silicio ASTM A401, provee máxima absorción de impacto dinámico, nula deformación plástica permanente y ciclado "
         "continuo libre de fatiga en condiciones severas de intemperie y tráfico logístico continuo."
     )
@@ -488,8 +488,8 @@ def build_pdf():
     can.drawString(margin_x + 8, sec2_y + sec2_h - 30, 'A) SISTEMAS DE RETENCIÓN VEHICULAR TIPO GANCHO (RHINO / DOK-LOK / TR-LOCK)')
     
     text_ret = (
-        "El resorte DZ-RHINO_GSLV-SPRING cumple una función crítica de seguridad en retenedores de andén electromecánicos "
-        "y neumáticos. Montado lateralmente al ensamble del carro deslizante, aplica una fuerza constante de recuperación sobre "
+        "El resorte DZ-RHINO_GSLV-SPRING cumple una función crítica de seguridad en retenedores de andén electromecánicos. "
+        "Montado lateralmente al ensamble del carro deslizante, aplica una fuerza constante de recuperación sobre "
         "el gancho oscilante, manteniéndolo firmemente enganchado en la barra de protección anti-impacto (ICC bar / RIG) del tráiler. "
         "Esto previene de forma contundente el <i>'trailer creep'</i> (desplazamiento gradual del semirremolque) y la salida prematura "
         "del camión mientras montacargas de 5 a 10 toneladas circulan entre el almacén y la caja de carga."

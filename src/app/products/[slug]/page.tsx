@@ -407,7 +407,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <a 
-                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261105_v5'}
+                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261111_v6'}
                 download={`Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`}
                 target="_blank"
                 rel="noopener noreferrer"

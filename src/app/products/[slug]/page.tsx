@@ -252,6 +252,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">{productName}</h1>
               <p className="text-xl text-muted-foreground leading-relaxed font-medium">{product.shortDescription}</p>
+              {product.description && (
+                <div className="bg-muted/40 p-4 rounded-xl border border-border/80">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary italic mb-1.5">Descripción de Ingeniería:</h4>
+                  <p className="text-sm text-foreground/80 leading-relaxed font-medium">
+                    {product.description}
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -407,7 +415,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <a 
-                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261111_v7'}
+                href={(product.technicalSheetUrl || `/fichas-tecnicas/${product.slug}.pdf`) + '?v=20261124_v8'}
                 download={`Ficha-Tecnica-Tecnorampa-${product.slug}.pdf`}
                 target="_blank"
                 rel="noopener noreferrer"

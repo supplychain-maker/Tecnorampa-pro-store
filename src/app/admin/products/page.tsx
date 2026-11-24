@@ -38,14 +38,21 @@ export default function AdminProductsPage() {
 
   const { data: products, loading: productsLoading } = useCollection<Product>(productsQuery);
 
-  // Auto-sincronizar nombre oficial del resorte a "Resorte de Extensión Amarillo"
+  // Auto-sincronizar nombre oficial del resorte a "Resorte de Extensión Amarillo" y descripción industrial limpia
   useEffect(() => {
     if (!products || !isAdmin || !db) return;
     const resorte = products.find(p => p.slug === 'resorte-extension-amarillo-rampa');
-    if (resorte && resorte.id && (resorte.name !== 'Resorte de Extensión Amarillo' || !resorte.technicalSheetUrl)) {
+    if (resorte && resorte.id && (
+      resorte.name !== 'Resorte de Extensión Amarillo' || 
+      !resorte.technicalSheetUrl ||
+      resorte.description?.includes('vehicular') ||
+      resorte.description?.includes('automotriz') ||
+      resorte.description?.includes('neumáticos')
+    )) {
       const productRef = doc(db, 'products', resorte.id);
       updateDoc(productRef, { 
         name: 'Resorte de Extensión Amarillo',
+        description: 'Fabricado bajo especificaciones industriales únicamente. Resorte helicoidal de extensión y tracción lateral en acero aleado Cromo-Silicio ASTM A401 para sistemas de retención de andén electromecánicos tipo gancho (Rhino / Dok-Lok) y niveladoras mecánicas de andén. Acabado en pintura electrostática amarillo industrial RAL 1018 para máxima visibilidad y resistencia a la corrosión.',
         technicalSheetUrl: '/fichas-tecnicas/resorte-extension-amarillo-rampa.pdf'
       }).then(() => {
         console.log('Successfully updated Resorte de Extensión Amarillo in Firestore');

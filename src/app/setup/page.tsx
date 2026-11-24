@@ -336,7 +336,7 @@ const INITIAL_PRODUCTS = [
     categoryNames: ["Refacciones Industriales", "Mecánicas y Retención"],
     price: 2850,
     shortDescription: "Resorte de extensión en acero cromo-silicio ASTM A401 con acabado electrostático amarillo RAL 1018.",
-    description: "Resorte helicoidal de extensión y tracción lateral fabricado en acero aleado Cromo-Silicio ASTM A401 para sistemas de gancho retenedor vehicular (Rhino / Dok-Lok) y niveladoras mecánicas de andén. Acabado en pintura electrostática amarillo industrial RAL 1018 para máxima visibilidad y resistencia a la corrosión.",
+    description: "Resorte helicoidal de extensión y tracción lateral fabricado bajo especificaciones industriales únicamente en acero aleado Cromo-Silicio ASTM A401 para sistemas de retención de andén tipo gancho (Rhino / Dok-Lok) y niveladoras mecánicas de andén. Acabado en pintura electrostática amarillo industrial RAL 1018 para máxima visibilidad y resistencia a la corrosión.",
     image: "/products/resorte-rampa-frente.jpeg",
     images: ["/products/resorte-rampa-frente.jpeg", "/products/resorte-rampa-lado.jpeg"],
     active: true,

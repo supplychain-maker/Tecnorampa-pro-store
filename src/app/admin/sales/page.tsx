@@ -220,6 +220,12 @@ export default function AdminSalesPage() {
                       <div className="flex flex-col">
                         <span className="font-black text-sm">${order.total.toLocaleString()}</span>
                         <span className="text-[9px] font-black text-green-600 uppercase tracking-widest">PAGO CONFIRMADO</span>
+                        {order.notificationSent && (
+                          <span className="text-[9px] font-bold text-muted-foreground flex items-center gap-1 mt-0.5" title={`Notificado vía ${order.notificationMethod || 'email'}`}>
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                            Notificado: {order.notificationSentTo || 'supplychain'}
+                          </span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">

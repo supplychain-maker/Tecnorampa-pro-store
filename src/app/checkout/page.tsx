@@ -56,7 +56,16 @@ function CheckoutContent() {
         updatedAt: serverTimestamp() 
       };
 
-      updateDoc(orderRef, updateData).catch(() => {});
+      updateDoc(orderRef, updateData)
+        .then(() => {
+          // Despachar notificación automática a supplychain@tecnorampa.com.mx
+          fetch('/api/orders/notify-sale', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId })
+          }).catch(err => console.error('Error al notificar venta desde checkout:', err));
+        })
+        .catch(() => {});
     }
   }, [clearCart, db, searchParams]);
 
@@ -189,7 +198,7 @@ function CheckoutContent() {
       userId: user.uid,
       customerEmail: user.email,
       customerName: user.displayName || 'Cliente Corporativo',
-      items: items.map(i => ({ id: i.id, name: i.name, quantity: i.quantity, price: i.price })),
+      items: items.map(i => ({ id: i.id, name: i.name, quantity: i.quantity, price: i.price, variant: i.variant || null })),
       subtotal: total,
       taxes: total * 0.16,
       total: total * 1.16,

@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe';
 import { headers } from 'next/headers';
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { sendSaleNotification } from '@/lib/email/order-notification';
 
 /**
  * Webhook de Stripe para confirmación asíncrona de pagos.
@@ -43,8 +44,11 @@ export async function POST(req: Request) {
           updatedAt: serverTimestamp()
         });
         console.log(`Orden ${orderId} confirmada como PAGADA satisfactoriamente.`);
+
+        // Despachar notificación automática a supplychain@tecnorampa.com.mx
+        await sendSaleNotification(orderId, { session });
       } catch (dbError) {
-        console.error('Error al actualizar Firestore desde Webhook:', dbError);
+        console.error('Error al actualizar Firestore desde Webhook o enviar notificación:', dbError);
       }
     }
   }

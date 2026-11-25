@@ -133,6 +133,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const product = products?.[0];
 
   useEffect(() => {
+    if (/\.(jpe?g|png|webp|gif|svg)$/i.test(slug)) {
+      window.location.replace(`/images/products/${slug}`);
+    }
+  }, [slug]);
+
+  useEffect(() => {
     if (product && product.variants && product.variants.length > 0 && !selectedVariant) {
       setSelectedVariant(product.variants[0].id);
     }
@@ -165,7 +171,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const dbImages = (product.images && product.images.length > 0) 
     ? product.images.map(img => getDirectImageUrl(img))
     : [];
-  const secondaryConfigImages = SECONDARY_IMAGES_MAP[slug] || [];
+  const secondaryConfigImages = (SECONDARY_IMAGES_MAP[slug] || []).map(img => getDirectImageUrl(img));
 
   const imagesToDisplay = [
     coverImage,

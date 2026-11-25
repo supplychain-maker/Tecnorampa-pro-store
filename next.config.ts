@@ -1,7 +1,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
   serverExternalPackages: ['pdfkit'],
   typescript: {
     ignoreBuildErrors: true,
@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
         hostname: '**',
       },
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: '/products/:file(.*\\.(?:jpg|jpeg|png|webp|gif|svg))',
+        destination: '/images/products/:file',
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     return [

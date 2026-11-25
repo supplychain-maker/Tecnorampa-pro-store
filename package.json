@@ -46,6 +46,8 @@
     "next": "15.5.9",
     "nodemailer": "^10.6.1",
     "patch-package": "^8.0.0",
+    "pdfkit": "^0.21.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.1",
     "react-day-picker": "^9.11.3",
     "react-dom": "^19.2.1",
@@ -60,6 +62,8 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",
+    "@types/pdfkit": "^0.17.7",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
     "genkit-cli": "^1.28.0",

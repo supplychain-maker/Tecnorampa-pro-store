@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { generatePickupVoucherPdf } from '@/lib/pdf/pickup-voucher';
 
 export const NOTIFICATION_RECIPIENT = process.env.ORDER_NOTIFICATION_EMAIL || 'supplychain@tecnorampa.com.mx';
 
@@ -28,10 +29,12 @@ export interface OrderData {
   createdAt?: any;
   notificationSent?: boolean;
   notificationSentAt?: any;
+  customerNotificationSent?: boolean;
+  customerNotificationSentAt?: any;
 }
 
 /**
- * Genera la plantilla HTML y de texto plano para el correo de notificación de venta.
+ * Genera la plantilla HTML y de texto plano para el correo INTERNO de notificación a Supply Chain.
  */
 export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
   const shortOrderId = orderId.substring(0, 8).toUpperCase();
@@ -53,7 +56,6 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
     timeStyle: 'medium'
   });
 
-  // Generar filas de productos en HTML
   const itemsHtml = items.map((item, idx) => {
     const itemTotal = Number(item.price || 0) * Number(item.quantity || 1);
     const bgColor = idx % 2 === 0 ? '#FFFFFF' : '#F9FAFB';
@@ -97,7 +99,7 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
                 <tr>
                   <td>
                     <div style="font-size: 10px; font-weight: 800; color: #FFD830; letter-spacing: 2px; text-transform: uppercase;">
-                      TECNORAMPA PRO-STORE • SISTEMA DE VENTAS
+                      TECNORAMPA PRO-STORE • CONTROL INTERNO DE VENTAS
                     </div>
                     <div style="font-size: 22px; font-weight: 900; color: #FFFFFF; margin-top: 4px; letter-spacing: -0.5px; text-transform: uppercase;">
                       ¡Nueva Venta Confirmada y Pagada!
@@ -117,7 +119,7 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
           <tr>
             <td style="padding: 28px 28px 16px 28px;">
               <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.5; color: #374151;">
-                Se ha confirmado un nuevo pedido pagado con tarjeta a través de <strong>Stripe</strong> en la tienda oficial. A continuación los detalles para programación logística:
+                Se ha confirmado un nuevo pedido pagado con tarjeta a través de <strong>Stripe</strong> en la tienda oficial. Se adjunta el <strong>Vale Oficial de Recolección en PDF</strong> correspondiente.
               </p>
 
               <!-- Tarjeta de Resumen Rápido -->
@@ -146,6 +148,12 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
                       <tr>
                         <td style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px;">Ubicación Entrega:</td>
                         <td style="font-size: 13px; font-weight: 600; color: #374151;">${pickup}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px;">Vale PDF Adjunto:</td>
+                        <td style="font-size: 12px; font-weight: 700; color: #059669;">
+                          📄 Vale-Recoleccion-Tecnorampa-${shortOrderId}.pdf
+                        </td>
                       </tr>
                       ${order.stripeSessionId ? `
                       <tr>
@@ -217,8 +225,8 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
           <!-- Pie de Página -->
           <tr>
             <td style="background-color: #F9FAFB; padding: 20px 28px; border-top: 1px solid #E5E7EB; font-size: 11px; color: #6B7280; line-height: 1.5; text-align: center;">
-              Este es un correo automático generado por el sistema de pagos seguros de <strong>Tecnorampa Pro-Store</strong>.<br/>
-              Notificación oficial dirigida a <strong>supplychain@tecnorampa.com.mx</strong> para seguimiento de inventario y recolección.<br/>
+              Este es un correo automático generado por el sistema de pagos de <strong>Tecnorampa Pro-Store</strong>.<br/>
+              Notificación oficial dirigida a <strong>supplychain@tecnorampa.com.mx</strong> para inventario y logística.<br/>
               Tecnorampa S.A. de C.V. • Planta Pedro Escobedo, Querétaro • Tel: 800 6230 332
             </td>
           </tr>
@@ -231,7 +239,6 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
 </html>
   `;
 
-  // Versión texto plano
   const itemsText = items.map(i => ` - ${i.name}${i.variant ? ` [${i.variant}]` : ''} x${i.quantity} @ $${Number(i.price).toLocaleString('es-MX')} MXN`).join('\n');
   const text = `
 ¡NUEVA VENTA CONFIRMADA Y PAGADA! - TECNORAMPA PRO-STORE
@@ -239,6 +246,7 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
 Número de Pedido: #${shortOrderId} (${orderId})
 Fecha y Hora: ${dateStr}
 Estado de Pago: Pagado con Stripe (Completado)
+Vale PDF: Adjunto a este mensaje
 
 DATOS DEL CLIENTE:
 - Nombre: ${customerName}
@@ -264,7 +272,238 @@ Tecnorampa S.A. de C.V.
 }
 
 /**
- * Función principal para despachar la notificación por correo al confirmarse una venta.
+ * Genera la plantilla HTML y de texto plano para el correo que recibe EL CLIENTE (comprobante y vale).
+ */
+export function buildCustomerConfirmationTemplates(orderId: string, order: OrderData) {
+  const shortOrderId = orderId.substring(0, 8).toUpperCase();
+  const customerName = order.customerName || 'Estimado(a) Cliente';
+  const subtotal = Number(order.subtotal || 0);
+  const taxes = Number(order.taxes || subtotal * 0.16);
+  const total = Number(order.total || subtotal + taxes);
+  const items = order.items || [];
+  
+  const purchasesUrl = process.env.NEXT_PUBLIC_APP_URL 
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/my-purchases`
+    : 'https://tecnorampa.com.mx/my-purchases';
+
+  const dateStr = new Date().toLocaleString('es-MX', {
+    timeZone: 'America/Mexico_City',
+    dateStyle: 'full',
+    timeStyle: 'short'
+  });
+
+  const itemsHtml = items.map((item, idx) => {
+    const itemTotal = Number(item.price || 0) * Number(item.quantity || 1);
+    const bgColor = idx % 2 === 0 ? '#FFFFFF' : '#F9FAFB';
+    return `
+      <tr style="background-color: ${bgColor};">
+        <td style="padding: 12px 14px; border-bottom: 1px solid #E5E7EB; font-size: 13px; color: #111827; font-weight: 600;">
+          ${item.name}
+          ${item.variant ? `<br/><span style="font-size: 11px; color: #6B7280; font-weight: 500;">Medida / Config: <strong>${item.variant}</strong></span>` : ''}
+        </td>
+        <td style="padding: 12px 14px; border-bottom: 1px solid #E5E7EB; text-align: center; font-size: 13px; color: #111827; font-weight: 700;">
+          x${item.quantity}
+        </td>
+        <td style="padding: 12px 14px; border-bottom: 1px solid #E5E7EB; text-align: right; font-size: 13px; color: #374151;">
+          $${Number(item.price || 0).toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+        </td>
+        <td style="padding: 12px 14px; border-bottom: 1px solid #E5E7EB; text-align: right; font-size: 13px; color: #111827; font-weight: 700;">
+          $${itemTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  const html = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Compra - Tecnorampa</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F3F4F6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1F2937;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #F3F4F6; padding: 24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 620px; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid #E5E7EB;" cellspacing="0" cellpadding="0">
+          
+          <!-- Encabezado Corporativo -->
+          <tr>
+            <td style="background-color: #111827; padding: 26px 28px; border-bottom: 4px solid #FFD830;">
+              <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <div style="font-size: 11px; font-weight: 800; color: #FFD830; letter-spacing: 2px; text-transform: uppercase;">
+                      TECNORAMPA PRO-STORE
+                    </div>
+                    <div style="font-size: 24px; font-weight: 900; color: #FFFFFF; margin-top: 4px; letter-spacing: -0.5px;">
+                      ¡Gracias por tu compra!
+                    </div>
+                  </td>
+                  <td align="right" style="vertical-align: middle;">
+                    <span style="background-color: #059669; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 6px; letter-spacing: 1px; text-transform: uppercase; display: inline-block;">
+                      ✓ PAGO RECIBIDO
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Cuerpo Principal -->
+          <tr>
+            <td style="padding: 28px 28px 16px 28px;">
+              <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #374151;">
+                Estimado(a) <strong>${customerName}</strong>,<br/>
+                Hemos recibido y confirmado tu pago exitosamente. Tu pedido ha sido registrado en nuestro sistema y está listo para programarse para entrega.
+              </p>
+
+              <!-- Tarjeta Destacada de Recolección con Código -->
+              <table width="100%" cellspacing="0" cellpadding="0" style="background-color: #111827; border-radius: 10px; margin-bottom: 24px; overflow: hidden; border: 2px solid #FFD830;">
+                <tr>
+                  <td style="padding: 20px; text-align: center; color: #FFFFFF;">
+                    <div style="font-size: 11px; font-weight: 800; color: #FFD830; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
+                      TU CÓDIGO OFICIAL DE RECOLECCIÓN EN PLANTA
+                    </div>
+                    <div style="font-size: 32px; font-weight: 900; letter-spacing: 4px; font-family: monospace; color: #FFFFFF; margin-bottom: 10px;">
+                      ${shortOrderId}
+                    </div>
+                    <div style="font-size: 12px; color: #D1D5DB; line-height: 1.5; max-width: 480px; margin: 0 auto;">
+                      📍 <strong>Planta Tecnorampa:</strong> Carr. Federal México - Querétaro km 176+500, El Sauz, Pedro Escobedo, Qro. C.P. 76729<br/>
+                      🕒 <strong>Horario de atención:</strong> Lunes a Viernes de 8:30 a 17:30 hrs.<br/>
+                      <span style="color: #FFD830; font-size: 11px; font-weight: 600;">* Adjunto a este correo se encuentra tu Vale Oficial en formato PDF para presentar en caseta o almacén.</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Resumen del Pedido -->
+              <div style="font-size: 12px; font-weight: 800; color: #111827; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                Resumen de Equipos y Refacciones:
+              </div>
+              
+              <table width="100%" cellspacing="0" cellpadding="0" style="border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; margin-bottom: 24px; border-collapse: collapse;">
+                <thead>
+                  <tr style="background-color: #111827; color: #FFFFFF;">
+                    <th align="left" style="padding: 10px 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Producto</th>
+                    <th align="center" style="padding: 10px 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Cant.</th>
+                    <th align="right" style="padding: 10px 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">P. Unit.</th>
+                    <th align="right" style="padding: 10px 14px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${itemsHtml}
+                </tbody>
+              </table>
+
+              <!-- Totales -->
+              <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
+                <tr>
+                  <td width="50%"></td>
+                  <td width="50%">
+                    <table width="100%" cellspacing="0" cellpadding="6" style="background-color: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px;">
+                      <tr>
+                        <td style="font-size: 12px; color: #6B7280; font-weight: 600;">Subtotal:</td>
+                        <td align="right" style="font-size: 13px; color: #374151; font-weight: 600;">$${subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</td>
+                      </tr>
+                      <tr>
+                        <td style="font-size: 12px; color: #6B7280; font-weight: 600;">IVA (16%):</td>
+                        <td align="right" style="font-size: 13px; color: #374151; font-weight: 600;">$${taxes.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</td>
+                      </tr>
+                      <tr style="border-top: 2px solid #E5E7EB;">
+                        <td style="font-size: 14px; color: #111827; font-weight: 900; text-transform: uppercase;">Total Pagado:</td>
+                        <td align="right" style="font-size: 16px; color: #047857; font-weight: 900;">$${total.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Información de Facturación y Embarque -->
+              <table width="100%" cellspacing="0" cellpadding="0" style="background-color: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px; margin-bottom: 24px;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <div style="font-size: 12px; font-weight: 800; color: #92400E; text-transform: uppercase; margin-bottom: 4px;">
+                      📄 ¿Requieres Factura Fiscal (CFDI)?
+                    </div>
+                    <div style="font-size: 12px; color: #78350F; line-height: 1.5;">
+                      Para emitir tu factura con validez fiscal, por favor comparte tu <strong>Constancia de Situación Fiscal</strong> actualizada y el folio de tu orden <strong>(#${shortOrderId})</strong> por WhatsApp al <strong>427 276 1410</strong> o al correo <a href="mailto:supplychain@tecnorampa.com.mx" style="color: #92400E; font-weight: 700;">supplychain@tecnorampa.com.mx</a>.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Botón Mis Compras -->
+              <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td align="center">
+                    <a href="${purchasesUrl}" style="background-color: #111827; color: #FFD830; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; display: inline-block; border: 2px solid #FFD830;">
+                      📦 Consultar Mis Compras en Tecnorampa →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Pie de Página -->
+          <tr>
+            <td style="background-color: #F9FAFB; padding: 20px 28px; border-top: 1px solid #E5E7EB; font-size: 11px; color: #6B7280; line-height: 1.5; text-align: center;">
+              Tecnorampa S.A. de C.V. • Especialistas en Rampas Niveladoras y Equipamiento para Andén.<br/>
+              Carretera Federal México - Querétaro km 176+500, El Sauz, Pedro Escobedo, Qro. C.P. 76729<br/>
+              Teléfono de atención: 800 6230 332 • WhatsApp: 427 276 1410 • <a href="https://tecnorampa.com.mx" style="color: #6B7280;">www.tecnorampa.com.mx</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+
+  const itemsText = items.map(i => ` - ${i.name}${i.variant ? ` [${i.variant}]` : ''} x${i.quantity} @ $${Number(i.price).toLocaleString('es-MX')} MXN`).join('\n');
+  const text = `
+¡GRACIAS POR TU COMPRA EN TECNORAMPA PRO-STORE!
+==============================================
+Estimado(a) ${customerName},
+Tu pago ha sido confirmado satisfactoriamente por Stripe.
+
+CÓDIGO OFICIAL DE RECOLECCIÓN EN PLANTA:
+${shortOrderId}
+
+Lugar de Entrega:
+Planta Tecnorampa: Carr. Federal México-Querétaro km 176+500, El Sauz, Pedro Escobedo, Qro. C.P. 76729
+Horario: Lunes a Viernes de 8:30 a 17:30 hrs.
+* Adjunto encontrarás tu Vale de Recolección oficial en PDF con código QR.
+
+RESUMEN DE TU PEDIDO:
+${itemsText}
+
+- Subtotal: $${subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+- IVA (16%): $${taxes.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+- TOTAL PAGADO: $${total.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+
+SOLICITUD DE FACTURA (CFDI):
+Envía tu Constancia de Situación Fiscal y número de orden #${shortOrderId} por WhatsApp al 427 276 1410 o al correo supplychain@tecnorampa.com.mx.
+
+Consulta tus pedidos en cualquier momento:
+${purchasesUrl}
+
+Tecnorampa S.A. de C.V.
+  `.trim();
+
+  return { html, text, subject: `✅ Confirmación de Compra y Vale de Recolección #${shortOrderId} - Tecnorampa` };
+}
+
+/**
+ * Función principal para despachar las notificaciones por correo al confirmarse una venta:
+ * 1) Correo de control interno a supplychain@tecnorampa.com.mx (con Vale PDF adjunto)
+ * 2) Correo de confirmación y entrega al CLIENTE (con Vale PDF adjunto)
+ * 
  * Garantiza idempotencia: solo envía una vez por orden, salvo que se use force=true.
  */
 export async function sendSaleNotification(orderId: string, options?: { session?: any; orderData?: any; force?: boolean }) {
@@ -298,48 +537,44 @@ export async function sendSaleNotification(orderId: string, options?: { session?
       };
     }
 
-    // Comprobación de idempotencia: si ya se envió y no se fuerza reenvío, omitir
-    if (order.notificationSent && !options?.force) {
-      console.log(`[NOTIFICACIÓN VENTA] La orden ${orderId} ya fue notificada previamente a ${order.customerEmail || NOTIFICATION_RECIPIENT}. Omitiendo.`);
+    // Comprobación de idempotencia: si ya se envió todo y no se fuerza reenvío, omitir
+    if (order.notificationSent && order.customerNotificationSent && !options?.force) {
+      console.log(`[NOTIFICACIÓN VENTA] La orden ${orderId} ya fue notificada previamente a logística y cliente. Omitiendo.`);
       return { success: true, skipped: true, reason: 'Already sent' };
     }
 
-    const { html, text, subject } = buildSaleEmailTemplates(orderId, order);
+    const shortOrderId = orderId.substring(0, 8).toUpperCase();
+
+    // ------------------------------------------------------------------------
+    // GENERAR VALE DE RECOLECCIÓN EN PDF
+    // ------------------------------------------------------------------------
+    let pdfBuffer: Buffer | null = null;
+    try {
+      pdfBuffer = await generatePickupVoucherPdf(orderId, order);
+      console.log(`[NOTIFICACIÓN VENTA] Vale PDF generado con éxito para orden #${shortOrderId} (${pdfBuffer.length} bytes)`);
+    } catch (pdfErr: any) {
+      console.error('[NOTIFICACIÓN VENTA] Error al generar Vale PDF:', pdfErr.message);
+    }
+
+    const pdfAttachment = pdfBuffer ? [{
+      filename: `Vale-Recoleccion-Tecnorampa-${shortOrderId}.pdf`,
+      content: pdfBuffer,
+      contentType: 'application/pdf'
+    }] : [];
+
+    const supplyChainEmail = buildSaleEmailTemplates(orderId, order);
+    const customerEmail = buildCustomerConfirmationTemplates(orderId, order);
+
+    const recipientCustomer = order.customerEmail;
     let methodUsed = 'none';
-    let messageId: string | undefined;
+    let supplyChainMessageId: string | undefined;
+    let customerMessageId: string | undefined;
     let errorDetail: string | undefined;
 
     // ------------------------------------------------------------------------
-    // MÉTODO 1: Resend (si existe RESEND_API_KEY)
+    // MÉTODO 1: SMTP / Nodemailer (Google Workspace / Gmail / cPanel)
     // ------------------------------------------------------------------------
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const fromAddress = process.env.RESEND_FROM || 'Tecnorampa Pro-Store <ventas@tecnorampa.com.mx>';
-        const result = await resend.emails.send({
-          from: fromAddress,
-          to: NOTIFICATION_RECIPIENT,
-          subject,
-          html,
-          text
-        });
-
-        if (result.error) {
-          throw new Error(result.error.message);
-        }
-        methodUsed = 'resend';
-        messageId = result.data?.id;
-        console.log(`[NOTIFICACIÓN VENTA] Correo enviado exitosamente vía Resend a ${NOTIFICATION_RECIPIENT} (ID: ${messageId})`);
-      } catch (err: any) {
-        console.error('[NOTIFICACIÓN VENTA] Error enviando vía Resend:', err.message);
-        errorDetail = `Resend: ${err.message}`;
-      }
-    }
-
-    // ------------------------------------------------------------------------
-    // MÉTODO 2: SMTP / Nodemailer (Google Workspace / Gmail / cPanel)
-    // ------------------------------------------------------------------------
-    if (methodUsed === 'none' && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       try {
         const isSecure = process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465';
         const transporter = nodemailer.createTransport({
@@ -354,17 +589,40 @@ export async function sendSaleNotification(orderId: string, options?: { session?
 
         const fromAddress = process.env.SMTP_FROM || `"Tecnorampa Pro-Store" <${process.env.SMTP_USER}>`;
 
-        const info = await transporter.sendMail({
+        // 1. Enviar correo a Supply Chain (Logística interna)
+        const infoSupply = await transporter.sendMail({
           from: fromAddress,
           to: NOTIFICATION_RECIPIENT,
-          subject,
-          html,
-          text,
+          subject: supplyChainEmail.subject,
+          html: supplyChainEmail.html,
+          text: supplyChainEmail.text,
+          attachments: pdfAttachment
         });
+        supplyChainMessageId = infoSupply.messageId;
+        console.log(`[NOTIFICACIÓN VENTA] Correo y Vale PDF enviados a Supply Chain (${NOTIFICATION_RECIPIENT}) - ID: ${supplyChainMessageId}`);
+
+        // 2. Enviar correo al CLIENTE (si tiene correo válido y no es idéntico al de supplychain para evitar reenvío innecesario si es el mismo)
+        if (recipientCustomer) {
+          try {
+            const infoCustomer = await transporter.sendMail({
+              from: fromAddress,
+              to: recipientCustomer,
+              subject: customerEmail.subject,
+              html: customerEmail.html,
+              text: customerEmail.text,
+              attachments: pdfAttachment
+            });
+            customerMessageId = infoCustomer.messageId;
+            console.log(`[NOTIFICACIÓN VENTA] Correo de confirmación y Vale PDF enviados al Cliente (${recipientCustomer}) - ID: ${customerMessageId}`);
+          } catch (custMailErr: any) {
+            console.error(`[NOTIFICACIÓN VENTA] Error enviando correo al cliente (${recipientCustomer}):`, custMailErr.message);
+            errorDetail = `Cliente: ${custMailErr.message}`;
+          }
+        } else {
+          console.warn(`[NOTIFICACIÓN VENTA] La orden ${orderId} no cuenta con correo de cliente registrado.`);
+        }
 
         methodUsed = 'smtp';
-        messageId = info.messageId;
-        console.log(`[NOTIFICACIÓN VENTA] Correo enviado exitosamente vía SMTP a ${NOTIFICATION_RECIPIENT} (MessageId: ${messageId})`);
       } catch (err: any) {
         console.error('[NOTIFICACIÓN VENTA] Error enviando vía SMTP:', err.message);
         errorDetail = errorDetail ? `${errorDetail} | SMTP: ${err.message}` : `SMTP: ${err.message}`;
@@ -372,54 +630,47 @@ export async function sendSaleNotification(orderId: string, options?: { session?
     }
 
     // ------------------------------------------------------------------------
-    // MÉTODO 3: Cola de correo en Firestore (Firebase Trigger Email extension)
+    // MÉTODO 2: Resend (Alternativa si SMTP no está configurado)
     // ------------------------------------------------------------------------
-    if (db) {
+    if (methodUsed === 'none' && process.env.RESEND_API_KEY) {
       try {
-        await addDoc(collection(db, 'mail'), {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const fromAddress = process.env.RESEND_FROM || 'Tecnorampa Pro-Store <ventas@tecnorampa.com.mx>';
+        
+        const resendAttachments = pdfBuffer ? [{
+          filename: `Vale-Recoleccion-Tecnorampa-${shortOrderId}.pdf`,
+          content: pdfBuffer
+        }] : undefined;
+
+        // A Supply Chain
+        const resultSupply = await resend.emails.send({
+          from: fromAddress,
           to: NOTIFICATION_RECIPIENT,
-          message: {
-            subject,
-            text,
-            html
-          },
-          orderId,
-          createdAt: serverTimestamp()
+          subject: supplyChainEmail.subject,
+          html: supplyChainEmail.html,
+          text: supplyChainEmail.text,
+          attachments: resendAttachments
         });
-        if (methodUsed === 'none') {
-          methodUsed = 'firebase-mail-queue';
-          console.log(`[NOTIFICACIÓN VENTA] Correo encolado en Firestore colección 'mail' para ${NOTIFICATION_RECIPIENT}`);
+        supplyChainMessageId = resultSupply.data?.id;
+
+        // Al Cliente
+        if (recipientCustomer) {
+          const resultCust = await resend.emails.send({
+            from: fromAddress,
+            to: recipientCustomer,
+            subject: customerEmail.subject,
+            html: customerEmail.html,
+            text: customerEmail.text,
+            attachments: resendAttachments
+          });
+          customerMessageId = resultCust.data?.id;
         }
-      } catch (queueErr: any) {
-        console.warn('[NOTIFICACIÓN VENTA] No se pudo encolar en Firestore mail:', queueErr.message);
+
+        methodUsed = 'resend';
+      } catch (err: any) {
+        console.error('[NOTIFICACIÓN VENTA] Error enviando vía Resend:', err.message);
+        errorDetail = `Resend: ${err.message}`;
       }
-    }
-
-    // ------------------------------------------------------------------------
-    // Si no había credenciales activas, registrar log informativo
-    // ------------------------------------------------------------------------
-    if (methodUsed === 'none') {
-      console.log(`
-================================================================================
-[NOTIFICACIÓN DE VENTA GENERADA]
-Destinatario: ${NOTIFICATION_RECIPIENT}
-Asunto: ${subject}
-Orden ID: ${orderId}
-Monto Total: $${order.total} MXN
-Cliente: ${order.customerName} (${order.customerEmail})
-Equipos: ${(order.items || []).map(i => `${i.name} x${i.quantity}`).join(', ')}
-
-AVISO DE CONFIGURACIÓN:
-Para envío directo a través de servidor de correo, configura en tu archivo .env:
-  SMTP_HOST=smtp.gmail.com
-  SMTP_PORT=465
-  SMTP_USER=tu-cuenta@tecnorampa.com.mx
-  SMTP_PASS=tu-contraseña-de-aplicación
-o bien:
-  RESEND_API_KEY=re_...
-================================================================================
-      `);
-      methodUsed = 'console-log';
     }
 
     // ------------------------------------------------------------------------
@@ -431,19 +682,25 @@ o bien:
           notificationSent: true,
           notificationSentTo: NOTIFICATION_RECIPIENT,
           notificationSentAt: serverTimestamp(),
+          customerNotificationSent: !!customerMessageId,
+          customerNotificationSentTo: recipientCustomer || null,
+          customerNotificationSentAt: customerMessageId ? serverTimestamp() : null,
           notificationMethod: methodUsed,
+          pickupVoucherGenerated: !!pdfBuffer,
           ...(errorDetail ? { notificationError: errorDetail } : {})
         });
       } catch (updateErr: any) {
-        console.error('[NOTIFICACIÓN VENTA] Error al marcar orden como notificada:', updateErr.message);
+        console.warn('[NOTIFICACIÓN VENTA] Error al marcar orden como notificada en Firestore:', updateErr.message);
       }
     }
 
     return {
       success: true,
       method: methodUsed,
-      messageId,
-      recipient: NOTIFICATION_RECIPIENT,
+      supplyChainMessageId,
+      customerMessageId,
+      customerRecipient: recipientCustomer,
+      pdfGenerated: !!pdfBuffer,
       error: errorDetail
     };
   } catch (err: any) {

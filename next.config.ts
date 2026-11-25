@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/products/:file(.*\\.(?:jpg|jpeg|png|webp|gif|svg))',
+        destination: '/images/products/:file',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

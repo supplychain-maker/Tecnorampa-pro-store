@@ -7,25 +7,26 @@ export function cn(...inputs: ClassValue[]) {
 
 // Mapeo directo de IDs de Google Drive a imágenes locales optimizadas con fondo blanco puro
 const DRIVE_ID_TO_LOCAL: Record<string, string> = {
-  '1568T4cpn4B6QnskbqgI4b5oICkt8oV8t': '/products/semaforo-led.jpg',
-  '1LMVZcXnswjpUyDD-ITyqOsQKuFloJUHr': '/products/mini-dock-hidraulico-1.jpg',
-  '1djDAfRNiCHTfN68du2cm8X7pyHt3PySR': '/products/mini-dock-hidraulico-2.jpg',
-  '1WJPlItAwHvdDIoKV6iD5u_LZeX40l7rk': '/products/mini-dock-hidraulico-3.jpg',
-  '1Vr6or92_otUzLfLMaWoHpXBwpspb1n0d': '/products/niveladora-mecanica.jpg',
-  '1JQyUblYuT0fNwsLnjnMKX6xZQe8F8qYT': '/products/tope-laminado.jpg',
-  '1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH': '/products/tope-acero.jpg',
-  '1SPv_oOqflDA3RfrarRdGvF3jiEIbkvSm': '/products/mini-dock-mecanico-1.jpg',
-  '1zpSvdCjwm53ePHSkXr6WY37xlhYupYmI': '/products/mini-dock-mecanico-2.jpg',
-  '1If7SEwYlWmpL4uSH1B41kp0BPA7bVTc6': '/products/mini-dock-mecanico-3.jpg',
-  '1OnmLSVRZVsaBKHlIi_V4IsHhJ4RrSGvV': '/products/niveladora-hidraulica.jpg',
-  '1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR': '/products/rampa-parking-lift.jpg',
-  '1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb': '/products/rampa-evolution.jpg',
-  '1Uic5BVA-nQ_lkKIwcVSeLjZWqhASLsyG': '/products/lampara-anden.jpg',
+  '1568T4cpn4B6QnskbqgI4b5oICkt8oV8t': '/images/products/semaforo-led.jpg',
+  '1LMVZcXnswjpUyDD-ITyqOsQKuFloJUHr': '/images/products/mini-dock-hidraulico-1.jpg',
+  '1djDAfRNiCHTfN68du2cm8X7pyHt3PySR': '/images/products/mini-dock-hidraulico-2.jpg',
+  '1WJPlItAwHvdDIoKV6iD5u_LZeX40l7rk': '/images/products/mini-dock-hidraulico-3.jpg',
+  '1Vr6or92_otUzLfLMaWoHpXBwpspb1n0d': '/images/products/niveladora-mecanica.jpg',
+  '1JQyUblYuT0fNwsLnjnMKX6xZQe8F8qYT': '/images/products/tope-laminado.jpg',
+  '1KmevvDfJduxXuVdcaszS3ZEE_qF3MxwH': '/images/products/tope-acero.jpg',
+  '1SPv_oOqflDA3RfrarRdGvF3jiEIbkvSm': '/images/products/mini-dock-mecanico-1.jpg',
+  '1zpSvdCjwm53ePHSkXr6WY37xlhYupYmI': '/images/products/mini-dock-mecanico-2.jpg',
+  '1If7SEwYlWmpL4uSH1B41kp0BPA7bVTc6': '/images/products/mini-dock-mecanico-3.jpg',
+  '1OnmLSVRZVsaBKHlIi_V4IsHhJ4RrSGvV': '/images/products/niveladora-hidraulica.jpg',
+  '1GdpJDMn0j0Q-1dCaGKp7BurerlQmZHAR': '/images/products/rampa-parking-lift.jpg',
+  '1tj2QGoSA0MziPAU8FwnR6k2ZzbKUqmyb': '/images/products/rampa-evolution.jpg',
+  '1Uic5BVA-nQ_lkKIwcVSeLjZWqhASLsyG': '/images/products/lampara-anden.jpg',
 };
 
 /**
  * Convierte un enlace de Google Drive en la imagen local optimizada correspondiente,
  * o en el enlace directo de visualización de Google como fallback.
+ * Evita colisión de rutas con /products/[slug] mapeando a /images/products/.
  */
 export function getDirectImageUrl(url: string): string {
   if (!url) return '';
@@ -41,6 +42,11 @@ export function getDirectImageUrl(url: string): string {
     }
     // Retornar el formato de hosting directo de Google como fallback
     return `https://lh3.googleusercontent.com/d/${driveId}`;
+  }
+  
+  // Si la URL apunta a /products/... redirigir a /images/products/... para evitar colisión con la ruta de página /products/[slug]
+  if (url.startsWith('/products/')) {
+    return url.replace(/^\/products\//, '/images/products/');
   }
   
   return url;

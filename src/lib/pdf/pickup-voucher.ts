@@ -27,7 +27,7 @@ export async function generatePickupVoucherPdf(orderId: string, order: OrderData
   });
 
   // Generar código QR en buffer PNG
-  const verificationUrl = `https://tecnorampa.com.mx/admin/sales?order=${orderId}`;
+  const verificationUrl = `https://tecnorampa.com.mx/admin/deliveries?order=${orderId}`;
   const qrBuffer = await QRCode.toBuffer(verificationUrl, {
     width: 140,
     margin: 1,
@@ -239,3 +239,4 @@ export async function generatePickupVoucherPdf(orderId: string, order: OrderData
     }
   });
 }
+

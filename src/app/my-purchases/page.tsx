@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, Package, Calendar, MapPin, QrCode, ArrowLeft, Printer, ShoppingBag, Receipt, AlertCircle, MessageSquareText } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -129,7 +130,14 @@ export default function MyPurchasesPage() {
 
                   <div className="bg-foreground text-background rounded-2xl p-4 flex flex-col items-center justify-center text-center space-y-4 shadow-2xl print:bg-white print:text-black print:border-2 print:border-black print:shadow-none print:rounded-lg">
                     <div className="p-2 bg-white rounded-lg shadow-lg print:shadow-none print:border">
-                      <QrCode size={100} className="text-foreground" />
+                      <Image 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`https://tecnorampa.com.mx/admin/deliveries?order=${order.id}`)}`}
+                        alt="Código QR de Recolección"
+                        width={100}
+                        height={100}
+                        unoptimized
+                        className="object-contain"
+                      />
                     </div>
                     <div className="space-y-0.5">
                       <h5 className="font-black uppercase tracking-widest text-[9px] italic text-primary print:text-black">Código de Recolección</h5>

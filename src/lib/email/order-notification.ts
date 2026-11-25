@@ -45,7 +45,7 @@ export function buildSaleEmailTemplates(orderId: string, order: OrderData) {
   
   const adminUrl = process.env.NEXT_PUBLIC_APP_URL 
     ? `${process.env.NEXT_PUBLIC_APP_URL}/admin/sales`
-    : 'https://tecnorampa-pro-store.vercel.app/admin/sales';
+    : 'https://tecnorampa.com.mx/admin/sales';
 
   const dateStr = new Date().toLocaleString('es-MX', {
     timeZone: 'America/Mexico_City',

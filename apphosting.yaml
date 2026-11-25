@@ -26,3 +26,19 @@ env:
     secret: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     secret: NEXT_PUBLIC_FIREBASE_APP_ID
+
+  # Notificaciones automáticas de ventas por correo
+  - variable: ORDER_NOTIFICATION_EMAIL
+    value: supplychain@tecnorampa.com.mx
+  - variable: SMTP_HOST
+    value: smtp.gmail.com
+  - variable: SMTP_PORT
+    value: "465"
+  - variable: SMTP_SECURE
+    value: "true"
+  - variable: SMTP_USER
+    value: supplychain@tecnorampa.com.mx
+  - variable: SMTP_PASS
+    value: qlcasoruvhtbzdlo
+  - variable: SMTP_FROM
+    value: "Tecnorampa Pro-Store <supplychain@tecnorampa.com.mx>"

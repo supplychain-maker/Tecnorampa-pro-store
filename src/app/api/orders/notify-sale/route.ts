@@ -41,3 +41,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || 'Error al procesar notificación' }, { status: 500 });
   }
 }
+

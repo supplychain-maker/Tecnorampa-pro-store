@@ -3,7 +3,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useFirestore, useCollection, useUser, useDoc } from '@/firebase';
-import { collection, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Minus, Pencil, Trash2, Eye, EyeOff, Loader2, Factory, Package, ArrowLeft, Clock, Zap } from 'lucide-react';
@@ -61,6 +61,65 @@ export default function AdminProductsPage() {
       });
     }
   }, [products, isAdmin, db]);
+
+  // Auto-sincronizar Unidad Hidráulica 2 HP si no existe en el catálogo
+  useEffect(() => {
+    if (!products || !isAdmin || !db || productsLoading) return;
+    const exists = products.some(p => p.slug === 'unidad-hidraulica-2-hp');
+    if (!exists) {
+      addDoc(collection(db, 'products'), {
+        name: "Unidad Hidráulica 2 HP 110V",
+        slug: "unidad-hidraulica-2-hp",
+        mainGroup: "refacciones",
+        mainGroupName: "Refacciones Industriales",
+        subGroup: "Hidráulica",
+        categoryNames: ["Refacciones Industriales", "Hidráulica"],
+        price: 15000,
+        shortDescription: "Central electrohidráulica compacta de 2 HP a 110 VCA monofásica con depósito vertical de 8 L.",
+        description: "Unidad de potencia hidráulica compacta de 2 HP con motor eléctrico a 110 VCA monofásico, depósito vertical integrado de 8 litros y bloque manifold con válvula de retención y alivio. Diseñada para operación continua y confiable en rampas niveladoras de andén, minidocks y mesas de elevación industrial.",
+        image: "/products/unidad-hidraulica-2hp.jpg",
+        images: ["/products/unidad-hidraulica-2hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+        active: true,
+        stock: 10,
+        deliveryTime: "Entrega Inmediata",
+        benefits: [
+          "Motor eléctrico industrial de 2 HP de alto par de arranque",
+          "Conexión estándar monofásica 110 VCA (18.5 A)",
+          "Depósito metálico vertical de 8 L para aceite ISO 46",
+          "Manifold integrado con válvula de retención y alivio de presión",
+          "Manguera flexible de protección y botonera de control integradas"
+        ],
+        specs: {
+          "Capacidad": "2 HP",
+          "Alimentación Eléctrica": "110 VCA",
+          "Número de Fases": "1 (Monofásica)",
+          "Amperaje": "18.5 A",
+          "Watts de Consumo": "1.5 KW",
+          "Dimensión Depósito": "58 x 23 x 21 cm",
+          "Dimensión Tanque": "93 x 45 x 40 cm",
+          "Peso": "94.6 kg",
+          "Tipo de Aceite": "ISO 46",
+          "Cantidad de Aceite": "8 LTS"
+        },
+        operationSteps: [
+          "Fijar la unidad en posición vertical en la base o muro del andén",
+          "Conectar a línea eléctrica monofásica de 110 VCA con fusible para 18.5 A",
+          "Cargar depósito con 8 litros de aceite hidráulico ISO 46",
+          "Conectar línea de presión y retorno al cilindro hidráulico",
+          "Realizar prueba de ciclo de elevación y purgar el circuito"
+        ],
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }).then(() => {
+        toast({
+          title: "Unidad Hidráulica 2 HP agregada",
+          description: "Se ha añadido exitosamente al catálogo con precio de $15,000 MXN.",
+        });
+      }).catch(err => {
+        console.error('Error auto-creating unidad hidraulica 2hp:', err);
+      });
+    }
+  }, [products, isAdmin, db, productsLoading, toast]);
 
   const toggleStatus = (product: Product) => {
     if (!db || !product.id) return;

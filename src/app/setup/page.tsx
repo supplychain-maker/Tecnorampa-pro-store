@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useUser, useFirestore } from '@/firebase';
-import { doc, setDoc, collection, addDoc, serverTimestamp, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, addDoc, serverTimestamp, getDocs, deleteDoc, query, where } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Loader2, Database, ShieldAlert, CheckCircle2, ArrowRight, AlertTriangle, Info, UserCheck, Layers } from 'lucide-react';
@@ -524,6 +524,48 @@ const INITIAL_PRODUCTS = [
     benefits: ["Máxima capacidad de carga radial del mercado", "Complemento completo de rodillos de acero endurecido", "Sellos 2RS para protección contra contaminantes", "Resistente a impactos y vibración pesada"],
     specs: { "Modelo": "NCF2208V-2RS", "Tipo": "Rodillos cilíndricos complemento completo", "Sellos": "Doble retén de protección 2RS", "Lubricación": "Grasa industrial para extrema presión" },
     operationSteps: ["Revisar asiento del eje", "Prensado uniforme sobre la pista exterior/interior", "Verificar juego axial permitido"]
+  },
+  {
+    name: "Unidad Hidráulica 2 HP 110V",
+    slug: "unidad-hidraulica-2-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 15000,
+    shortDescription: "Central electrohidráulica compacta de 2 HP a 110 VCA monofásica con depósito vertical de 8 L.",
+    description: "Unidad de potencia hidráulica compacta de 2 HP con motor eléctrico a 110 VCA monofásico, depósito vertical integrado de 8 litros y bloque manifold con válvula de retención y alivio. Diseñada para operación continua y confiable en rampas niveladoras de andén, minidocks y mesas de elevación industrial.",
+    image: "/products/unidad-hidraulica-2hp.jpg",
+    images: ["/products/unidad-hidraulica-2hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico industrial de 2 HP de alto par de arranque",
+      "Conexión estándar monofásica 110 VCA (18.5 A)",
+      "Depósito metálico vertical de 8 L para aceite ISO 46",
+      "Manifold integrado con válvula de retención y alivio de presión",
+      "Manguera flexible de protección y botonera de control integradas"
+    ],
+    specs: {
+      "Capacidad": "2 HP",
+      "Alimentación Eléctrica": "110 VCA",
+      "Número de Fases": "1",
+      "Amperaje": "18.5 A",
+      "Watts de Consumo": "1.5 KW",
+      "Dimensión Depósito": "58 x 23 x 21 cm",
+      "Dimensión Tanque": "93 x 45 x 40 cm",
+      "Peso": "94.6 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "8 LTS"
+    },
+    operationSteps: [
+      "Fijar la unidad en posición vertical en la base o muro del andén",
+      "Conectar a línea eléctrica monofásica de 110 VCA con fusible para 18.5 A",
+      "Cargar depósito con 8 litros de aceite hidráulico ISO 46",
+      "Conectar línea de presión y retorno al cilindro hidráulico",
+      "Realizar prueba de ciclo de elevación y purgar el circuito"
+    ]
   }
 ];
 
@@ -601,6 +643,53 @@ export default function SetupPage() {
     }
   };
 
+  const addHydraulicUnit2HP = async () => {
+    if (!db || !user) return;
+    setLoading(true);
+    setError(null);
+    setStep('Agregando Unidad Hidráulica 2 HP al catálogo...');
+
+    try {
+      const existing = await getDocs(query(collection(db, 'products'), where('slug', '==', 'unidad-hidraulica-2-hp')));
+      if (!existing.empty) {
+        setStep('La Unidad Hidráulica 2 HP ya existe en el catálogo.');
+        setSuccess(true);
+        return;
+      }
+
+      const catsSnap = await getDocs(collection(db, 'categories'));
+      let hidraulicaCatId: string | null = null;
+      let refaccionesCatId: string | null = null;
+
+      for (const catDoc of catsSnap.docs) {
+        const data = catDoc.data();
+        if (data.name === 'Hidráulica') hidraulicaCatId = catDoc.id;
+        if (data.name === 'Refacciones Industriales') refaccionesCatId = catDoc.id;
+      }
+
+      const categoryIds = [refaccionesCatId, hidraulicaCatId].filter((id): id is string => !!id);
+      const prodDef = INITIAL_PRODUCTS.find(p => p.slug === 'unidad-hidraulica-2-hp');
+
+      if (prodDef) {
+        await addDoc(collection(db, 'products'), {
+          ...prodDef,
+          categoryIds,
+          categoryId: categoryIds[0] || null,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+      }
+
+      setSuccess(true);
+      setStep('¡Unidad Hidráulica 2 HP agregada exitosamente!');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Error al agregar la unidad hidráulica');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (authLoading) return <div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin text-primary" size={40} /></div>;
 
   if (!user) {
@@ -666,6 +755,10 @@ export default function SetupPage() {
 
               <Button onClick={runSetup} className="w-full h-16 font-black text-lg uppercase italic shadow-xl" disabled={loading}>
                 {loading ? "RESTAURANDO..." : "RESTAURAR CATÁLOGO COMPLETO"}
+              </Button>
+
+              <Button onClick={addHydraulicUnit2HP} variant="outline" className="w-full h-14 font-black text-sm uppercase italic border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-md" disabled={loading}>
+                ⚡ AGREGAR SÓLO UNIDAD HIDRÁULICA 2 HP ($15,000)
               </Button>
             </div>
           ) : (

@@ -111,6 +111,9 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
     '/products/rodamiento-ncf2208-dentro.jpeg',
     '/products/rodamiento-ncf2208-lado.jpeg',
   ],
+  'unidad-hidraulica-2-hp': [
+    '/products/ficha-especificaciones-unidades-hidraulicas.jpg',
+  ],
 };
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { Product } from '@/app/lib/products';
+import { INITIAL_PRODUCTS } from '@/app/lib/initial-products';
 import { getDirectImageUrl, cn } from '@/lib/utils';
 import { ProductTechnicalSheet } from '@/components/products/ProductTechnicalSheet';
 
@@ -148,7 +149,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   }, [db, slug]);
 
   const { data: products, loading } = useCollection<Product>(productQuery);
-  const product = products?.[0];
+  const fallbackProduct = useMemo(() => {
+    return INITIAL_PRODUCTS.find(p => p.slug === slug);
+  }, [slug]);
+  const product = products?.[0] || fallbackProduct;
 
   useEffect(() => {
     if (/\.(jpe?g|png|webp|gif|svg)$/i.test(slug)) {
@@ -162,7 +166,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     }
   }, [product, selectedVariant]);
 
-  if (loading) {
+  if (loading && !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={40} />

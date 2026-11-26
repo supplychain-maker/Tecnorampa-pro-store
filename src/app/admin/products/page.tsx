@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Product } from '@/app/lib/products';
+import { INITIAL_PRODUCTS } from '@/app/lib/initial-products';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -329,11 +330,11 @@ export default function AdminProductsPage() {
     }
   }, [products, isAdmin, db]);
 
-  // Auto-sincronizar Unidades Hidráulicas si faltan en el catálogo
+  // Auto-sincronizar Unidades Hidráulicas y catálogo si faltan en Firestore
   useEffect(() => {
     if (!products || !isAdmin || !db || productsLoading) return;
     
-    for (const unit of NEW_HYDRAULIC_UNITS) {
+    for (const unit of INITIAL_PRODUCTS) {
       const exists = products.some(p => p.slug === unit.slug);
       if (!exists) {
         addDoc(collection(db, 'products'), {
@@ -342,8 +343,8 @@ export default function AdminProductsPage() {
           updatedAt: serverTimestamp()
         }).then(() => {
           toast({
-            title: "Producto agregado",
-            description: `${unit.name} incorporada automáticamente al catálogo ($${unit.price?.toLocaleString()} MXN).`,
+            title: "Producto sincronizado",
+            description: `${unit.name} sincronizado en la base de datos ($${unit.price?.toLocaleString()} MXN).`,
           });
         }).catch(err => {
           console.error(`Error auto-creating ${unit.slug}:`, err);

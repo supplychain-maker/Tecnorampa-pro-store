@@ -26,6 +26,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Product } from '@/app/lib/products';
+import { INITIAL_PRODUCTS } from '@/app/lib/initial-products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -135,15 +136,22 @@ export default function ProductsPage() {
 
   const { data: products, loading: productsLoading, error } = useCollection<Product>(productsQuery);
 
+  const allProducts = useMemo(() => {
+    const dbList = products || [];
+    const dbSlugs = new Set(dbList.map(p => p.slug));
+    const missing = INITIAL_PRODUCTS.filter(p => !dbSlugs.has(p.slug));
+    return [...dbList, ...missing];
+  }, [products]);
+
   const groupCounts = useMemo(() => {
-    const list = products || [];
+    const list = allProducts;
     return {
       all: list.length,
       anden: list.filter(p => p.mainGroup === 'anden' || p.categoryNames?.some(c => c.toLowerCase().includes('andén') || c.toLowerCase().includes('rampas'))).length,
       estacionamiento: list.filter(p => p.mainGroup === 'estacionamiento' || p.categoryNames?.some(c => c.toLowerCase().includes('estacionamiento'))).length,
       refacciones: list.filter(p => p.mainGroup === 'refacciones' || p.categoryNames?.some(c => c.toLowerCase().includes('refacc') || c.toLowerCase().includes('baleros') || c.toLowerCase().includes('hidrául') || c.toLowerCase().includes('control'))).length,
     };
-  }, [products]);
+  }, [allProducts]);
 
   const activeGroupConfig = useMemo(() => {
     return MAIN_GROUPS_CONFIG.find(g => g.id === selectedMainGroup);
@@ -151,7 +159,7 @@ export default function ProductsPage() {
 
   // Filtrar productos según el Macro-Grupo, Subgrupo y término de búsqueda
   const filteredProducts = useMemo(() => {
-    let results = products || [];
+    let results = allProducts;
 
     // 1. Filtro por Macro-Grupo
     if (selectedMainGroup !== 'all') {
@@ -181,7 +189,7 @@ export default function ProductsPage() {
     }
 
     return results;
-  }, [products, selectedMainGroup, selectedSubGroup, searchTerm]);
+  }, [allProducts, selectedMainGroup, selectedSubGroup, searchTerm]);
 
   const totalPages = Math.ceil((filteredProducts?.length || 0) / ITEMS_PER_PAGE);
   const paginatedProducts = useMemo(() => {

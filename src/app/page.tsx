@@ -29,6 +29,7 @@ import {
 import { useFirestore, useCollection } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
 import { Product } from '@/app/lib/products';
+import { INITIAL_PRODUCTS } from '@/app/lib/initial-products';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -139,7 +140,14 @@ export default function Home() {
     if (!db) return null;
     return query(collection(db, 'products'), where('active', '==', true));
   }, [db]);
-  const { data: allProducts, loading: productsLoading, error: productsError } = useCollection<Product>(productsQuery);
+  const { data: dbProducts, loading: productsLoading, error: productsError } = useCollection<Product>(productsQuery);
+
+  const allProducts = useMemo(() => {
+    const dbList = dbProducts || [];
+    const dbSlugs = new Set(dbList.map(p => p.slug));
+    const missing = INITIAL_PRODUCTS.filter(p => !dbSlugs.has(p.slug));
+    return [...dbList, ...missing];
+  }, [dbProducts]);
 
   // Restaurar la posición exacta de scroll SOLO al volver de un producto
   useEffect(() => {

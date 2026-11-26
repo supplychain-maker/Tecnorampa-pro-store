@@ -188,6 +188,52 @@ const NEW_HYDRAULIC_UNITS: Partial<Product>[] = [
       "Conectar puertos NPT de la válvula LIFT V3080 a la red hidráulica del equipo",
       "Presurizar el circuito y calibrar manómetro de glicerina a la presión nominal"
     ]
+  },
+  {
+    name: "Unidad Hidráulica 10 HP 220V Trifásica Tecnorampa",
+    slug: "unidad-hidraulica-10-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 35000,
+    shortDescription: "Central electrohidráulica de alta potencia 10 HP trifásica a 220 VCA, 7.46 kW, válvula LIFT V3080 y tanque de 85 L.",
+    description: "Unidad de potencia electrohidráulica de uso rudo y alto rendimiento de 10 HP Tecnorampa con motor eléctrico horizontal de enfriamiento por aire a 220 VCA trifásico (7.46 kW). Cuenta con tanque reforzado de 85 litros con mirilla visual para nivel, temperatura y viscosidad, bomba de engranes con dren de aceite, bloque de válvulas LIFT V3080 en aluminio con puertos NPT, manómetro en glicerina calibrado a 500 psi y filtro de admisión de aceite. Desarrollada para rampas de servicio pesado, plataformas elevadoras de gran tonelaje y sistemas con altura de bombeo de hasta 12 metros.",
+    image: "/products/unidad-hidraulica-10hp.jpg",
+    images: ["/products/unidad-hidraulica-10hp.jpg", "/products/ficha-especificaciones-unidades-pesadas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico de 10 HP (7.46 kW) con enfriamiento por aire para trabajo continuo",
+      "Alimentación trifásica 220 VCA (27 A) de alto rendimiento dinámico",
+      "Tanque metálico estructural de 85 L con indicador exterior de nivel y temperatura",
+      "Bloque manifold con válvula LIFT V3080 en aluminio y puertos NPT",
+      "Manómetro en glicerina para monitoreo exacto de presión hasta 500 psi",
+      "Filtro de admisión de aceite para máxima vida útil del sistema hidráulico"
+    ],
+    specs: {
+      "Capacidad": "10 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "3 (Trifásica)",
+      "Amperaje": "27 A",
+      "Watts de Consumo": "7.46 KW",
+      "Dimensión Depósito": "70 x 40 x 90 cm",
+      "Peso": "150 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "85 LTS",
+      "Válvula de Control": "LIFT V3080 aluminio NPT",
+      "Instrumentación": "Manómetro de glicerina 500 psi y visor de nivel/temp",
+      "Altura Máxima": "12 m máx."
+    },
+    operationSteps: [
+      "Fijar y nivelar el tanque estructural sobre la base o fosa designada",
+      "Conectar a línea eléctrica trifásica de 220 VCA protegida para 27 A",
+      "Verificar el sentido de rotación del motor eléctrico y el flujo de aire de enfriamiento",
+      "Llenar el depósito con 85 litros de aceite hidráulico ISO 46 hasta el nivel indicado",
+      "Conectar las líneas hidráulicas a los puertos NPT de la válvula LIFT V3080",
+      "Realizar ciclo de prueba sin carga para purgar aire y verificar presión de trabajo"
+    ]
   }
 ];
 

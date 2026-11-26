@@ -9,7 +9,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Andén de Carga",
     subGroup: "Niveladoras y Mini Docks",
     categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
-    price: 125000,
+    price: 65000,
     shortDescription: "Operación automática con un solo botón. Capacidad de 30k a 50k lbs.",
     description: "La niveladora hidráulica de Tecnorampa ofrece la máxima eficiencia y seguridad. Su sistema electro-hidráulico elimina el esfuerzo manual y reduce el mantenimiento significativamente.",
     image: "/products/niveladora-hidraulica.jpg",
@@ -24,8 +24,17 @@ export const INITIAL_PRODUCTS: Product[] = [
     operationSteps: ["Verificar posicionamiento", "Presionar botón elevación", "Extensión automática"],
     variants: [
       { id: "h-30-16", name: "30,000 lbs - Labio 16\"", priceModifier: 0 },
-      { id: "h-40-16", name: "40,000 lbs - Labio 16\"", priceModifier: 15000 },
-      { id: "h-30-18", name: "30,000 lbs - Labio 18\"", priceModifier: 8000 }
+      { id: "h-30-18", name: "30,000 lbs - Labio 18\"", priceModifier: 2000 },
+      { id: "h-30-20", name: "30,000 lbs - Labio 20\"", priceModifier: 4000 },
+      { id: "h-30-22", name: "30,000 lbs - Labio 22\"", priceModifier: 6000 },
+      { id: "h-40-16", name: "40,000 lbs - Labio 16\"", priceModifier: 5000 },
+      { id: "h-40-18", name: "40,000 lbs - Labio 18\"", priceModifier: 8000 },
+      { id: "h-40-20", name: "40,000 lbs - Labio 20\"", priceModifier: 9000 },
+      { id: "h-40-22", name: "40,000 lbs - Labio 22\"", priceModifier: 11000 },
+      { id: "h-50-16", name: "50,000 lbs - Labio 16\"", priceModifier: 16000 },
+      { id: "h-50-18", name: "50,000 lbs - Labio 18\"", priceModifier: 19000 },
+      { id: "h-50-20", name: "50,000 lbs - Labio 20\"", priceModifier: 21000 },
+      { id: "h-50-22", name: "50,000 lbs - Labio 22\"", priceModifier: 25000 }
     ]
   },
   {
@@ -35,7 +44,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Andén de Carga",
     subGroup: "Niveladoras y Mini Docks",
     categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
-    price: 95000,
+    price: 68000,
     shortDescription: "Operación manual robusta mediante cadena y resortes de alta tensión.",
     description: "Solución confiable y de bajo costo operativo. Fabricada con acero estructural de alta resistencia, diseñada para soportar tráfico pesado constante.",
     image: "/products/niveladora-mecanica.jpg",
@@ -46,11 +55,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     ],
     active: true,
     benefits: ["Sin consumo eléctrico", "Altamente resistente", "Fácil mantenimiento"],
-    specs: { "Capacidad": "30,000 lbs", "Sistema": "Mecánico por cadena", "Material": "Acero Estructural" },
+    specs: { "Capacidad": "30,000 / 40,000 lbs", "Sistema": "Mecánico por cadena", "Material": "Acero Estructural", "Labio": "16\"" },
     operationSteps: ["Jalar cadena de liberación", "Caminar sobre la rampa", "Asentamiento en remolque"],
     variants: [
       { id: "m-30-16", name: "30,000 lbs - Labio 16\"", priceModifier: 0 },
-      { id: "m-40-16", name: "40,000 lbs - Labio 16\"", priceModifier: 12000 }
+      { id: "m-40-16", name: "40,000 lbs - Labio 16\"", priceModifier: 7000 }
     ]
   },
   {
@@ -60,9 +69,9 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Andén de Carga",
     subGroup: "Niveladoras y Mini Docks",
     categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
-    price: 65000,
-    shortDescription: "Compacto y automático. Ideal para renovaciones de andenes existentes.",
-    description: "Se instala directamente en el borde del andén sin necesidad de fosa profunda. Operación electro-hidráulica de un solo toque.",
+    price: 32000,
+    shortDescription: "Compacto y automático de 30,000 lbs. Ideal para renovaciones de andenes existentes.",
+    description: "Se instala directamente en el borde del andén sin necesidad de fosa profunda. Operación electro-hidráulica de un solo toque con capacidad de 30,000 lbs.",
     image: "/products/mini-dock-hidraulico-1.jpg",
     images: [
       "/products/mini-dock-hidraulico-1.jpg",
@@ -70,13 +79,9 @@ export const INITIAL_PRODUCTS: Product[] = [
       "/products/mini-dock-hidraulico-3.jpg"
     ],
     active: true,
-    benefits: ["Instalación rápida", "Operación con botón", "Ahorro de espacio"],
-    specs: { "Capacidad": "30,000 lbs", "Ancho": "66\" / 72\"", "Motor": "1 HP" },
-    operationSteps: ["Alinear camión", "Activar nivelación", "Verificar contacto"],
-    variants: [
-      { id: "md-h-66", name: "Ancho 66\" - 30k lbs", priceModifier: 0 },
-      { id: "md-h-72", name: "Ancho 72\" - 30k lbs", priceModifier: 5500 }
-    ]
+    benefits: ["Instalación rápida", "Operación con botón", "Ahorro de espacio", "Capacidad 30,000 lbs"],
+    specs: { "Capacidad": "30,000 lbs", "Operación": "Electro-hidráulica", "Motor": "1 HP" },
+    operationSteps: ["Alinear camión", "Activar nivelación", "Verificar contacto"]
   },
   {
     name: "Mini Dock Mecánico",
@@ -85,9 +90,9 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Andén de Carga",
     subGroup: "Niveladoras y Mini Docks",
     categoryNames: ["Andén de Carga", "Niveladoras y Mini Docks"],
-    price: 45000,
-    shortDescription: "La solución más económica y rápida para nivelar andenes.",
-    description: "Niveladora de orilla de andén manual. Se acciona mediante una palanca, ideal para operaciones ligeras y medias sin suministro eléctrico.",
+    price: 42000,
+    shortDescription: "La solución más económica y rápida de 30,000 lbs para nivelar andenes.",
+    description: "Niveladora de orilla de andén manual con capacidad de 30,000 lbs. Se acciona mediante una palanca, ideal para operaciones ligeras y medias sin suministro eléctrico.",
     image: "/products/mini-dock-mecanico-1.jpg",
     images: [
       "/products/mini-dock-mecanico-1.jpg",
@@ -95,13 +100,9 @@ export const INITIAL_PRODUCTS: Product[] = [
       "/products/mini-dock-mecanico-3.jpg"
     ],
     active: true,
-    benefits: ["Cero electricidad", "Precio competitivo", "Mantenimiento simple"],
+    benefits: ["Cero electricidad", "Precio competitivo", "Mantenimiento simple", "Capacidad 30,000 lbs"],
     specs: { "Capacidad": "30,000 lbs", "Operación": "Manual con palanca", "Labio": "16\"" },
-    operationSteps: ["Insertar palanca", "Jalar hacia atrás", "Empujar hacia adelante"],
-    variants: [
-      { id: "md-m-66", name: "Ancho 66\" - 30k lbs", priceModifier: 0 },
-      { id: "md-m-72", name: "Ancho 72\" - 30k lbs", priceModifier: 4200 }
-    ]
+    operationSteps: ["Insertar palanca", "Jalar hacia atrás", "Empujar hacia adelante"]
   },
   {
     name: "Semáforo de Andén LED",
@@ -243,7 +244,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Estacionamiento",
     subGroup: "Duplicadores de Autos",
     categoryNames: ["Estacionamiento", "Duplicadores de Autos"],
-    price: 185000,
+    price: 93000,
     shortDescription: "Premium. Duplica tu espacio de estacionamiento con máxima seguridad.",
     description: "Sistema de elevación de alta gama. Permite abrir las puertas del auto completamente gracias a su diseño de postes delgados pero ultra resistentes.",
     image: "/products/rampa-evolution.jpg",
@@ -264,7 +265,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     mainGroupName: "Estacionamiento",
     subGroup: "Duplicadores de Autos",
     categoryNames: ["Estacionamiento", "Duplicadores de Autos"],
-    price: 145000,
+    price: 87000,
     shortDescription: "Robusta y funcional para condominios y residencias.",
     description: "Solución de elevación electro-hidráulica para dos autos. Ideal para garajes con techos altos que buscan optimizar el área de parqueo.",
     image: "/products/rampa-parking-lift.jpg",

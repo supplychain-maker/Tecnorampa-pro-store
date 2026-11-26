@@ -140,6 +140,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const { toast } = useToast();
   
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  const [hydraulicCapacity, setHydraulicCapacity] = useState<'30' | '40' | '50'>('30');
+  const [hydraulicLip, setHydraulicLip] = useState<'16' | '18' | '20' | '22'>('16');
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
@@ -152,7 +154,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const fallbackProduct = useMemo(() => {
     return INITIAL_PRODUCTS.find(p => p.slug === slug);
   }, [slug]);
-  const product = products?.[0] || fallbackProduct;
+  const rawProduct = products?.[0] || fallbackProduct;
+  const product = useMemo(() => {
+    if (!rawProduct) return null;
+    if (!fallbackProduct) return rawProduct;
+    return {
+      ...rawProduct,
+      price: fallbackProduct.price,
+      variants: fallbackProduct.variants,
+      specs: { ...rawProduct.specs, ...fallbackProduct.specs }
+    };
+  }, [rawProduct, fallbackProduct]);
 
   useEffect(() => {
     if (/\.(jpe?g|png|webp|gif|svg)$/i.test(slug)) {
@@ -161,10 +173,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   }, [slug]);
 
   useEffect(() => {
-    if (product && product.variants && product.variants.length > 0 && !selectedVariant) {
+    if (product?.slug === 'niveladora-hidraulica-premium') {
+      const targetId = `h-${hydraulicCapacity}-${hydraulicLip}`;
+      if (selectedVariant !== targetId) {
+        setSelectedVariant(targetId);
+      }
+    } else if (product && product.variants && product.variants.length > 0 && !selectedVariant) {
       setSelectedVariant(product.variants[0].id);
     }
-  }, [product, selectedVariant]);
+  }, [product, selectedVariant, hydraulicCapacity, hydraulicLip]);
 
   if (loading && !product) {
     return (
@@ -322,44 +339,135 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <Separator className="bg-border" />
 
             {product.variants && product.variants.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-black uppercase text-[10px] tracking-widest text-primary italic">
-                    Configuración / Medida Certificada:
-                  </h4>
-                  <span className="text-[10px] text-muted-foreground font-bold">
-                    {product.variants.length} medidas disponibles
-                  </span>
-                </div>
-                <RadioGroup 
-                  value={selectedVariant || ''} 
-                  onValueChange={setSelectedVariant} 
-                  className={cn(
-                    "grid gap-2.5",
-                    product.variants.length > 3 ? "grid-cols-1 sm:grid-cols-2 max-h-80 overflow-y-auto pr-1" : "grid-cols-1"
-                  )}
-                >
-                  {product.variants.map((v) => (
-                    <div key={v.id} className="relative">
-                      <RadioGroupItem value={v.id} id={v.id} className="peer sr-only" />
-                      <Label
-                        htmlFor={v.id}
-                        className="flex flex-1 items-center justify-between rounded-md border-2 border-muted bg-card p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary cursor-pointer transition-all shadow-sm"
-                      >
-                        <div className="flex flex-col pr-2">
-                          <span className="font-black uppercase text-xs italic">{v.name}</span>
-                          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Materia prima certificada</span>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <span className="font-black text-sm italic text-primary">
-                            ${(product.price + v.priceModifier).toLocaleString()}
-                          </span>
-                        </div>
-                      </Label>
+              product.slug === 'niveladora-hidraulica-premium' ? (
+                <div className="space-y-5 bg-muted/30 p-5 md:p-6 rounded-2xl border border-border shadow-xs">
+                  {/* Sección 1: Capacidad */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <label className="font-black uppercase text-xs tracking-wider text-foreground flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary inline-block" />
+                        Capacidad de Carga:
+                      </label>
+                      <span className="text-xs font-black text-primary uppercase italic">
+                        {hydraulicCapacity === '30' ? '30,000 lbs' : hydraulicCapacity === '40' ? '40,000 lbs' : '50,000 lbs'}
+                      </span>
                     </div>
-                  ))}
-                </RadioGroup>
-              </div>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {[
+                        { id: '30', label: '30,000 lbs', desc: 'Estándar' },
+                        { id: '40', label: '40,000 lbs', desc: 'Pesada' },
+                        { id: '50', label: '50,000 lbs', desc: 'Extra Pesada' }
+                      ].map(cap => (
+                        <button
+                          key={cap.id}
+                          type="button"
+                          onClick={() => {
+                            setHydraulicCapacity(cap.id as any);
+                            setSelectedVariant(`h-${cap.id}-${hydraulicLip}`);
+                          }}
+                          className={cn(
+                            "py-3 px-2 rounded-xl border-2 text-center transition-all flex flex-col items-center justify-center gap-0.5 cursor-pointer",
+                            hydraulicCapacity === cap.id
+                              ? "border-primary bg-primary/10 text-primary font-black shadow-sm ring-1 ring-primary/40"
+                              : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground font-bold"
+                          )}
+                        >
+                          <span className="text-sm md:text-base font-black italic tracking-tight">{cap.label}</span>
+                          <span className="text-[9px] uppercase tracking-wider opacity-80">{cap.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sección 2: Largo de Labio */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <label className="font-black uppercase text-xs tracking-wider text-foreground flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary inline-block" />
+                        Largo de Labio:
+                      </label>
+                      <span className="text-xs font-black text-primary uppercase italic">
+                        Labio de {hydraulicLip}&quot;
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[
+                        { id: '16', label: '16"' },
+                        { id: '18', label: '18"' },
+                        { id: '20', label: '20"' },
+                        { id: '22', label: '22"' }
+                      ].map(lip => (
+                        <button
+                          key={lip.id}
+                          type="button"
+                          onClick={() => {
+                            setHydraulicLip(lip.id as any);
+                            setSelectedVariant(`h-${hydraulicCapacity}-${lip.id}`);
+                          }}
+                          className={cn(
+                            "py-3 px-2 rounded-xl border-2 text-center transition-all flex flex-col items-center justify-center cursor-pointer",
+                            hydraulicLip === lip.id
+                              ? "border-primary bg-primary/10 text-primary font-black shadow-sm ring-1 ring-primary/40"
+                              : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground font-bold"
+                          )}
+                        >
+                          <span className="text-sm md:text-base font-black italic">{lip.label}</span>
+                          <span className="text-[8px] uppercase tracking-widest text-muted-foreground font-bold mt-0.5">Labio</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Resumen de configuración activa */}
+                  <div className="bg-background/90 rounded-xl p-3 border border-border flex items-center justify-between">
+                    <span className="text-[11px] font-black uppercase text-muted-foreground tracking-wider">
+                      Configuración activa:
+                    </span>
+                    <span className="text-xs font-black text-primary uppercase italic">
+                      {hydraulicCapacity === '30' ? '30,000 lbs' : hydraulicCapacity === '40' ? '40,000 lbs' : '50,000 lbs'} — Labio {hydraulicLip}&quot; (${finalPrice.toLocaleString()} MXN)
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-black uppercase text-[10px] tracking-widest text-primary italic">
+                      Configuración / Medida Certificada:
+                    </h4>
+                    <span className="text-[10px] text-muted-foreground font-bold">
+                      {product.variants.length} medidas disponibles
+                    </span>
+                  </div>
+                  <RadioGroup 
+                    value={selectedVariant || ''} 
+                    onValueChange={setSelectedVariant} 
+                    className={cn(
+                      "grid gap-2.5",
+                      product.variants.length > 3 ? "grid-cols-1 sm:grid-cols-2 max-h-80 overflow-y-auto pr-1" : "grid-cols-1"
+                    )}
+                  >
+                    {product.variants.map((v) => (
+                      <div key={v.id} className="relative">
+                        <RadioGroupItem value={v.id} id={v.id} className="peer sr-only" />
+                        <Label
+                          htmlFor={v.id}
+                          className="flex flex-1 items-center justify-between rounded-md border-2 border-muted bg-card p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary cursor-pointer transition-all shadow-sm"
+                        >
+                          <div className="flex flex-col pr-2">
+                            <span className="font-black uppercase text-xs italic">{v.name}</span>
+                            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Materia prima certificada</span>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="font-black text-sm italic text-primary">
+                              ${(product.price + v.priceModifier).toLocaleString()}
+                            </span>
+                          </div>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              )
             )}
 
             {/* Selector de Cantidad y Aviso Dinámico de Entrega */}

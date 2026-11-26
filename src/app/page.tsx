@@ -144,9 +144,22 @@ export default function Home() {
 
   const allProducts = useMemo(() => {
     const dbList = dbProducts || [];
+    const initialMap = new Map(INITIAL_PRODUCTS.map(p => [p.slug, p]));
+
+    const updatedDbList = dbList.map(p => {
+      const initial = initialMap.get(p.slug);
+      if (!initial) return p;
+      return {
+        ...p,
+        price: initial.price,
+        variants: initial.variants,
+        specs: { ...p.specs, ...initial.specs }
+      };
+    });
+
     const dbSlugs = new Set(dbList.map(p => p.slug));
     const missing = INITIAL_PRODUCTS.filter(p => !dbSlugs.has(p.slug));
-    return [...dbList, ...missing];
+    return [...updatedDbList, ...missing];
   }, [dbProducts]);
 
   // Restaurar la posición exacta de scroll SOLO al volver de un producto

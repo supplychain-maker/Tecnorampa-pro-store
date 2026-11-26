@@ -138,9 +138,22 @@ export default function ProductsPage() {
 
   const allProducts = useMemo(() => {
     const dbList = products || [];
+    const initialMap = new Map(INITIAL_PRODUCTS.map(p => [p.slug, p]));
+
+    const updatedDbList = dbList.map(p => {
+      const initial = initialMap.get(p.slug);
+      if (!initial) return p;
+      return {
+        ...p,
+        price: initial.price,
+        variants: initial.variants,
+        specs: { ...p.specs, ...initial.specs }
+      };
+    });
+
     const dbSlugs = new Set(dbList.map(p => p.slug));
     const missing = INITIAL_PRODUCTS.filter(p => !dbSlugs.has(p.slug));
-    return [...dbList, ...missing];
+    return [...updatedDbList, ...missing];
   }, [products]);
 
   const groupCounts = useMemo(() => {

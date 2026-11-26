@@ -330,13 +330,13 @@ export default function AdminProductsPage() {
     }
   }, [products, isAdmin, db]);
 
-  // Auto-sincronizar Unidades Hidráulicas y catálogo si faltan en Firestore
+  // Auto-sincronizar Unidades Hidráulicas y catálogo si faltan en Firestore, o actualizar precios oficiales
   useEffect(() => {
     if (!products || !isAdmin || !db || productsLoading) return;
     
     for (const unit of INITIAL_PRODUCTS) {
-      const exists = products.some(p => p.slug === unit.slug);
-      if (!exists) {
+      const existing = products.find(p => p.slug === unit.slug);
+      if (!existing) {
         addDoc(collection(db, 'products'), {
           ...unit,
           createdAt: serverTimestamp(),
@@ -348,6 +348,22 @@ export default function AdminProductsPage() {
           });
         }).catch(err => {
           console.error(`Error auto-creating ${unit.slug}:`, err);
+        });
+      } else if (
+        existing.id && (
+          existing.price !== unit.price || 
+          JSON.stringify(existing.variants ?? []) !== JSON.stringify(unit.variants ?? [])
+        )
+      ) {
+        const ref = doc(db, 'products', existing.id);
+        updateDoc(ref, {
+          price: unit.price,
+          variants: unit.variants ?? [],
+          updatedAt: serverTimestamp()
+        }).then(() => {
+          console.log(`Updated official price for ${unit.slug}: $${unit.price}`);
+        }).catch(err => {
+          console.error(`Error updating price for ${unit.slug}:`, err);
         });
       }
     }

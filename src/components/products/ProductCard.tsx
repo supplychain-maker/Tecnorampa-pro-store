@@ -86,6 +86,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-2xl italic">
+              {product.variants && product.variants.length > 0 && (
+                <span className="text-xs uppercase font-bold text-muted-foreground not-italic tracking-wider">Desde</span>
+              )}
               ${product.price.toLocaleString()} 
               <span className="text-xs text-muted-foreground font-normal not-italic tracking-widest">MXN</span>
             </div>

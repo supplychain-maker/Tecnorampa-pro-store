@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -16,6 +15,93 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { useRouter } from 'next/navigation';
 import { getDirectImageUrl, cn } from '@/lib/utils';
+
+const NEW_HYDRAULIC_UNITS: Partial<Product>[] = [
+  {
+    name: "Unidad Hidráulica 2 HP 110V",
+    slug: "unidad-hidraulica-2-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 15000,
+    shortDescription: "Central electrohidráulica compacta de 2 HP a 110 VCA monofásica con depósito vertical de 8 L.",
+    description: "Unidad de potencia hidráulica compacta de 2 HP con motor eléctrico a 110 VCA monofásico, depósito vertical integrado de 8 litros y bloque manifold con válvula de retención y alivio. Diseñada para operación continua y confiable en rampas niveladoras de andén, minidocks y mesas de elevación industrial.",
+    image: "/products/unidad-hidraulica-2hp.jpg",
+    images: ["/products/unidad-hidraulica-2hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico industrial de 2 HP de alto par de arranque",
+      "Conexión estándar monofásica 110 VCA (18.5 A)",
+      "Depósito metálico vertical de 8 L para aceite ISO 46",
+      "Manifold integrado con válvula de retención y alivio de presión",
+      "Manguera flexible de protección y botonera de control integradas"
+    ],
+    specs: {
+      "Capacidad": "2 HP",
+      "Alimentación Eléctrica": "110 VCA",
+      "Número de Fases": "1 (Monofásica)",
+      "Amperaje": "18.5 A",
+      "Watts de Consumo": "1.5 KW",
+      "Dimensión Depósito": "58 x 23 x 21 cm",
+      "Dimensión Tanque": "93 x 45 x 40 cm",
+      "Peso": "94.6 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "8 LTS"
+    },
+    operationSteps: [
+      "Fijar la unidad en posición vertical en la base o muro del andén",
+      "Conectar a línea eléctrica monofásica de 110 VCA con fusible para 18.5 A",
+      "Cargar depósito con 8 litros de aceite hidráulico ISO 46",
+      "Conectar línea de presión y retorno al cilindro hidráulico",
+      "Realizar prueba de ciclo de elevación y purgar el circuito"
+    ]
+  },
+  {
+    name: "Unidad Hidráulica 3 HP 220V",
+    slug: "unidad-hidraulica-3-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 20000,
+    shortDescription: "Central electrohidráulica de 3 HP a 220 VCA con tanque industrial de 40 L y mirilla de nivel.",
+    description: "Unidad de potencia hidráulica industrial de 3 HP equipada con motor eléctrico a 220 VCA (2 fases), tanque rectangular de acero estructural de 40 litros, indicador de nivel visual, tapón de llenado con respiradero y base con patas de anclaje. Ideal para rampas niveladoras de alta demanda, duplicadores de autos y plataformas elevadoras pesadas.",
+    image: "/products/unidad-hidraulica-3hp.jpg",
+    images: ["/products/unidad-hidraulica-3hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico de 3 HP para servicio industrial continuo",
+      "Alimentación a 220 VCA bifásica (16 A)",
+      "Tanque de acero de 40 L para óptima disipación térmica",
+      "Indicador de nivel visual de aceite exterior integrado",
+      "Patas estructurales con barrenos para anclaje firme a piso o base"
+    ],
+    specs: {
+      "Capacidad": "3 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "2 (Bifásica)",
+      "Amperaje": "16 A",
+      "Watts de Consumo": "2.25 KW",
+      "Dimensión Depósito": "68 x 23 x 21 cm",
+      "Dimensión Tanque": "93 x 45 x 40 cm",
+      "Peso": "97 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "40 LTS"
+    },
+    operationSteps: [
+      "Anclar la unidad a piso firme mediante los 4 barrenos de las patas estructurales",
+      "Conectar a línea bifásica de 220 VCA protegida para 16 A",
+      "Llenar tanque con 40 litros de aceite hidráulico ISO 46 verificando el visor de nivel",
+      "Conectar líneas hidráulicas de presión y retorno",
+      "Encender motor para purgar el sistema y verificar presión de trabajo"
+    ]
+  }
+];
 
 export default function AdminProductsPage() {
   const db = useFirestore();
@@ -62,62 +148,26 @@ export default function AdminProductsPage() {
     }
   }, [products, isAdmin, db]);
 
-  // Auto-sincronizar Unidad Hidráulica 2 HP si no existe en el catálogo
+  // Auto-sincronizar Unidades Hidráulicas si faltan en el catálogo
   useEffect(() => {
     if (!products || !isAdmin || !db || productsLoading) return;
-    const exists = products.some(p => p.slug === 'unidad-hidraulica-2-hp');
-    if (!exists) {
-      addDoc(collection(db, 'products'), {
-        name: "Unidad Hidráulica 2 HP 110V",
-        slug: "unidad-hidraulica-2-hp",
-        mainGroup: "refacciones",
-        mainGroupName: "Refacciones Industriales",
-        subGroup: "Hidráulica",
-        categoryNames: ["Refacciones Industriales", "Hidráulica"],
-        price: 15000,
-        shortDescription: "Central electrohidráulica compacta de 2 HP a 110 VCA monofásica con depósito vertical de 8 L.",
-        description: "Unidad de potencia hidráulica compacta de 2 HP con motor eléctrico a 110 VCA monofásico, depósito vertical integrado de 8 litros y bloque manifold con válvula de retención y alivio. Diseñada para operación continua y confiable en rampas niveladoras de andén, minidocks y mesas de elevación industrial.",
-        image: "/products/unidad-hidraulica-2hp.jpg",
-        images: ["/products/unidad-hidraulica-2hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
-        active: true,
-        stock: 10,
-        deliveryTime: "Entrega Inmediata",
-        benefits: [
-          "Motor eléctrico industrial de 2 HP de alto par de arranque",
-          "Conexión estándar monofásica 110 VCA (18.5 A)",
-          "Depósito metálico vertical de 8 L para aceite ISO 46",
-          "Manifold integrado con válvula de retención y alivio de presión",
-          "Manguera flexible de protección y botonera de control integradas"
-        ],
-        specs: {
-          "Capacidad": "2 HP",
-          "Alimentación Eléctrica": "110 VCA",
-          "Número de Fases": "1 (Monofásica)",
-          "Amperaje": "18.5 A",
-          "Watts de Consumo": "1.5 KW",
-          "Dimensión Depósito": "58 x 23 x 21 cm",
-          "Dimensión Tanque": "93 x 45 x 40 cm",
-          "Peso": "94.6 kg",
-          "Tipo de Aceite": "ISO 46",
-          "Cantidad de Aceite": "8 LTS"
-        },
-        operationSteps: [
-          "Fijar la unidad en posición vertical en la base o muro del andén",
-          "Conectar a línea eléctrica monofásica de 110 VCA con fusible para 18.5 A",
-          "Cargar depósito con 8 litros de aceite hidráulico ISO 46",
-          "Conectar línea de presión y retorno al cilindro hidráulico",
-          "Realizar prueba de ciclo de elevación y purgar el circuito"
-        ],
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }).then(() => {
-        toast({
-          title: "Unidad Hidráulica 2 HP agregada",
-          description: "Se ha añadido exitosamente al catálogo con precio de $15,000 MXN.",
+    
+    for (const unit of NEW_HYDRAULIC_UNITS) {
+      const exists = products.some(p => p.slug === unit.slug);
+      if (!exists) {
+        addDoc(collection(db, 'products'), {
+          ...unit,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }).then(() => {
+          toast({
+            title: "Producto agregado",
+            description: `${unit.name} incorporada automáticamente al catálogo ($${unit.price?.toLocaleString()} MXN).`,
+          });
+        }).catch(err => {
+          console.error(`Error auto-creating ${unit.slug}:`, err);
         });
-      }).catch(err => {
-        console.error('Error auto-creating unidad hidraulica 2hp:', err);
-      });
+      }
     }
   }, [products, isAdmin, db, productsLoading, toast]);
 
@@ -233,124 +283,120 @@ export default function AdminProductsPage() {
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Precio</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Stock / Entrega</TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest">Estado</TableHead>
-                  <TableHead className="font-black uppercase text-[10px] tracking-widest text-right">Acciones</TableHead>
+                  <TableHead className="text-right font-black uppercase text-[10px] tracking-widest">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {products.map((product) => {
-                  const displayName = product.slug === 'resorte-extension-amarillo-rampa'
-                    ? 'Resorte de Extensión Amarillo'
-                    : product.name;
+                  const stock = product.stock ?? 0;
                   return (
-                  <TableRow key={product.id || product.slug} className="group hover:bg-muted/30 transition-colors">
-                    <TableCell>
-                      <div className="relative w-16 h-12 bg-muted rounded overflow-hidden border border-border">
-                        <Image 
-                          src={getDirectImageUrl(product.image)} 
-                          alt={displayName} 
-                          fill 
-                          className="object-cover" 
-                          unoptimized 
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-black uppercase text-sm italic">{displayName}</span>
-                        <span className="text-[10px] text-muted-foreground font-mono">{product.id}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {product.categoryNames?.map((cat, i) => (
-                          <Badge key={i} variant="outline" className="text-[8px] font-black uppercase px-1 py-0 h-4">{cat}</Badge>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-bold text-primary">
-                      ${product.price.toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1.5 min-w-[150px]">
-                        <div className="flex items-center gap-1.5">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-6 w-6 text-xs p-0 shrink-0 hover:bg-muted" 
-                            title="Reducir stock"
-                            onClick={() => handleQuickStock(product, Math.max(0, (Number(product.stock) || 0) - 1))}
-                          >
-                            <Minus size={10} />
-                          </Button>
-                          <span className={cn(
-                            "font-mono font-black text-xs px-2 py-0.5 rounded border text-center min-w-[28px]",
-                            (product.stock ?? 0) > 0 
-                              ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/30" 
-                              : "bg-muted text-muted-foreground border-border"
-                          )}>
-                            {product.stock ?? 0}
-                          </span>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-6 w-6 text-xs p-0 shrink-0 hover:bg-muted" 
-                            title="Aumentar stock"
-                            onClick={() => handleQuickStock(product, (Number(product.stock) || 0) + 1)}
-                          >
-                            <Plus size={10} />
-                          </Button>
-                          {(product.stock ?? 0) > 0 ? (
-                            <Badge className="bg-emerald-600/10 text-emerald-600 border-emerald-600/30 text-[8px] font-black uppercase px-1.5 py-0 h-4">
-                              <Zap size={8} className="mr-0.5 inline" /> Inmediata
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-500/5 text-[8px] font-black uppercase px-1.5 py-0 h-4">
-                              Sin stock
+                    <TableRow key={product.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell>
+                        <div className="relative w-12 h-12 rounded border bg-muted/20 overflow-hidden">
+                          <Image 
+                            src={getDirectImageUrl(product.image)} 
+                            alt={product.name} 
+                            fill 
+                            className="object-contain p-1"
+                            unoptimized
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-black text-xs uppercase tracking-tight max-w-[200px]">
+                        <Link href={`/products/${product.slug}`} className="hover:text-primary transition-colors">
+                          {product.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <Badge variant="outline" className="text-[9px] w-fit font-bold border-primary/30 text-primary">
+                            {product.mainGroupName || 'Sin grupo'}
+                          </Badge>
+                          {product.subGroup && (
+                            <Badge variant="secondary" className="text-[8px] w-fit font-medium">
+                              {product.subGroup}
                             </Badge>
                           )}
                         </div>
-                        <span className="text-[10px] text-muted-foreground font-medium truncate flex items-center gap-1" title={product.deliveryTime || '3 a 5 días hábiles'}>
-                          <Clock size={10} className="shrink-0 text-primary" />
-                          {product.deliveryTime || '3 a 5 días hábiles'}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {product.active ? (
-                        <Badge className="bg-green-600/10 text-green-600 border-green-600/20 text-[9px] font-black uppercase tracking-widest">Activo</Badge>
-                      ) : (
-                        <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-widest opacity-50">Inactivo</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      </TableCell>
+                      <TableCell className="font-black text-sm italic text-primary">
+                        ${product.price.toLocaleString()} <span className="text-[9px] text-muted-foreground font-normal not-italic">MXN</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center border rounded-lg bg-background shadow-xs overflow-hidden">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-7 w-7 rounded-none hover:bg-muted"
+                              onClick={() => handleQuickStock(product, Math.max(0, stock - 1))}
+                              title="Restar 1 unidad"
+                            >
+                              <Minus size={12} />
+                            </Button>
+                            <span className={cn(
+                              "px-2.5 text-xs font-black min-w-[28px] text-center",
+                              stock > 0 ? "text-emerald-700" : "text-muted-foreground"
+                            )}>
+                              {stock}
+                            </span>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-7 w-7 rounded-none hover:bg-muted"
+                              onClick={() => handleQuickStock(product, stock + 1)}
+                              title="Sumar 1 unidad"
+                            >
+                              <Plus size={12} />
+                            </Button>
+                          </div>
+
+                          {stock > 0 ? (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                              <Zap size={10} className="text-emerald-600" /> Inmediata
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase text-muted-foreground bg-muted border border-border px-2 py-0.5 rounded-full">
+                              <Clock size={10} className="text-primary" /> {product.deliveryTime || '3 a 5 días'}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         <Button 
                           variant="ghost" 
-                          size="icon" 
-                          title={product.active ? "Desactivar" : "Activar"}
+                          size="sm" 
                           onClick={() => toggleStatus(product)}
-                          className="hover:bg-primary/10 hover:text-primary"
+                          className={cn(
+                            "text-[9px] font-black uppercase tracking-wider h-6 px-2.5 rounded-full",
+                            product.active 
+                              ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20" 
+                              : "bg-muted text-muted-foreground hover:bg-muted/80"
+                          )}
                         >
-                          {product.active ? <EyeOff size={18} /> : <Eye size={18} />}
+                          {product.active ? 'Activo' : 'Oculto'}
                         </Button>
-                        <Link href={`/admin/products/${product.id}/edit`}>
-                          <Button variant="ghost" size="icon" className="hover:bg-blue-600/10 hover:text-blue-600">
-                            <Pencil size={18} />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Link href={`/admin/products/${product.id}/edit`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary">
+                              <Pencil size={14} />
+                            </Button>
+                          </Link>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                            onClick={() => handleDelete(product)}
+                          >
+                            <Trash2 size={14} />
                           </Button>
-                        </Link>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleDelete(product)}
-                          className="hover:bg-destructive/10 hover:text-destructive"
-                        >
-                          <Trash2 size={18} />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

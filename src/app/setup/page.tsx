@@ -566,6 +566,48 @@ const INITIAL_PRODUCTS = [
       "Conectar línea de presión y retorno al cilindro hidráulico",
       "Realizar prueba de ciclo de elevación y purgar el circuito"
     ]
+  },
+  {
+    name: "Unidad Hidráulica 3 HP 220V",
+    slug: "unidad-hidraulica-3-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 20000,
+    shortDescription: "Central electrohidráulica de 3 HP a 220 VCA con tanque industrial de 40 L y mirilla de nivel.",
+    description: "Unidad de potencia hidráulica industrial de 3 HP equipada con motor eléctrico a 220 VCA (2 fases), tanque rectangular de acero estructural de 40 litros, indicador de nivel visual, tapón de llenado con respiradero y base con patas de anclaje. Ideal para rampas niveladoras de alta demanda, duplicadores de autos y plataformas elevadoras pesadas.",
+    image: "/products/unidad-hidraulica-3hp.jpg",
+    images: ["/products/unidad-hidraulica-3hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico de 3 HP para servicio industrial continuo",
+      "Alimentación a 220 VCA bifásica (16 A)",
+      "Tanque de acero de 40 L para óptima disipación térmica",
+      "Indicador de nivel visual de aceite exterior integrado",
+      "Patas estructurales con barrenos para anclaje firme a piso o base"
+    ],
+    specs: {
+      "Capacidad": "3 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "2 (Bifásica)",
+      "Amperaje": "16 A",
+      "Watts de Consumo": "2.25 KW",
+      "Dimensión Depósito": "68 x 23 x 21 cm",
+      "Dimensión Tanque": "93 x 45 x 40 cm",
+      "Peso": "97 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "40 LTS"
+    },
+    operationSteps: [
+      "Anclar la unidad a piso firme mediante los 4 barrenos de las patas estructurales",
+      "Conectar a línea bifásica de 220 VCA protegida para 16 A",
+      "Llenar tanque con 40 litros de aceite hidráulico ISO 46 verificando el visor de nivel",
+      "Conectar líneas hidráulicas de presión y retorno",
+      "Encender motor para purgar el sistema y verificar presión de trabajo"
+    ]
   }
 ];
 

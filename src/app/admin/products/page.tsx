@@ -100,6 +100,48 @@ const NEW_HYDRAULIC_UNITS: Partial<Product>[] = [
       "Conectar líneas hidráulicas de presión y retorno",
       "Encender motor para purgar el sistema y verificar presión de trabajo"
     ]
+  },
+  {
+    name: "Unidad Hidráulica 5 HP 220V Trifásica Evolution",
+    slug: "unidad-hidraulica-5-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 25000,
+    shortDescription: "Central electrohidráulica industrial de 5 HP a 220 VCA trifásica con tanque de 65 L, manómetro y electroválvula.",
+    description: "Unidad de potencia electrohidráulica de alto rendimiento serie Evolution de 5 HP. Configurada con motor trifásico horizontal de alto torque a 220 VCA, tanque de almacenamiento de 65 litros, manifold con manómetro de presión, electroválvula direccional y mirilla visual. Diseñada para operación continua y ciclos pesados en rampas vehiculares, sistemas de elevación múltiple y andenes industriales.",
+    image: "/products/unidad-hidraulica-5hp.jpg",
+    images: ["/products/unidad-hidraulica-5hp.jpg", "/products/ficha-especificaciones-unidades-hidraulicas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico trifásico de 5 HP de alto par y bajo calentamiento",
+      "Alimentación trifásica 220 VCA (14 A) de alta eficiencia",
+      "Gran tanque de acero de 65 L con mirilla para trabajo continuo",
+      "Bloque manifold con manómetro de presión y electroválvula integrados",
+      "Diseño horizontal serie Evolution con patas estructurales de anclaje"
+    ],
+    specs: {
+      "Capacidad": "5 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "3 (Trifásica)",
+      "Amperaje": "14 A",
+      "Watts de Consumo": "3.73 KW",
+      "Dimensión Depósito": "63 x 76 x 48 cm",
+      "Peso": "106 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "65 LTS",
+      "Instrumentación": "Manómetro de glicerina y visor de nivel incluidos"
+    },
+    operationSteps: [
+      "Montar y anclar la base de la unidad a piso firme y nivelado",
+      "Conectar acometida trifásica de 220 VCA con protección térmica calibrada a 14 A",
+      "Verificar sentido de rotación del motor eléctrico horizontal",
+      "Cargar el tanque con 65 litros de aceite hidráulico anti-desgaste ISO 46",
+      "Conectar mangueras de presión/retorno y calibrar presión de alivio con el manómetro"
+    ]
   }
 ];
 

@@ -126,6 +126,9 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
   'unidad-hidraulica-10-hp': [
     '/products/ficha-especificaciones-unidades-pesadas.jpg',
   ],
+  'unidad-hidraulica-15-hp': [
+    '/products/ficha-especificaciones-unidades-pesadas.jpg',
+  ],
 };
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {

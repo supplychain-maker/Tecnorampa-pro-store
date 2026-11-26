@@ -234,6 +234,53 @@ const NEW_HYDRAULIC_UNITS: Partial<Product>[] = [
       "Conectar las líneas hidráulicas a los puertos NPT de la válvula LIFT V3080",
       "Realizar ciclo de prueba sin carga para purgar aire y verificar presión de trabajo"
     ]
+  },
+  {
+    name: "Unidad Hidráulica 15 HP 220V Trifásica Tecnorampa",
+    slug: "unidad-hidraulica-15-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 40000,
+    shortDescription: "Central electrohidráulica de potencia pesada 15 HP trifásica a 220 VCA, 11.19 kW, tanque de 160 L y bomba manual de emergencia.",
+    description: "Unidad de potencia electrohidráulica de máxima capacidad 15 HP Tecnorampa con motor eléctrico trifásico a 220 VCA de enfriamiento por aire (11.19 kW). Diseñada para las exigencias más severas de elevación continua en la industria logística. Cuenta con un gran tanque reforzado de 160 litros con indicador de nivel, temperatura y viscosidad, manifold con válvula LIFT V3080 de aluminio NPT, manómetro en glicerina de 500 psi, filtro de admisión de alta pureza, bomba con drenaje de aceite y sistema de palanca/bomba manual de respaldo para descenso o accionamiento de emergencia.",
+    image: "/products/unidad-hidraulica-15hp.jpg",
+    images: ["/products/unidad-hidraulica-15hp.jpg", "/products/ficha-especificaciones-unidades-pesadas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor industrial trifásico de 15 HP (11.19 kW) con enfriamiento por aire para ciclo continuo",
+      "Alimentación trifásica 220 VCA (41 A) de máxima fuerza y torque",
+      "Tanque de acero de gran volumen de 160 L para excelente estabilidad térmica",
+      "Bomba manual de respaldo con palanca integrada para maniobras de emergencia",
+      "Bloque manifold con válvula LIFT V3080 de aluminio y manómetro en baño de glicerina",
+      "Mirilla exterior de nivel, temperatura y viscosidad de aceite con alcance hasta 12 m"
+    ],
+    specs: {
+      "Capacidad": "15 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "3 (Trifásica)",
+      "Amperaje": "41 A",
+      "Watts de Consumo": "11.19 KW",
+      "Dimensión Depósito": "100 x 100 x 120 cm",
+      "Peso": "205 kg",
+      "Tipo de Aceite": "ISO 46",
+      "Cantidad de Aceite": "160 LTS",
+      "Válvula de Control": "LIFT V3080 aluminio NPT",
+      "Instrumentación": "Manómetro de glicerina 500 psi y visor de nivel/temp",
+      "Sistema de Emergencia": "Bomba manual de palanca integrada",
+      "Altura Máxima": "12 m máx."
+    },
+    operationSteps: [
+      "Anclar el tanque de 160 L a la base de concreto mediante sus patas estructurales",
+      "Conectar a acometida eléctrica trifásica de 220 VCA calibrada para 41 A",
+      "Verificar rotación del motor y ventilador de enfriamiento",
+      "Rellenar con 160 litros de aceite hidráulico ISO 46 verificando el visor de nivel",
+      "Conectar las líneas hidráulicas a los puertos de la válvula LIFT V3080 y verificar la palanca de emergencia",
+      "Poner en marcha para purga de aire y calibración de la presión con el manómetro"
+    ]
   }
 ];
 

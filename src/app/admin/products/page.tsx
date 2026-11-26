@@ -142,6 +142,52 @@ const NEW_HYDRAULIC_UNITS: Partial<Product>[] = [
       "Cargar el tanque con 65 litros de aceite hidráulico anti-desgaste ISO 46",
       "Conectar mangueras de presión/retorno y calibrar presión de alivio con el manómetro"
     ]
+  },
+  {
+    name: "Unidad Hidráulica 7.2 HP 220V Trifásica Tecnorampa",
+    slug: "unidad-hidraulica-7-2-hp",
+    mainGroup: "refacciones",
+    mainGroupName: "Refacciones Industriales",
+    subGroup: "Hidráulica",
+    categoryNames: ["Refacciones Industriales", "Hidráulica"],
+    price: 30000,
+    shortDescription: "Central electrohidráulica de alta capacidad 7.2 HP trifásica a 220 VCA, 10.9 GPM, válvula LIFT V3080 y tanque de 90 L.",
+    description: "Unidad de potencia electrohidráulica industrial de alta capacidad 7.2 HP Tecnorampa con motor de enfriamiento forzado por aire a 220 VCA trifásico. Equipada con tanque metálico de 90 litros con mirilla de nivel y temperatura, bomba de engranes de alto flujo de 10.9 GPM, bloque de válvulas LIFT V3080 de aluminio con puertos NPT, manómetro de glicerina graduado a 500 psi y filtro de admisión de aceite. Especialmente diseñada para sistemas de andenes pesados, elevación de carga continua y altura máxima de bombeo de hasta 12 metros.",
+    image: "/products/unidad-hidraulica-7-2hp.jpg",
+    images: ["/products/unidad-hidraulica-7-2hp.jpg", "/products/ficha-especificaciones-unidades-pesadas.jpg"],
+    active: true,
+    stock: 10,
+    deliveryTime: "Entrega Inmediata",
+    benefits: [
+      "Motor eléctrico de 7.2 HP con enfriamiento forzado por aire para servicio rudo",
+      "Bomba de engranes de alto caudal de 10.9 GPM con dren integrado",
+      "Válvula direccional LIFT V3080 en aluminio de ingeniería con puertos NPT",
+      "Manómetro en baño de glicerina calibrado con escalas de 500 psi",
+      "Tanque de acero reforzado de 90 L con mirilla de nivel, temperatura y viscosidad",
+      "Filtro de admisión de aceite de alta eficiencia y altura máxima de elevación de 12 m"
+    ],
+    specs: {
+      "Capacidad": "7.2 HP",
+      "Alimentación Eléctrica": "220 VCA",
+      "Número de Fases": "3 (Trifásica)",
+      "Amperaje": "22 A",
+      "Watts de Consumo": "5.3 KW",
+      "Dimensión Depósito": "75 x 35 x 100 cm",
+      "Peso": "205 kg",
+      "Tipo de Aceite": "ISO 68",
+      "Cantidad de Aceite": "90 LTS",
+      "Caudal de Bomba": "10.9 GPM",
+      "Válvula de Control": "LIFT V3080 aluminio NPT",
+      "Instrumentación": "Manómetro de glicerina 500 psi y visor de nivel/temp"
+    },
+    operationSteps: [
+      "Anclar firmemente el tanque metálico sobre los apoyos estructurales de piso",
+      "Conectar acometida trifásica de 220 VCA calibrada para consumo de 22 A",
+      "Comprobar el sentido de giro del ventilador de enfriamiento del motor",
+      "Rellenar el depósito con 90 litros de aceite hidráulico ISO 68 verificando la mirilla",
+      "Conectar puertos NPT de la válvula LIFT V3080 a la red hidráulica del equipo",
+      "Presurizar el circuito y calibrar manómetro de glicerina a la presión nominal"
+    ]
   }
 ];
 

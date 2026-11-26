@@ -120,6 +120,9 @@ const SECONDARY_IMAGES_MAP: Record<string, string[]> = {
   'unidad-hidraulica-5-hp': [
     '/products/ficha-especificaciones-unidades-hidraulicas.jpg',
   ],
+  'unidad-hidraulica-7-2-hp': [
+    '/products/ficha-especificaciones-unidades-pesadas.jpg',
+  ],
 };
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
